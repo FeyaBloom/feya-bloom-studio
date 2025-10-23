@@ -66,7 +66,7 @@ const Home = () => {
                 </p>
               </div>
               <div className="text-center space-y-4 p-8 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-elevated hover:shadow-[0_20px_50px_rgba(34,197,94,0.4)] transition-smooth hover:scale-105 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
-                <div className="text-5xl font-script text-accent drop-shadow-[0_8px_30px_rgba(255,255,255,0.35)]">Aesthetics</div>
+                <div className="text-5xl font-script text-accent drop-shadow-[0_10px_30px_rgba(255,255,255,0.8)]">Aesthetics</div>
                 <p className="text-white/90">
                   Beautiful designs that inspire and captivate the senses
                 </p>
