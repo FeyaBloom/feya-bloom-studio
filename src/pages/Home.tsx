@@ -46,28 +46,28 @@ const Home = () => {
       </section>
 
       {/* About Section */}
-      <section className="py-24 bg-gradient-ethereal">
+      <section className="py-24 gradient-mystic relative">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-5xl font-serif text-center mb-12 text-foreground">
+            <h2 className="text-5xl font-serif text-center mb-12 text-white">
               About the Studio
             </h2>
             <div className="grid md:grid-cols-3 gap-8">
-              <div className="text-center space-y-4 p-6 rounded-xl bg-card shadow-soft">
-                <div className="text-4xl font-script text-primary">Utility</div>
-                <p className="text-muted-foreground">
+              <div className="text-center space-y-4 p-8 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-elevated hover:shadow-[0_20px_50px_rgba(168,85,247,0.4)] transition-smooth hover:scale-105 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+                <div className="text-5xl font-script text-primary drop-shadow-lg">Utility</div>
+                <p className="text-white/90">
                   Every creation serves a purpose, thoughtfully designed to enhance functionality
                 </p>
               </div>
-              <div className="text-center space-y-4 p-6 rounded-xl bg-card shadow-soft">
-                <div className="text-4xl font-script text-secondary">Ergonomics</div>
-                <p className="text-muted-foreground">
+              <div className="text-center space-y-4 p-8 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-elevated hover:shadow-[0_20px_50px_rgba(236,72,153,0.4)] transition-smooth hover:scale-105 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
+                <div className="text-5xl font-script text-secondary drop-shadow-lg">Ergonomics</div>
+                <p className="text-white/90">
                   Intuitive interactions that feel natural and effortless
                 </p>
               </div>
-              <div className="text-center space-y-4 p-6 rounded-xl bg-card shadow-soft">
-                <div className="text-4xl font-script text-accent">Aesthetics</div>
-                <p className="text-muted-foreground">
+              <div className="text-center space-y-4 p-8 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-elevated hover:shadow-[0_20px_50px_rgba(34,197,94,0.4)] transition-smooth hover:scale-105 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
+                <div className="text-5xl font-script text-accent drop-shadow-lg">Aesthetics</div>
+                <p className="text-white/90">
                   Beautiful designs that inspire and captivate the senses
                 </p>
               </div>
@@ -77,16 +77,17 @@ const Home = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24">
-        <div className="container mx-auto px-6">
-          <div className="max-w-3xl mx-auto text-center space-y-6">
-            <h2 className="text-4xl md:text-5xl font-serif text-foreground">
+      <section className="py-32 gradient-aurora relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-accent/20 via-transparent to-primary/20" />
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="max-w-3xl mx-auto text-center space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <h2 className="text-5xl md:text-6xl font-serif text-white drop-shadow-lg">
               Ready to create something beautiful?
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-xl text-white/90">
               Let's collaborate on your next project
             </p>
-            <Button asChild size="lg" className="shadow-soft hover:shadow-elevated transition-smooth">
+            <Button asChild size="lg" className="shadow-elevated hover:shadow-[0_20px_50px_rgba(168,85,247,0.5)] transition-smooth bg-white text-primary hover:bg-white/90 text-lg px-8 py-6">
               <Link to="/contact">Start a Conversation</Link>
             </Button>
           </div>
