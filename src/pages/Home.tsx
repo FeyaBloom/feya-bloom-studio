@@ -54,22 +54,22 @@ const Home = () => {
             </h2>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center space-y-4 p-8 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-elevated hover:shadow-[0_20px_50px_rgba(168,85,247,0.4)] transition-smooth hover:scale-105 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
-                <div className="text-5xl font-script text-primary [text-shadow:0_8px_30px_rgba(255,255,255,0.35)]">Utility</div>
+                <div className="text-5xl font-script text-primary [text-shadow:0_5px_30px_rgba(255,255,255,1)]">Utility</div>
                 <p className="text-white/90">
                   Every creation serves a purpose, thoughtfully designed to enhance functionality
                 </p>
               </div>
               <div className="text-center space-y-4 p-8 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-elevated hover:shadow-[0_20px_50px_rgba(236,72,153,0.4)] transition-smooth hover:scale-105 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
-                <div className="text-5xl font-script text-secondary [text-shadow:0_8px_30px_rgba(255,255,255,0.35)]">Ergonomics</div>
+                <div className="text-5xl font-script text-secondary [text-shadow:0_5px_30px_rgba(255,255,255,1)]">Ergonomics</div>
                 <p className="text-white/90">
                   Intuitive interactions that feel natural and effortless
                 </p>
               </div>
               <div className="text-center space-y-4 p-8 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-elevated hover:shadow-[0_20px_50px_rgba(34,197,94,0.4)] transition-smooth hover:scale-105 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
-                <div className="text-5xl font-script text-accent [text-shadow:0_10px_30px_rgba(255,255,255,0.8)]">Aesthetics</div>
+                <div className="text-5xl font-script text-accent [text-shadow:0_5px_30px_rgba(255,255,255,1)]">Aesthetics</div>
                 <p className="text-white/90">
                   Beautiful designs that inspire and captivate the senses
-                </p>
+                </p>            
               </div>
             </div>
           </div>
