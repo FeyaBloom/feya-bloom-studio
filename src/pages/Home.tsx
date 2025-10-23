@@ -24,11 +24,10 @@ const Home = () => {
               Feya Bloom Studio
             </h1>
             <p className="text-2xl md:text-3xl font-serif text-foreground animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-200">
-              Creating beauty through design
+              Beauty that serves • Art that resonates
             </p>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
-              We craft projects that seamlessly blend utility, ergonomics, and aesthetics—
-              spanning both digital and physical realms.
+              Step into a world where nature, art and technology interwine to create designs that are as functional as they are beautiful. 
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
               <Button asChild size="lg" className="gap-2 shadow-soft hover:shadow-elevated transition-smooth">
@@ -50,7 +49,7 @@ const Home = () => {
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-5xl font-serif text-center mb-12 text-white">
-              About the Studio
+              What guides my work
             </h2>
             <div className="grid md:grid-cols-3 gap-8">
   <div className="text-center space-y-4 p-8 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-elevated hover:shadow-[0_20px_50px_rgba(168,85,247,0.4)] transition-smooth hover:scale-105 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
@@ -90,10 +89,10 @@ const Home = () => {
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-3xl mx-auto text-center space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <h2 className="text-5xl md:text-6xl font-serif text-secondary drop-shadow-lg">
-              Ready to create something beautiful?
+              Have in mind some ideas?
             </h2>
             <p className="text-xl text-secondary ">
-              Let's collaborate on your next project
+              Let's create something extraordinary together. Reach out today to start our journey! 
             </p>
             <Button asChild size="lg" className="shadow-elevated hover:shadow-[0_20px_50px_rgba(59,130,246,0.5)] transition-smooth bg-accent text-white hover:bg-secondary text-lg px-8 py-6">
               <Link to="/contact">Start a Conversation</Link>

@@ -65,7 +65,7 @@ const Gallery = () => {
                 Project Gallery
               </h1>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                A curated collection of our digital and physical design works
+                Discover my creative universe 
               </p>
             </div>
 
