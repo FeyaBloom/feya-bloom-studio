@@ -22,35 +22,35 @@ const Footer = () => {
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-primary hover:bg-primary/80 transition-colors flex items-center justify-center"
+                className="w-10 h-10 rounded-full bg-accent hover:bg-accent/80 transition-colors flex items-center justify-center"
                 aria-label="Instagram"
               >
-                <Instagram className="h-5 w-5 text-primary-foreground" />
+                <Instagram className="h-5 w-5 text-accent-foreground" />
               </a>
               <a
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-primary hover:bg-primary/80 transition-colors flex items-center justify-center"
+                className="w-10 h-10 rounded-full bg-accent hover:bg-accent/80 transition-colors flex items-center justify-center"
                 aria-label="Facebook"
               >
-                <Facebook className="h-5 w-5 text-primary-foreground" />
+                <Facebook className="h-5 w-5 text-accent-foreground" />
               </a>
               <a
                 href="https://linkedin.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-primary hover:bg-primary/80 transition-colors flex items-center justify-center"
+                className="w-10 h-10 rounded-full bg-accent hover:bg-accent/80 transition-colors flex items-center justify-center"
                 aria-label="LinkedIn"
               >
-                <Linkedin className="h-5 w-5 text-primary-foreground" />
+                <Linkedin className="h-5 w-5 text-accent-foreground" />
               </a>
               <a
                 href="mailto:hello@feyabloom.com"
-                className="w-10 h-10 rounded-full bg-primary hover:bg-primary/80 transition-colors flex items-center justify-center"
+                className="w-10 h-10 rounded-full bg-accent hover:bg-accent/80 transition-colors flex items-center justify-center"
                 aria-label="Email"
               >
-                <Mail className="h-5 w-5 text-primary-foreground" />
+                <Mail className="h-5 w-5 text-accent-foreground" />
               </a>
             </div>
           </div>
