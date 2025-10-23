@@ -16,8 +16,8 @@ const Footer = () => {
 
           {/* Social Media */}
           <div className="space-y-4">
-            <h4 className="font-semibold text-foreground">Connect With Us</h4>
-            <div className="flex gap-4">
+            <h4 className="font-semibold text-foreground text-center md:text-left">Connect With Us</h4>
+            <div className="flex gap-4 justify-center md:justify-start">
               <a
                 href="https://instagram.com"
                 target="_blank"
@@ -25,7 +25,7 @@ const Footer = () => {
                 className="w-10 h-10 rounded-full bg-accent hover:bg-accent/80 transition-colors flex items-center justify-center"
                 aria-label="Instagram"
               >
-                <Instagram className="h-5 w-5 text-accent-foreground" />
+                <Instagram className="h-5 w-5 text-white" />
               </a>
               <a
                 href="https://facebook.com"
@@ -34,7 +34,7 @@ const Footer = () => {
                 className="w-10 h-10 rounded-full bg-accent hover:bg-accent/80 transition-colors flex items-center justify-center"
                 aria-label="Facebook"
               >
-                <Facebook className="h-5 w-5 text-accent-foreground" />
+                <Facebook className="h-5 w-5 text-white" />
               </a>
               <a
                 href="https://linkedin.com"
@@ -43,14 +43,14 @@ const Footer = () => {
                 className="w-10 h-10 rounded-full bg-accent hover:bg-accent/80 transition-colors flex items-center justify-center"
                 aria-label="LinkedIn"
               >
-                <Linkedin className="h-5 w-5 text-accent-foreground" />
+                <Linkedin className="h-5 w-5 text-white" />
               </a>
               <a
                 href="mailto:hello@feyabloom.com"
                 className="w-10 h-10 rounded-full bg-accent hover:bg-accent/80 transition-colors flex items-center justify-center"
                 aria-label="Email"
               >
-                <Mail className="h-5 w-5 text-accent-foreground" />
+                <Mail className="h-5 w-5 text-white" />
               </a>
             </div>
           </div>

@@ -15,7 +15,7 @@ const Navigation = () => {
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group">
-            <img src={logo} alt="Feya Bloom Studio" className="h-10 w-10 transition-smooth group-hover:scale-110" />
+            <img src={logo} alt="Feya Bloom Studio" className="h-10 w-10 transition-smooth group-hover:scale-110 hidden md:block" />
             <div>
               <h1 className="text-xl font-script text-foreground">Feya Bloom Studio</h1>
             </div>
