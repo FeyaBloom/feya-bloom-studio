@@ -1,0 +1,402 @@
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card } from "@/components/ui/card";
+import { Plus, Edit, Trash, LogOut, ArrowLeft } from "lucide-react";
+import { toast } from "sonner";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+
+interface Project {
+  id?: string;
+  title: string;
+  category: string;
+  short_description?: string;
+  full_description?: string;
+  images?: string[];
+  tags?: string[];
+  published: boolean;
+}
+
+const Admin = () => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentProject, setCurrentProject] = useState<Project | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  // Check if user is admin
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        navigate('/login');
+        return;
+      }
+
+      const { data: roles } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .eq('role', 'admin')
+        .maybeSingle();
+
+      if (!roles) {
+        toast.error('Access denied. Admin privileges required.');
+        navigate('/');
+        return;
+      }
+
+      setIsAdmin(true);
+      setLoading(false);
+    };
+
+    checkAdmin();
+  }, [navigate]);
+
+  // Get all projects
+  const { data: projects } = useQuery({
+    queryKey: ['admin-projects'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      return data as Project[];
+    },
+    enabled: isAdmin
+  });
+
+  // Save project
+  const saveMutation = useMutation({
+    mutationFn: async (project: Project) => {
+      if (project.id) {
+        const { error } = await supabase
+          .from('projects')
+          .update(project)
+          .eq('id', project.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from('projects')
+          .insert([project]);
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-projects'] });
+      setIsEditing(false);
+      setCurrentProject(null);
+      toast.success('Project saved successfully');
+    },
+    onError: (error: any) => {
+      toast.error(error.message || 'Failed to save project');
+    }
+  });
+
+  // Delete project
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from('projects')
+        .delete()
+        .eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-projects'] });
+      toast.success('Project deleted successfully');
+    },
+    onError: (error: any) => {
+      toast.error(error.message || 'Failed to delete project');
+    }
+  });
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/');
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-xl">Loading...</p>
+      </div>
+    );
+  }
+
+  if (!isAdmin) return null;
+
+  return (
+    <div className="min-h-screen bg-gradient-mystic">
+      <div className="container mx-auto px-6 py-12">
+        <div className="flex justify-between items-center mb-8">
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={() => navigate('/')}
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <h1 className="text-4xl font-serif">Project Admin</h1>
+          </div>
+          <div className="flex gap-2">
+            {!isEditing && (
+              <Button onClick={() => {
+                setCurrentProject({ 
+                  title: '', 
+                  category: 'Digital', 
+                  short_description: '',
+                  full_description: '',
+                  images: [],
+                  tags: [],
+                  published: false 
+                });
+                setIsEditing(true);
+              }}>
+                <Plus className="mr-2 h-4 w-4" />
+                New Project
+              </Button>
+            )}
+            <Button variant="outline" onClick={handleLogout}>
+              <LogOut className="mr-2 h-4 w-4" />
+              Logout
+            </Button>
+          </div>
+        </div>
+
+        {isEditing ? (
+          <ProjectForm 
+            project={currentProject!}
+            onSave={(data) => saveMutation.mutate(data)}
+            onCancel={() => {
+              setIsEditing(false);
+              setCurrentProject(null);
+            }}
+          />
+        ) : (
+          <div className="grid gap-4">
+            {projects?.map(project => (
+              <Card key={project.id} className="p-4 flex justify-between items-center bg-white/10 backdrop-blur-sm border-white/20">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-semibold">{project.title}</h3>
+                    {project.published ? (
+                      <span className="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded">Published</span>
+                    ) : (
+                      <span className="text-xs bg-gray-500/20 text-gray-300 px-2 py-1 rounded">Draft</span>
+                    )}
+                  </div>
+                  <p className="text-sm text-muted-foreground">{project.category}</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setCurrentProject(project);
+                      setIsEditing(true);
+                    }}
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => {
+                      if (confirm('Are you sure you want to delete this project?')) {
+                        deleteMutation.mutate(project.id!);
+                      }
+                    }}
+                  >
+                    <Trash className="h-4 w-4" />
+                  </Button>
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+interface ProjectFormProps {
+  project: Project;
+  onSave: (data: Project) => void;
+  onCancel: () => void;
+}
+
+const ProjectForm = ({ project, onSave, onCancel }: ProjectFormProps) => {
+  const [formData, setFormData] = useState<Project>(project);
+  const [imageInput, setImageInput] = useState('');
+  const [tagInput, setTagInput] = useState('');
+
+  const addImage = () => {
+    if (imageInput.trim()) {
+      setFormData({
+        ...formData,
+        images: [...(formData.images || []), imageInput.trim()]
+      });
+      setImageInput('');
+    }
+  };
+
+  const removeImage = (index: number) => {
+    setFormData({
+      ...formData,
+      images: formData.images?.filter((_, i) => i !== index)
+    });
+  };
+
+  const addTag = () => {
+    if (tagInput.trim()) {
+      setFormData({
+        ...formData,
+        tags: [...(formData.tags || []), tagInput.trim()]
+      });
+      setTagInput('');
+    }
+  };
+
+  const removeTag = (index: number) => {
+    setFormData({
+      ...formData,
+      tags: formData.tags?.filter((_, i) => i !== index)
+    });
+  };
+
+  return (
+    <Card className="p-6 space-y-6 bg-white/10 backdrop-blur-sm border-white/20">
+      <div className="space-y-2">
+        <Label htmlFor="title">Title *</Label>
+        <Input
+          id="title"
+          placeholder="Project title"
+          value={formData.title}
+          onChange={(e) => setFormData({...formData, title: e.target.value})}
+          required
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="category">Category *</Label>
+        <select
+          id="category"
+          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          value={formData.category}
+          onChange={(e) => setFormData({...formData, category: e.target.value})}
+        >
+          <option value="Digital">Digital</option>
+          <option value="Physical">Physical</option>
+          <option value="Mixed">Mixed</option>
+        </select>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="short_description">Short Description</Label>
+        <Textarea
+          id="short_description"
+          placeholder="Brief description for gallery"
+          value={formData.short_description || ''}
+          onChange={(e) => setFormData({...formData, short_description: e.target.value})}
+          rows={2}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="full_description">Full Description</Label>
+        <Textarea
+          id="full_description"
+          placeholder="Detailed description"
+          value={formData.full_description || ''}
+          onChange={(e) => setFormData({...formData, full_description: e.target.value})}
+          rows={4}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label>Images</Label>
+        <div className="flex gap-2">
+          <Input
+            placeholder="Image URL"
+            value={imageInput}
+            onChange={(e) => setImageInput(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addImage())}
+          />
+          <Button type="button" onClick={addImage}>Add</Button>
+        </div>
+        <div className="flex flex-wrap gap-2 mt-2">
+          {formData.images?.map((img, i) => (
+            <div key={i} className="relative group">
+              <img src={img} alt="" className="h-20 w-20 object-cover rounded" />
+              <Button
+                type="button"
+                variant="destructive"
+                size="sm"
+                className="absolute -top-2 -right-2 h-6 w-6 p-0 opacity-0 group-hover:opacity-100"
+                onClick={() => removeImage(i)}
+              >
+                ×
+              </Button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label>Tags</Label>
+        <div className="flex gap-2">
+          <Input
+            placeholder="Tag name"
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
+          />
+          <Button type="button" onClick={addTag}>Add</Button>
+        </div>
+        <div className="flex flex-wrap gap-2 mt-2">
+          {formData.tags?.map((tag, i) => (
+            <span key={i} className="bg-primary/20 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+              {tag}
+              <button
+                type="button"
+                onClick={() => removeTag(i)}
+                className="hover:text-destructive"
+              >
+                ×
+              </button>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex items-center space-x-2">
+        <Switch
+          id="published"
+          checked={formData.published}
+          onCheckedChange={(checked) => setFormData({...formData, published: checked})}
+        />
+        <Label htmlFor="published">Publish project</Label>
+      </div>
+      
+      <div className="flex gap-2 pt-4">
+        <Button onClick={() => onSave(formData)} disabled={!formData.title || !formData.category}>
+          Save Project
+        </Button>
+        <Button variant="outline" onClick={onCancel}>Cancel</Button>
+      </div>
+    </Card>
+  );
+};
+
+export default Admin;
