@@ -17,39 +17,54 @@ export type Database = {
       projects: {
         Row: {
           category: string
+          content: Json | null
+          cover_image: string | null
           created_at: string
           full_description: string | null
           id: string
           images: string[] | null
+          links: Json | null
+          order_index: number | null
           published: boolean | null
           short_description: string | null
           tags: string[] | null
           title: string
           updated_at: string
+          year: string | null
         }
         Insert: {
           category: string
+          content?: Json | null
+          cover_image?: string | null
           created_at?: string
           full_description?: string | null
           id?: string
           images?: string[] | null
+          links?: Json | null
+          order_index?: number | null
           published?: boolean | null
           short_description?: string | null
           tags?: string[] | null
           title: string
           updated_at?: string
+          year?: string | null
         }
         Update: {
           category?: string
+          content?: Json | null
+          cover_image?: string | null
           created_at?: string
           full_description?: string | null
           id?: string
           images?: string[] | null
+          links?: Json | null
+          order_index?: number | null
           published?: boolean | null
           short_description?: string | null
           tags?: string[] | null
           title?: string
           updated_at?: string
+          year?: string | null
         }
         Relationships: []
       }

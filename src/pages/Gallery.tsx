@@ -2,13 +2,12 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
-import ProjectCard, { Project } from "@/components/ProjectCard";
+import ProjectCard from "@/components/ProjectCard";
+import { Project } from "@/types/project";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Gallery = () => {
   const [activeCategory, setActiveCategory] = useState<string>("All");
-
-  const categories = ["All", "Digital", "Physical", "Mixed"];
 
   // Fetch published projects from database
   const { data: projects = [], isLoading } = useQuery({
@@ -18,22 +17,25 @@ const Gallery = () => {
         .from('projects')
         .select('*')
         .eq('published', true)
+        .order('order_index', { ascending: true })
         .order('created_at', { ascending: false });
       
       if (error) throw error;
       
-      // Transform database format to component format
+      // Transform data to Project type
       return data.map(p => ({
-        id: p.id,
-        title: p.title,
-        category: p.category,
-        shortDescription: p.short_description || '',
-        fullDescription: p.full_description || '',
-        images: p.images || [],
-        tags: p.tags || []
+        ...p,
+        content: p.content as any,
+        links: p.links as any
       })) as Project[];
     }
   });
+
+  // Get unique categories from projects
+  const categories = ["All", ...(projects 
+    ? [...new Set(projects.map(p => p.category))]
+    : []
+  )];
 
   const filteredProjects = activeCategory === "All" 
     ? projects 

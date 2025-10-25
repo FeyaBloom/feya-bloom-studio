@@ -10,17 +10,8 @@ import { Plus, Edit, Trash, LogOut, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-
-interface Project {
-  id?: string;
-  title: string;
-  category: string;
-  short_description?: string;
-  full_description?: string;
-  images?: string[];
-  tags?: string[];
-  published: boolean;
-}
+import { Project } from "@/types/project";
+import ContentBlockEditor from "@/components/ContentBlockEditor";
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -67,10 +58,16 @@ const Admin = () => {
       const { data, error } = await supabase
         .from('projects')
         .select('*')
+        .order('order_index', { ascending: true })
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return data as Project[];
+      
+      return data.map(p => ({
+        ...p,
+        content: p.content as any,
+        links: p.links as any
+      })) as Project[];
     },
     enabled: isAdmin
   });
@@ -78,16 +75,23 @@ const Admin = () => {
   // Save project
   const saveMutation = useMutation({
     mutationFn: async (project: Project) => {
+      // Transform Project to database format
+      const dbProject = {
+        ...project,
+        content: project.content as any,
+        links: project.links as any
+      };
+      
       if (project.id) {
         const { error } = await supabase
           .from('projects')
-          .update(project)
+          .update(dbProject)
           .eq('id', project.id);
         if (error) throw error;
       } else {
         const { error } = await supabase
           .from('projects')
-          .insert([project]);
+          .insert([dbProject]);
         if (error) throw error;
       }
     },
@@ -156,10 +160,13 @@ const Admin = () => {
                   title: '', 
                   category: 'Digital', 
                   short_description: '',
-                  full_description: '',
-                  images: [],
+                  cover_image: '',
+                  year: '',
                   tags: [],
-                  published: false 
+                  content: [],
+                  links: {},
+                  published: false,
+                  order_index: 0
                 });
                 setIsEditing(true);
               }}>
@@ -238,25 +245,7 @@ interface ProjectFormProps {
 
 const ProjectForm = ({ project, onSave, onCancel }: ProjectFormProps) => {
   const [formData, setFormData] = useState<Project>(project);
-  const [imageInput, setImageInput] = useState('');
   const [tagInput, setTagInput] = useState('');
-
-  const addImage = () => {
-    if (imageInput.trim()) {
-      setFormData({
-        ...formData,
-        images: [...(formData.images || []), imageInput.trim()]
-      });
-      setImageInput('');
-    }
-  };
-
-  const removeImage = (index: number) => {
-    setFormData({
-      ...formData,
-      images: formData.images?.filter((_, i) => i !== index)
-    });
-  };
 
   const addTag = () => {
     if (tagInput.trim()) {
@@ -306,50 +295,66 @@ const ProjectForm = ({ project, onSave, onCancel }: ProjectFormProps) => {
         <Label htmlFor="short_description">Short Description</Label>
         <Textarea
           id="short_description"
-          placeholder="Brief description for gallery"
+          placeholder="Brief description for gallery card"
           value={formData.short_description || ''}
           onChange={(e) => setFormData({...formData, short_description: e.target.value})}
           rows={2}
         />
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="full_description">Full Description</Label>
-        <Textarea
-          id="full_description"
-          placeholder="Detailed description"
-          value={formData.full_description || ''}
-          onChange={(e) => setFormData({...formData, full_description: e.target.value})}
-          rows={4}
-        />
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="cover_image">Cover Image URL</Label>
+          <Input
+            id="cover_image"
+            placeholder="Main image for gallery card"
+            value={formData.cover_image || ''}
+            onChange={(e) => setFormData({...formData, cover_image: e.target.value})}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="year">Year</Label>
+          <Input
+            id="year"
+            placeholder="e.g. 2024"
+            value={formData.year || ''}
+            onChange={(e) => setFormData({...formData, year: e.target.value})}
+          />
+        </div>
       </div>
 
+      <ContentBlockEditor
+        blocks={formData.content || []}
+        onChange={(content) => setFormData({...formData, content})}
+      />
+
       <div className="space-y-2">
-        <Label>Images</Label>
-        <div className="flex gap-2">
+        <Label>Project Links</Label>
+        <div className="grid gap-2">
           <Input
-            placeholder="Image URL"
-            value={imageInput}
-            onChange={(e) => setImageInput(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addImage())}
+            placeholder="Demo URL"
+            value={formData.links?.demo || ''}
+            onChange={(e) => setFormData({
+              ...formData, 
+              links: { ...formData.links, demo: e.target.value }
+            })}
           />
-          <Button type="button" onClick={addImage}>Add</Button>
-        </div>
-        <div className="flex flex-wrap gap-2 mt-2">
-          {formData.images?.map((img, i) => (
-            <div key={i} className="relative group">
-              <img src={img} alt="" className="h-20 w-20 object-cover rounded" />
-              <Button
-                type="button"
-                variant="destructive"
-                size="sm"
-                className="absolute -top-2 -right-2 h-6 w-6 p-0 opacity-0 group-hover:opacity-100"
-                onClick={() => removeImage(i)}
-              >
-                ×
-              </Button>
-            </div>
-          ))}
+          <Input
+            placeholder="GitHub URL"
+            value={formData.links?.github || ''}
+            onChange={(e) => setFormData({
+              ...formData, 
+              links: { ...formData.links, github: e.target.value }
+            })}
+          />
+          <Input
+            placeholder="Purchase/Buy URL"
+            value={formData.links?.buy || ''}
+            onChange={(e) => setFormData({
+              ...formData, 
+              links: { ...formData.links, buy: e.target.value }
+            })}
+          />
         </div>
       </div>
 
@@ -387,6 +392,17 @@ const ProjectForm = ({ project, onSave, onCancel }: ProjectFormProps) => {
           onCheckedChange={(checked) => setFormData({...formData, published: checked})}
         />
         <Label htmlFor="published">Publish project</Label>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="order_index">Display Order</Label>
+        <Input
+          id="order_index"
+          type="number"
+          placeholder="0"
+          value={formData.order_index || 0}
+          onChange={(e) => setFormData({...formData, order_index: parseInt(e.target.value) || 0})}
+        />
       </div>
       
       <div className="flex gap-2 pt-4">
