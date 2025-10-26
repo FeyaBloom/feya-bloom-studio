@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Trash, GripVertical, Plus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { ImageUploader } from "@/components/ImageUploader";
 
 interface ContentBlockEditorProps {
   blocks: ContentBlock[];
@@ -149,56 +150,27 @@ const ContentBlockEditor = ({ blocks, onChange }: ContentBlockEditorProps) => {
 
             {block.type === "image" && (
               <>
-                <Input
-                  placeholder="Image URL"
+                <ImageUploader
                   value={block.content as string}
-                  onChange={(e) => updateBlock(index, { content: e.target.value })}
+                  onChange={(url) => updateBlock(index, { content: url })}
+                  preview={true}
                 />
                 <Input
                   placeholder="Caption (optional)"
                   value={block.caption || ""}
                   onChange={(e) => updateBlock(index, { caption: e.target.value })}
                 />
-                {block.content && (
-                  <img 
-                    src={block.content as string} 
-                    alt="Preview" 
-                    className="w-full max-h-40 object-cover rounded"
-                  />
-                )}
               </>
             )}
 
             {block.type === "gallery" && (
               <>
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="Image URL"
-                    onKeyPress={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        const input = e.currentTarget;
-                        if (input.value.trim()) {
-                          addImageToGallery(index, input.value.trim());
-                          input.value = "";
-                        }
-                      }
-                    }}
-                  />
-                  <Button
-                    type="button"
-                    onClick={(e) => {
-                      const input = e.currentTarget.previousSibling as HTMLInputElement;
-                      if (input.value.trim()) {
-                        addImageToGallery(index, input.value.trim());
-                        input.value = "";
-                      }
-                    }}
-                  >
-                    Add
-                  </Button>
-                </div>
-                <div className="grid grid-cols-4 gap-2">
+                <ImageUploader
+                  value=""
+                  onChange={(url) => addImageToGallery(index, url)}
+                  preview={false}
+                />
+                <div className="grid grid-cols-4 gap-2 mt-2">
                   {Array.isArray(block.content) && block.content.map((img, imgIdx) => (
                     <div key={imgIdx} className="relative group">
                       <img 

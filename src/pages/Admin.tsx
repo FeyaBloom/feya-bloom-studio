@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Project } from "@/types/project";
 import ContentBlockEditor from "@/components/ContentBlockEditor";
+import { ImageUploader } from "@/components/ImageUploader";
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -303,15 +304,12 @@ const ProjectForm = ({ project, onSave, onCancel }: ProjectFormProps) => {
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="cover_image">Cover Image URL</Label>
-          <Input
-            id="cover_image"
-            placeholder="Main image for gallery card"
-            value={formData.cover_image || ''}
-            onChange={(e) => setFormData({...formData, cover_image: e.target.value})}
-          />
-        </div>
+        <ImageUploader
+          label="Cover Image"
+          value={formData.cover_image || ''}
+          onChange={(url) => setFormData({...formData, cover_image: url})}
+          preview={true}
+        />
         <div className="space-y-2">
           <Label htmlFor="year">Year</Label>
           <Input
