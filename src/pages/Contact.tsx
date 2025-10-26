@@ -7,56 +7,55 @@ import { Label } from "@/components/ui/label";
 import { Mail, MessageSquare, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-
 const Contact = () => {
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     subject: "",
-    message: "",
+    message: ""
   });
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
     try {
-      const { error } = await supabase.functions.invoke('send-contact-email', {
-        body: formData,
+      const {
+        error
+      } = await supabase.functions.invoke('send-contact-email', {
+        body: formData
       });
-
       if (error) throw error;
-
       toast({
         title: "Message sent!",
-        description: "Thank you for reaching out. We'll get back to you soon.",
+        description: "Thank you for reaching out. We'll get back to you soon."
       });
-      setFormData({ name: "", email: "", subject: "", message: "" });
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: ""
+      });
     } catch (error) {
       console.error("Error sending message:", error);
       toast({
         title: "Error",
         description: "Failed to send message. Please try again.",
-        variant: "destructive",
+        variant: "destructive"
       });
     } finally {
       setIsSubmitting(false);
     }
   };
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFormData((prev) => ({
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     }));
   };
-
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       <Navigation />
       
       <div className="pt-32 pb-24">
@@ -81,7 +80,7 @@ const Contact = () => {
                     </div>
                     <div>
                       <h3 className="font-serif text-lg text-foreground">Email</h3>
-                      <p className="text-muted-foreground">hello@feyabloom.studio</p>
+                      <p className="text-muted-foreground">feya.bloom.design@gmail.com</p>
                     </div>
                   </div>
                 </div>
@@ -115,60 +114,25 @@ const Contact = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
                   <Label htmlFor="name">Name</Label>
-                  <Input
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    placeholder="Your name"
-                  />
+                  <Input id="name" name="name" value={formData.name} onChange={handleChange} required placeholder="Your name" />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    placeholder="your@email.com"
-                  />
+                  <Input id="email" name="email" type="email" value={formData.email} onChange={handleChange} required placeholder="your@email.com" />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="subject">Subject</Label>
-                  <Input
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    required
-                    placeholder="What's this about?"
-                  />
+                  <Input id="subject" name="subject" value={formData.subject} onChange={handleChange} required placeholder="What's this about?" />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="message">Message</Label>
-                  <Textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    placeholder="Tell us about your project..."
-                    rows={6}
-                  />
+                  <Textarea id="message" name="message" value={formData.message} onChange={handleChange} required placeholder="Tell us about your project..." rows={6} />
                 </div>
 
-                <Button 
-                  type="submit" 
-                  className="w-full shadow-soft hover:shadow-elevated transition-smooth gap-2"
-                  size="lg"
-                  disabled={isSubmitting}
-                >
+                <Button type="submit" className="w-full shadow-soft hover:shadow-elevated transition-smooth gap-2" size="lg" disabled={isSubmitting}>
                   {isSubmitting ? "Sending..." : "Send Message"}
                   <Send className="h-4 w-4" />
                 </Button>
@@ -177,8 +141,6 @@ const Contact = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Contact;
