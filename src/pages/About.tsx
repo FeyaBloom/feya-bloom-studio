@@ -88,7 +88,7 @@ const About = () => {
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div className="space-y-8 animate-in fade-in slide-in-from-left-8 duration-1000">
               <div className="inline-block">
-                <h1 className="text-6xl md:text-7xl lg:text-8xl font-script text-transparent bg-clip-text gradient-mystic mb-4">
+                <h1 className="text-6xl md:text-7xl font-script gradient-mystic mb-4 text-amber-50 lg:text-8xl">
                   Feya Bloom
                 </h1>
                 <div className="h-1 w-32 gradient-mystic rounded-full" />
