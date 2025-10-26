@@ -187,7 +187,7 @@ const About = () => {
         
         <div className="container mx-auto max-w-6xl relative z-10">
           <h2 className="text-5xl font-serif font-bold text-center mb-20 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-            From Vision to <span className="text-transparent bg-clip-text gradient-mystic">Reality</span>
+            From Vision to <span className="bg-clip-text gradient-mystic text-amber-50">Reality</span>
           </h2>
           
           <div className="grid md:grid-cols-4 gap-12 relative">
