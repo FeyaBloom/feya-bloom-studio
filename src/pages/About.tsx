@@ -5,102 +5,76 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import heroImage from "@/assets/mood-aurora.png";
 import { Palette, Sparkles, Lightbulb, Heart, Compass, Layers, Home } from "lucide-react";
-
 const About = () => {
-  const directions = [
-    {
-      icon: Palette,
-      title: "Original Art",
-      description: "Paintings & Sculptures",
-    },
-    {
-      icon: Sparkles,
-      title: "Wearable Art",
-      description: "Artisan pieces with emotional depth",
-    },
-    {
-      icon: Lightbulb,
-      title: "Digital Tools",
-      description: "ADHD-friendly systems for creative entrepreneurs",
-    },
-    {
-      icon: Heart,
-      title: "Ancestral Wisdom",
-      description: "Wellness practices & timeless knowledge",
-    },
-  ];
-
-  const values = [
-    {
-      icon: Compass,
-      title: "Purpose",
-      description: "Every piece serves a purpose, blending intuition with intentional design",
-    },
-    {
-      icon: Layers,
-      title: "Harmony",
-      description: "Visual beauty meets tangible usefulness",
-    },
-    {
-      icon: Heart,
-      title: "Authenticity",
-      description: "Custom creations that become extensions of your authentic self",
-    },
-  ];
-
-  const process = [
-    {
-      step: "01",
-      title: "Feel",
-      description: "Understanding the emotional core",
-    },
-    {
-      step: "02",
-      title: "Design",
-      description: "Blending intuition with intention",
-    },
-    {
-      step: "03",
-      title: "Craft",
-      description: "Handmade with care and precision",
-    },
-    {
-      step: "04",
-      title: "Deliver",
-      description: "Pieces that enhance your world",
-    },
-  ];
-
-  const offerings = [
-    {
-      title: "Art & Sculpture",
-      description: "Original pieces that speak to the unspoken",
-      category: "Art",
-    },
-    {
-      title: "Wearable Art",
-      description: "Clothing as creative expression",
-      category: "Wearable",
-    },
-    {
-      title: "Business Systems",
-      description: "Tools that support natural rhythms",
-      category: "Digital",
-    },
-    {
-      title: "Home Decor",
-      description: "Unique pieces that resonate",
-      category: "Decor",
-    },
-    {
-      title: "Wellness & Wisdom",
-      description: "Knowledge that grounds you",
-      category: "Wellness",
-    },
-  ];
-
-  return (
-    <div className="min-h-screen bg-background">
+  const directions = [{
+    icon: Palette,
+    title: "Original Art",
+    description: "Paintings & Sculptures"
+  }, {
+    icon: Sparkles,
+    title: "Wearable Art",
+    description: "Artisan pieces with emotional depth"
+  }, {
+    icon: Lightbulb,
+    title: "Digital Tools",
+    description: "ADHD-friendly systems for creative entrepreneurs"
+  }, {
+    icon: Heart,
+    title: "Ancestral Wisdom",
+    description: "Wellness practices & timeless knowledge"
+  }];
+  const values = [{
+    icon: Compass,
+    title: "Purpose",
+    description: "Every piece serves a purpose, blending intuition with intentional design"
+  }, {
+    icon: Layers,
+    title: "Harmony",
+    description: "Visual beauty meets tangible usefulness"
+  }, {
+    icon: Heart,
+    title: "Authenticity",
+    description: "Custom creations that become extensions of your authentic self"
+  }];
+  const process = [{
+    step: "01",
+    title: "Feel",
+    description: "Understanding the emotional core"
+  }, {
+    step: "02",
+    title: "Design",
+    description: "Blending intuition with intention"
+  }, {
+    step: "03",
+    title: "Craft",
+    description: "Handmade with care and precision"
+  }, {
+    step: "04",
+    title: "Deliver",
+    description: "Pieces that enhance your world"
+  }];
+  const offerings = [{
+    title: "Art & Sculpture",
+    description: "Original pieces that speak to the unspoken",
+    category: "Art"
+  }, {
+    title: "Wearable Art",
+    description: "Clothing as creative expression",
+    category: "Wearable"
+  }, {
+    title: "Business Systems",
+    description: "Tools that support natural rhythms",
+    category: "Digital"
+  }, {
+    title: "Home Decor",
+    description: "Unique pieces that resonate",
+    category: "Decor"
+  }, {
+    title: "Wellness & Wisdom",
+    description: "Knowledge that grounds you",
+    category: "Wellness"
+  }];
+  return <div className="min-h-screen bg-background">
       <Navigation />
       
       {/* Hero Section */}
@@ -138,11 +112,7 @@ const About = () => {
             <div className="relative animate-in fade-in slide-in-from-right-8 duration-1000 delay-200">
               <div className="absolute -inset-4 gradient-mystic opacity-20 blur-2xl rounded-3xl" />
               <div className="relative rounded-3xl overflow-hidden shadow-elevated hover:shadow-soft transition-smooth group">
-                <img 
-                  src={heroImage} 
-                  alt="Feya Bloom Studio" 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-smooth"
-                />
+                <img src={heroImage} alt="Feya Bloom Studio" className="w-full h-full object-cover group-hover:scale-105 transition-smooth" />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-transparent opacity-0 group-hover:opacity-100 transition-smooth" />
               </div>
             </div>
@@ -159,19 +129,14 @@ const About = () => {
           <div className="text-center mb-20 animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <blockquote className="text-4xl md:text-5xl lg:text-6xl font-serif text-foreground italic leading-tight">
               "Everything I create begins<br />with a question:
-              <span className="block mt-4 text-transparent bg-clip-text gradient-mystic text-5xl md:text-6xl lg:text-7xl font-bold not-italic">
-                how does this feel?
-              </span>"
+              <span className="block mt-4 bg-clip-text gradient-mystic text-5xl md:text-6xl lg:text-7xl font-bold not-italic text-amber-50">How does this feel?</span>"
             </blockquote>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {directions.map((direction, index) => (
-              <Card 
-                key={direction.title}
-                className="group hover:shadow-elevated transition-smooth animate-in fade-in slide-in-from-bottom-8 duration-1000 border-0 bg-card/80 backdrop-blur-sm hover:-translate-y-2"
-                style={{ animationDelay: `${index * 150}ms` }}
-              >
+            {directions.map((direction, index) => <Card key={direction.title} className="group hover:shadow-elevated transition-smooth animate-in fade-in slide-in-from-bottom-8 duration-1000 border-0 bg-card/80 backdrop-blur-sm hover:-translate-y-2" style={{
+            animationDelay: `${index * 150}ms`
+          }}>
                 <CardContent className="p-8 text-center relative overflow-hidden">
                   <div className="absolute inset-0 gradient-ethereal opacity-0 group-hover:opacity-100 transition-smooth" />
                   <div className="relative z-10">
@@ -186,8 +151,7 @@ const About = () => {
                     </p>
                   </div>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </div>
       </section>
@@ -200,12 +164,9 @@ const About = () => {
           </h2>
           
           <div className="grid md:grid-cols-3 gap-8">
-            {values.map((value, index) => (
-              <div 
-                key={value.title}
-                className="text-center space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
+            {values.map((value, index) => <div key={value.title} className="text-center space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700" style={{
+            animationDelay: `${index * 100}ms`
+          }}>
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
                   <value.icon className="w-8 h-8 text-primary" />
                 </div>
@@ -215,8 +176,7 @@ const About = () => {
                 <p className="text-muted-foreground leading-relaxed">
                   {value.description}
                 </p>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
       </section>
@@ -234,12 +194,9 @@ const About = () => {
             {/* Connection line with gradient */}
             <div className="hidden md:block absolute top-24 left-16 right-16 h-1 gradient-mystic rounded-full opacity-30" />
             
-            {process.map((step, index) => (
-              <div 
-                key={step.title}
-                className="relative animate-in fade-in slide-in-from-bottom-8 duration-1000 group"
-                style={{ animationDelay: `${index * 150}ms` }}
-              >
+            {process.map((step, index) => <div key={step.title} className="relative animate-in fade-in slide-in-from-bottom-8 duration-1000 group" style={{
+            animationDelay: `${index * 150}ms`
+          }}>
                 <div className="text-center space-y-6">
                   <div className="relative inline-flex">
                     <div className="absolute inset-0 gradient-mystic blur-xl opacity-0 group-hover:opacity-50 transition-smooth" />
@@ -256,8 +213,7 @@ const About = () => {
                     {step.description}
                   </p>
                 </div>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
       </section>
@@ -273,15 +229,10 @@ const About = () => {
           </p>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {offerings.map((offering, index) => (
-              <Link
-                key={offering.title}
-                to={`/gallery?category=${offering.category}`}
-                className="group"
-              >
-                <Card className="h-full hover:shadow-elevated transition-smooth animate-in fade-in slide-in-from-bottom-4 duration-700"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
+            {offerings.map((offering, index) => <Link key={offering.title} to={`/gallery?category=${offering.category}`} className="group">
+                <Card className="h-full hover:shadow-elevated transition-smooth animate-in fade-in slide-in-from-bottom-4 duration-700" style={{
+              animationDelay: `${index * 100}ms`
+            }}>
                   <CardContent className="p-6">
                     <h3 className="text-xl font-serif font-semibold mb-2 group-hover:text-primary transition-smooth">
                       {offering.title}
@@ -291,8 +242,7 @@ const About = () => {
                     </p>
                   </CardContent>
                 </Card>
-              </Link>
-            ))}
+              </Link>)}
           </div>
         </div>
       </section>
@@ -329,8 +279,6 @@ const About = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default About;
