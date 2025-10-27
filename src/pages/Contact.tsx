@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import forestHero from "@/assets/forest-hero.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -59,18 +60,29 @@ const Contact = () => {
   return <div className="min-h-screen">
       <Navigation />
       
-      <div className="pt-32 pb-24">
+      {/* Hero Section (same as Gallery) */}
+      <section className="relative h-[50vh] flex items-center justify-center overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${forestHero})` }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background" />
+
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="max-w-4xl mx-auto text-center space-y-4">
+            <h1 className="text-6xl font-serif text-foreground">
+              Get in Touch
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Let's create something beautiful together. Reach out to discuss your project ideas.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div className="py-16">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-16 space-y-4">
-              <h1 className="text-6xl font-serif text-foreground">
-                Get in Touch
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Let's create something beautiful together. 
-                Reach out to discuss your project ideas.
-              </p>
-            </div>
 
             <div className="grid md:grid-cols-2 gap-12">
               <div className="space-y-8">
