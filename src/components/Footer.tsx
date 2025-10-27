@@ -2,7 +2,7 @@ import { Instagram, Facebook, Linkedin, Mail, Youtube } from "lucide-react";
 import { Link } from "react-router-dom";
 const Footer = () => {
   return <footer className="border-t bg-muted/50 backdrop-blur-sm">
-      <div className="container mx-auto px-6 py-12">
+      <div className="container mx-auto px-6 py-4">
         <div className="grid md:grid-cols-2 gap-8">
           {/* About */}
           <div className="space-y-4">
@@ -30,7 +30,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
+        <div className="pt-4 mt-4 border-t text-center text-sm text-muted-foreground">
           <p>&copy; {new Date().getFullYear()} Feya Bloom Studio. All rights reserved.</p>
         </div>
       </div>

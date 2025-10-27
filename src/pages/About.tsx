@@ -4,38 +4,40 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import heroImage from "@/assets/mood-aurora.png";
-import { Palette, Sparkles, Lightbulb, Heart, Compass, Layers, Home } from "lucide-react";
+import { Palette, Sparkles, Lightbulb, Heart, Hand, Brain, Home, LeafyGreen} from "lucide-react";
 const About = () => {
   const directions = [{
     icon: Palette,
-    title: "Original Art",
-    description: "Paintings & Sculptures"
-  }, {
-    icon: Sparkles,
-    title: "Wearable Art",
-    description: "Artisan pieces with emotional depth"
+    title: "Visual Storytelling",
+    description: "Painting, Sculpture & wearables"
   }, {
     icon: Lightbulb,
-    title: "Digital Tools",
-    description: "ADHD-friendly systems for creative entrepreneurs"
+    title: "Functional Design",
+    description: "ADHD-friendly systems"
   }, {
-    icon: Heart,
+    icon: Sparkles,
     title: "Ancestral Wisdom",
     description: "Wellness practices & timeless knowledge"
   }];
+
   const values = [{
-    icon: Compass,
-    title: "Purpose",
-    description: "Every piece serves a purpose, blending intuition with intentional design"
+    icon: Hand,
+    title: "No bullshit",
+    description: "I don't make things just to make things. If it doesn't serve a purpose or bring beauty—it doesn't leave my studio."
   }, {
-    icon: Layers,
-    title: "Harmony",
-    description: "Visual beauty meets tangible usefulness"
+    icon: LeafyGreen,
+    title: "Rooted in tradition",
+    description: "My passion about nature shows up in everything—from the herbs I write about to the colors I choose."
+  }, {
+    icon: Brain,
+    title: "Built for neurodivergent minds",
+    description: "Because I have one. My tools aren't just pretty — they actually work."
   }, {
     icon: Heart,
-    title: "Authenticity",
-    description: "Custom creations that become extensions of your authentic self"
+    title: "Handmade with intention",
+    description: "Every piece, whether digital or physical, carries intention. No mass production. No templates."
   }];
+   
   const process = [{
     step: "01",
     title: "Feel",
@@ -94,10 +96,10 @@ const About = () => {
                 <div className="h-1 w-32 gradient-mystic rounded-full" />
               </div>
               <h2 className="text-3xl md:text-4xl font-serif text-foreground leading-tight">
-                Multidisciplinary Artist & Designer
+                I'm a Multidisciplinary Artist
               </h2>
               <p className="text-xl text-muted-foreground leading-relaxed">
-                Creating handmade art, functional tools, and meaningful objects for those seeking beauty with purpose.
+                crafting art pieces, functional tools, and meaningful objects for those seeking beauty with purpose.
               </p>
               <div className="flex gap-4 pt-4">
                 <Button asChild size="lg" className="shadow-elevated hover:shadow-soft transition-smooth">
@@ -127,13 +129,34 @@ const About = () => {
         
         <div className="container mx-auto max-w-6xl relative z-10">
           <div className="text-center mb-20 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-            <blockquote className="text-4xl md:text-5xl lg:text-6xl font-serif text-foreground italic leading-tight">
-              "Everything I create begins<br />with a question:
-              <span className="block mt-4 bg-clip-text gradient-mystic text-5xl md:text-6xl lg:text-7xl font-bold not-italic text-amber-50">How does this feel?</span>"
-            </blockquote>
+          <h2 className="text-4xl font-serif font-bold text-center mb-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
+How I Got Here
+              </h2>
+              <p className="text-xl text-muted-foreground leading-relaxed ">
+I didn't set out to become a multidisciplinary creator.
+I just kept following what felt true.
+</p>
+<p className="text-xl text-muted-foreground leading-relaxed">
+One project led to another: paintings turned into wearable art,
+personal struggles with focus became ADHD-friendly tools,
+curiosity about local herbs grew into a book about Catalan 
+nature-related traditions.
+</p>
+<span className="block mt-4 bg-clip-text gradient-mystic text-5xl md:text-6xl lg:text-7xl font-bold not-italic text-amber-50">People asked: "What do you actually do?"</span>
+<p className="text-xl text-muted-foreground leading-relaxed py-10">
+I make things that help people live more intentionally—
+whether it's a planner that works for your brain,
+a piece of art that makes you stop and feel,
+or knowledge that connects you to something older than us.
+<br/><br/> Barcelona taught me that beauty and function aren't opposites.
+They're dance partners.
+</p>
+<p className="text-xl text-muted-foreground leading-relaxed">
+My work lives at the intersection of:
+              </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {directions.map((direction, index) => <Card key={direction.title} className="group hover:shadow-elevated transition-smooth animate-in fade-in slide-in-from-bottom-8 duration-1000 border-0 bg-card/80 backdrop-blur-sm hover:-translate-y-2" style={{
             animationDelay: `${index * 150}ms`
           }}>
@@ -160,10 +183,10 @@ const About = () => {
       <section className="py-20 px-6">
         <div className="container mx-auto max-w-6xl">
           <h2 className="text-4xl font-serif font-bold text-center mb-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            What Drives Me
+What Makes My Work Different
           </h2>
           
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-4 gap-8">
             {values.map((value, index) => <div key={value.title} className="text-center space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700" style={{
             animationDelay: `${index * 100}ms`
           }}>

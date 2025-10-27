@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -105,8 +106,8 @@ const Contact = () => {
                   </p>
                   <p className="text-muted-foreground">
                     Whether you have a clear vision or just the seed of an idea, 
-                    we're here to help bring your project to life with creativity, 
-                    functionality, and beauty.
+                    I'm here to help bring your project to life
+                    with functionality, meaning and beauty.
                   </p>
                 </div>
               </div>
@@ -141,6 +142,7 @@ const Contact = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>;
 };
 export default Contact;

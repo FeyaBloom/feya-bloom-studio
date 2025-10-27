@@ -49,7 +49,9 @@ const Home = () => {
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-5xl font-serif text-center mb-12 text-white">
-              What guides my work
+              Everything I create begins with a question: 
+                            <span className="block mt-4 bg-clip-text gradient-mystic text-5xl md:text-6xl lg:text-7xl font-bold not-italic text-amber-50">How does this feel?</span>
+              So what guides my work:
             </h2>
             <div className="grid md:grid-cols-3 gap-8">
   <div className="text-center space-y-4 p-8 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-elevated hover:shadow-[0_20px_50px_rgba(168,85,247,0.4)] transition-smooth hover:scale-105 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
@@ -89,7 +91,7 @@ const Home = () => {
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-3xl mx-auto text-center space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <h2 className="text-5xl md:text-6xl font-serif text-secondary drop-shadow-lg">
-              Have in mind some ideas?
+              Have an idea in mind?
             </h2>
             <p className="text-xl text-secondary ">
               Let's create something extraordinary together. Reach out today to start our journey! 

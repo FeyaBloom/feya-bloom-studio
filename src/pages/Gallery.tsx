@@ -3,8 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import ProjectCard from "@/components/ProjectCard";
+import Footer from "@/components/Footer";
 import { Project } from "@/types/project";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import forestHero from "@/assets/forest-hero.png";
 
 const Gallery = () => {
   const [activeCategory, setActiveCategory] = useState<string>("All");
@@ -44,9 +46,14 @@ const Gallery = () => {
   return (
     <div className="min-h-screen">
       <Navigation />
-      
-      <div className="pt-32 pb-24">
-        <div className="container mx-auto px-6">
+      <div className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+       <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${forestHero})` }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-muted" />
+        
+        <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12 space-y-4">
               <h1 className="text-6xl font-serif text-foreground">
@@ -97,6 +104,7 @@ const Gallery = () => {
           </div>
         </div>
       </div>
+            <Footer />
     </div>
   );
 };
