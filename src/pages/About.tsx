@@ -15,6 +15,7 @@ import {
   Home,
   LeafyGreen,
   Coffee,
+  Moon,
   Music,
   BookOpen,
   Brush,
@@ -79,19 +80,19 @@ const About: React.FC = () => {
   ];
 
   const beliefs = [
-    "Beauty should be functional",
-    "Systems should support neurodivergence, not fight it",
-    "Ancestral wisdom isn't 'woo-woo'—it's survival knowledge",
-    "Art is for everyone, not just galleries",
-    "What we surround ourselves with matters",
-  ];
+  { text: 'Keeping things functional', rotation: -3, scale: 1.1 },
+  { text: 'Systems should support users', rotation: 2, scale: 1 },
+  { text: 'Accessible design is not "extra work"', rotation: -5, scale: 1.2 },
+  { text: 'AI is the spotlight, not the guidance', rotation: 4, scale: 0.9 },
+  { text: 'What we surround ourselves with matters', rotation: -1, scale: 1.1 },
+];
 
   const funFactsArr: Fact[] = [
     {
       icon: Coffee,
       text: "Herbal tea addict (it's basically my personality now)",
       backText: "It's a hot bean water ritual.",
-      initialPos: { y: -20, x: -100 },
+      initialPos: { y: -60, x: -150 },
     },
     {
       icon: Music as unknown as React.ComponentType<any>,
@@ -99,13 +100,13 @@ const About: React.FC = () => {
       // (if you have Music imported elsewhere, replace this cast with the real icon)
       text: "Night owl pretending to be a morning person",
       backText: "My best ideas arrive after midnight.",
-      initialPos: { y: 20, x: 100 },
+      initialPos: { y: 70, x: 100 },
     },
     {
       icon: BookOpen,
       text: "Can't pass a craft store without buying at least one thing",
       backText: "My yarn collection is getting out of hand.",
-      initialPos: { y: -30, x: 120 },
+      initialPos: { y: -30, x: 150 },
     },
     {
       icon: Globe,
@@ -188,18 +189,19 @@ const About: React.FC = () => {
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div className="space-y-8 font-quicksand">
               <div className="inline-block">
-                <h1 className="text-6xl md:text-7xl lg:text-8xl font-lavishly hero-title mb-4">
+                <h1 className="text-7xl md:text-8xl font-script text-primary mb-4 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+               {/*<h1 className="text-6xl md:text-7xl lg:text-8xl font-script hero-title mb-4">*/}
                   Hi there, I'm Feya
                 </h1>
                 <div className="h-1 w-32 gradient-feya rounded-full" />
               </div>
 
-              <p className="text-2xl font-cormorant leading-relaxed text-lead">
+              <p className="text-2xl font-serif leading-relaxed text-lead">
                 I create for minds that won't fit the mold—
                 <br />and hearts that refuse to settle.
               </p>
 
-              <p className="text-lg leading-relaxed text-subtle">
+              <p className="text-lg leading-relaxed font-body text-muted-foreground">
                 Working from Barcelona, where I blend art, function,
                 and timeless wisdom into things that actually matter.
               </p>
@@ -315,52 +317,86 @@ const About: React.FC = () => {
       </section>
 
       {/* What I Believe */}
-      <section className="py-20 px-6 bg-white">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="text-5xl font-cormorant font-bold text-center mb-16 text-azul">What I Stand For</h2>
 
-          <div className="space-y-6">
-            {beliefs.map((belief, index) => (
-              <div 
-                key={index}
-                className="flex items-start gap-4 p-6 rounded-xl transition-all duration-300"
-              >
-                <div className="mt-1">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M5 13l4 4L19 7" stroke="#8BA888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-                <p className="text-lg font-quicksand">{belief}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+const WhatIStandFor = () => {
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
+  return (
+    <section ref={ref} className="py-24 px-6">
+      <div className="max-w-4xl mx-auto">
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          className="text-4xl md:text-5xl font-bold text-center gradient-text mb-20"
+        >
+          What I Stand For
+        </motion.h2>
+
+        <motion.div 
+          className="relative flex flex-wrap justify-center items-center gap-4 md:gap-8"
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          variants={{
+            visible: {
+              transition: {
+                staggerChildren: 0.2,
+              }
+            }
+          }}
+        >
+          {beliefs.map((value, index) => (
+            <motion.div
+              key={index}
+              variants={{
+                hidden: { opacity: 0, scale: 0.5, y: 50 },
+                visible: { opacity: 1, scale: value.scale, y: 0, rotate: value.rotation }
+              }}
+              transition={{ type: 'spring', damping: 12, stiffness: 100 }}
+              whileHover={{ scale: value.scale * 1.1, rotate: value.rotation + 2, zIndex: 10 }}
+              className="glass-card rounded-2xl p-6 shadow-xl cursor-default"
+            >
+              <p className="text-lg md:text-xl font-semibold text-gray-800 text-center">
+                {value.text}
+              </p>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
 
       {/* --- Fun Facts: replaced with interactive RandomThings-like structure --- */}
-      <section className="py-20 px-6 relative overflow-hidden bg-neutral-100">
+      <section className="pt-20 px-6 relative overflow-hidden bg-neutral-100">
         <div className="container mx-auto max-w-6xl">
           <FunFactsSection facts={funFactsArr} />
         </div>
       </section>
 
       {/* What I Create: Carousel section (structure only, styling via globals) */}
-      <section ref={ref} className="py-20 px-6 bg-white overflow-hidden">
+      <section ref={ref} className="pt-20 px-6 bg-white overflow-hidden">
         <div className="container mx-auto max-w-6xl">
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            className="text-5xl font-cormorant font-bold text-center mb-8"
+            className="text-5xl font-serif text-primary font-bold text-center mb-8"
           >
             What I Create
           </motion.h2>
-          <p className="text-center font-quicksand mb-12">Each piece blends intuition with intentional design, beauty with usefulness</p>
+                     
+            <p className="text-2xl md:text-2xl text-primary">        
+            Each piece blends intuition with intentional design, beauty with usefulness
+            </p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.15 }}
-            className="relative"
+            className="relative py-20"
           >
             <div className="overflow-hidden" ref={emblaRef}>
               <div className="flex">
@@ -371,19 +407,19 @@ const About: React.FC = () => {
                     <div key={item.title} className="flex-shrink-0 flex-grow-0 basis-full md:basis-1/3 lg:basis-1/4 px-4">
                       <motion.div
                         animate={{
-                          scale: isSelected ? 1 : 0.92,
+                          scale: isSelected ? 1 : 0.8,
                           opacity: isSelected ? 1 : 0.7,
                         }}
                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
                         className="card-surface rounded-3xl p-8 h-full flex flex-col items-center text-center"
                       >
                         <div className="relative mb-6">
-                          <div className="w-16 h-16 icon-bg rounded-2xl flex items-center justify-center">
+                          <div className="w-16 h-16 gradient-feya rounded-2xl flex items-center justify-center">
                             <Icon className="w-8 h-8 text-white" />
                           </div>
                         </div>
-                        <h3 className="text-xl font-cormorant font-semibold mb-2">{item.title}</h3>
-                        <p className="text-sm flex-grow font-quicksand">{item.description}</p>
+                        <h3 className="text-4xl font-serif font-semibold mb-2">{item.title}</h3>
+                        <p className="text-xl flex-grow font-body">{item.description}</p>
                       </motion.div>
                     </div>
                   );
@@ -412,26 +448,26 @@ const About: React.FC = () => {
         <div className="container mx-auto max-w-5xl relative z-10">
           <div className="bg-white/90 backdrop-blur-xl rounded-3xl p-12 md:p-16 shadow-2xl">
             <div className="text-center space-y-8">
-              <Home className="w-16 h-16 mx-auto" />
+              <Home className="w-16 h-16 mx-auto text-secondary" />
 
-              <h2 className="text-4xl md:text-5xl font-cormorant font-bold leading-tight">
+              <h2 className="text-4xl md:text-5xl font-serif text-secondary font-bold leading-tight">
                 Ready to bring something
                 <br />
-                <span className="text-gradient-feya font-lavishly text-6xl">meaningful</span>
+                <span className="text-gradient-feya font-script text-6xl px-5"> meaningful </span>
                 <br />
                 into your world?
               </h2>
 
-              <p className="text-xl font-quicksand max-w-2xl mx-auto leading-relaxed">
+              <p className="text-xl font-body max-w-2xl mx-auto leading-relaxed text-secondary">
                 What we surround ourselves with shapes our daily experience. 
                 My work invites you to feel genuinely seen and supported.
               </p>
 
               <div className="flex flex-wrap gap-6 justify-center pt-6">
-                <Button asChild size="lg" className="text-lg px-8 py-6 btn-primary font-quicksand">
+                <Button asChild size="lg" className="gap-2 shadow-soft hover:shadow-elevated transition-smooth">
                   <Link to="/contact">Get in Touch</Link>
-                </Button>
-                <Button asChild variant="outline" size="lg" className="text-lg px-8 py-6 btn-outline font-quicksand">
+                </Button>              
+                <Button asChild variant="outline" size="lg">
                   <Link to="/gallery">View Gallery</Link>
                 </Button>
               </div>
@@ -453,19 +489,20 @@ const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
   return (
     <section ref={ref} className="relative">
       <div className="text-center mb-8">
-        <motion.h2 initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} className="text-5xl font-cormorant font-bold mb-4">
+        <motion.h2 initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} className="text-5xl font-serif text-accent font-bold mb-4">
           Random Things About Me
         </motion.h2>
-        <p className="text-subtle">because we're all human</p>
+        <p className="text-accent text-3xl md:text-2xl font-body">because we're all 27% weird</p>
       </div>
 
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.08 }} className="flex justify-center mb-8">
-        <Button onClick={() => setIsRevealed((s) => !s)} className="btn-primary">
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.08 }} className="flex justify-center mb-8">                       
+        <Button onClick={() => setIsRevealed(!isRevealed)} size="lg" className="gap-2 shadow-soft hover:shadow-elevated transition-smooth bg-accent">
+
           {isRevealed ? "Hide them!" : "Take a look"}
         </Button>
       </motion.div>
 
-      <div className="relative h-[420px]">
+      <div className="relative h-[400px] w-full flex items-center justify-center">
         {facts.map((fact, i) => (
           <FactCard key={i} fact={fact} index={i} inView={inView} isRevealed={isRevealed} />
         ))}
@@ -486,14 +523,14 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
       animate={
         inView
           ? {
-              opacity: 1,
+              opacity: 0.9,
               scale: 1,
               x: isRevealed ? fact.initialPos.x : 0,
               y: isRevealed ? fact.initialPos.y : 0,
             }
           : {}
       }
-      transition={{ type: "spring", stiffness: 60, damping: 12, delay: index * 0.06 }}
+      transition={{ type: "spring", stiffness: 90, damping: 12, delay: index * 0.06 }}
       onClick={(e) => {
         e.stopPropagation();
         setIsFlipped((s) => !s);
@@ -511,22 +548,21 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
         {/* Front */}
         <div className="absolute w-full h-full" style={{ backfaceVisibility: "hidden" as const }}>
           <div className="glass-card rounded-2xl p-4 h-full flex items-center gap-4 shadow-sm">
-            <div className="w-12 h-12 icon-bg rounded-xl flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 gradient-mystic rounded-xl flex items-center justify-center flex-shrink-0">
               <Icon className="w-6 h-6 text-white" />
             </div>
-            <p className="text-gray-700 text-sm font-quicksand">{fact.text}</p>
+            <p className="text-gray-700 text-sm font-body">{fact.text}</p>
           </div>
         </div>
 
         {/* Back */}
         <div className="absolute w-full h-full" style={{ backfaceVisibility: "hidden" as const, transform: "rotateY(180deg)" }}>
-          <div className="glass-card rounded-2xl p-4 h-full flex items-center justify-center bg-gradient-to-br from-purple-400 to-pink-400">
-            <p className="text-white font-semibold text-center text-md font-quicksand">{fact.backText}</p>
+          <div className = "rounded-2xl p-4 h-full flex items-center justify-center gradient-mystic">
+            <p className="text-white font-semibold text-center text-md font-body">{fact.backText}</p>
           </div>
         </div>
       </motion.div>
     </motion.div>
   );
 };
-
 export default About;
