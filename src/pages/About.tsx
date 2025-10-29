@@ -256,50 +256,54 @@ const About: React.FC = () => {
       <Navigation />
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-32 px-6 overflow-hidden bg-hero-soft">
+      
+      <section className="relative pt-32 pb-32 px-6 overflow-hidden" style={{
+      backgroundColor: '#F5F0E8'
+    }}>
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-accent-1 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent-2 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-violeta rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-sage rounded-full blur-3xl animate-pulse" style={{
+          animationDelay: '1s'
+        }} />
         </div>
 
         <div className="container mx-auto max-w-6xl relative z-10">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div className="space-y-8 font-quicksand">
               <div className="inline-block">
-                <h1 className="text-7xl md:text-8xl font-script text-primary mb-4 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-                  Hi there, I'm Feya
-                </h1>
+                <h1 className="text-6xl md:text-7xl lg:text-8xl font-lavishly text-violeta mb-4">Hi there!I'm Feya
+              </h1>
                 <div className="h-1 w-32 gradient-feya rounded-full" />
               </div>
-
-              <p className="text-2xl font-serif leading-relaxed text-lead">
+              
+              <p className="text-2xl font-cormorant leading-relaxed" style={{
+              color: '#3D3935'
+            }}>
                 I create for minds that won't fit the mold—
                 <br />and hearts that refuse to settle.
               </p>
-
-              <p className="text-lg leading-relaxed font-body text-muted-foreground">
-                Working from Barcelona, where I blend art, function,
+              
+              <p className="text-lg leading-relaxed" style={{
+              color: '#8B8680'
+            }}>
+Working from Barcelona, where I blend art, function, 
                 and timeless wisdom into things that actually matter.
               </p>
-
+              
               <div className="flex gap-4 pt-4">
-                <Button asChild size="lg" className="btn-primary shadow-lg font-quicksand">
+                <Button asChild size="lg" className="bg-violeta hover:bg-opacity-90 shadow-lg font-quicksand">
                   <Link to="/contact">Start a Project</Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="btn-outline font-quicksand">
+                <Button asChild variant="outline" size="lg" className="border-2 border-violeta text-violeta hover:bg-violeta hover:text-white font-quicksand">
                   <Link to="/gallery">View Work</Link>
                 </Button>
               </div>
             </div>
 
             <div className="relative animate-float">
-              <div className="absolute -inset-4 gradient-feya-bg opacity-20 blur-2xl rounded-3xl" />
+              <div className="absolute -inset-4 gradient-feya opacity-20 blur-2xl rounded-3xl" />
               <div className="relative rounded-3xl overflow-hidden shadow-2xl hover-lift group">
-                <img 
-                  src={heroImage} 
-                  alt="Feya Bloom Studio" 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
-                />
+                <img src={heroImage} alt="Feya Bloom Studio" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               </div>
             </div>
           </div>
