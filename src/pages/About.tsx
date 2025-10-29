@@ -368,6 +368,68 @@ const About: React.FC = () => {
         </div>
       </section>
 
+    {/* What I Create: Carousel section */}
+      <section ref={ref} className="pt-20 px-6 bg-white overflow-hidden">
+        <div className="container mx-auto max-w-6xl">
+          <motion.h2
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            className="text-5xl font-serif text-primary font-bold text-center mb-8"
+          >
+            What I Create
+          </motion.h2>
+                     
+          <p className="text-2xl md:text-2xl text-primary text-center mb-8">        
+            Each piece blends intuition with intentional design, beauty with usefulness
+          </p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.15 }}
+            className="relative py-20"
+          >
+            <div className="overflow-hidden" ref={emblaRef}>
+              <div className="flex">
+                {creations.map((item, index) => {
+                  const Icon = item.icon;
+                  const isSelected = index === selectedIndex;
+                  return (
+                    <div key={item.title} className="flex-shrink-0 flex-grow-0 basis-full md:basis-1/3 lg:basis-1/4 px-4">
+                      <motion.div
+                        animate={{
+                          scale: isSelected ? 1 : 0.8,
+                          opacity: isSelected ? 1 : 0.7,
+                        }}
+                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                        className="card-surface rounded-3xl p-8 h-full flex flex-col items-center text-center"
+                      >
+                        <div className="relative mb-6">
+                          <div className="w-16 h-16 gradient-feya rounded-2xl flex items-center justify-center">
+                            <Icon className="w-8 h-8 text-white" />
+                          </div>
+                        </div>
+                        <h3 className="text-4xl font-serif font-semibold mb-2">{item.title}</h3>
+                        <p className="text-xl flex-grow font-body">{item.description}</p>
+                      </motion.div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="absolute top-1/2 -translate-y-1/2 flex justify-between w-full px-0">
+              <button onClick={scrollPrev} className="carousel-nav">
+                <ArrowLeft />
+              </button>
+              <button onClick={scrollNext} className="carousel-nav">
+                <ArrowRight />
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* What Makes My Work Different */}
       <section className="py-20 px-6 bg-neutral-50">
         <div className="container mx-auto max-w-6xl">
@@ -442,67 +504,7 @@ const About: React.FC = () => {
         </div>
       </section>
 
-      {/* What I Create: Carousel section */}
-      <section ref={ref} className="pt-20 px-6 bg-white overflow-hidden">
-        <div className="container mx-auto max-w-6xl">
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            className="text-5xl font-serif text-primary font-bold text-center mb-8"
-          >
-            What I Create
-          </motion.h2>
-                     
-          <p className="text-2xl md:text-2xl text-primary text-center mb-8">        
-            Each piece blends intuition with intentional design, beauty with usefulness
-          </p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.15 }}
-            className="relative py-20"
-          >
-            <div className="overflow-hidden" ref={emblaRef}>
-              <div className="flex">
-                {creations.map((item, index) => {
-                  const Icon = item.icon;
-                  const isSelected = index === selectedIndex;
-                  return (
-                    <div key={item.title} className="flex-shrink-0 flex-grow-0 basis-full md:basis-1/3 lg:basis-1/4 px-4">
-                      <motion.div
-                        animate={{
-                          scale: isSelected ? 1 : 0.8,
-                          opacity: isSelected ? 1 : 0.7,
-                        }}
-                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                        className="card-surface rounded-3xl p-8 h-full flex flex-col items-center text-center"
-                      >
-                        <div className="relative mb-6">
-                          <div className="w-16 h-16 gradient-feya rounded-2xl flex items-center justify-center">
-                            <Icon className="w-8 h-8 text-white" />
-                          </div>
-                        </div>
-                        <h3 className="text-4xl font-serif font-semibold mb-2">{item.title}</h3>
-                        <p className="text-xl flex-grow font-body">{item.description}</p>
-                      </motion.div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="absolute top-1/2 -translate-y-1/2 flex justify-between w-full px-0">
-              <button onClick={scrollPrev} className="carousel-nav">
-                <ArrowLeft />
-              </button>
-              <button onClick={scrollNext} className="carousel-nav">
-                <ArrowRight />
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+  
 
       {/* Call to Action */}
       <section className="relative py-32 px-6 overflow-hidden gradient-feya">
