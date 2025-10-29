@@ -35,6 +35,87 @@ type Fact = {
   initialPos: { x: number; y: number };
 };
 
+/* FunFactsSection + FactCard components */
+const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.18 });
+  const [isRevealed, setIsRevealed] = useState(false);
+
+  return (
+    <section ref={ref} className="relative">
+      <div className="text-center mb-8">
+        <motion.h2 initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} className="text-5xl font-serif text-accent font-bold mb-4">
+          Random Things About Me
+        </motion.h2>
+        <p className="text-accent text-3xl md:text-2xl font-body">because we're all 27% weird</p>
+      </div>
+
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.08 }} className="flex justify-center mb-8">                       
+        <Button onClick={() => setIsRevealed(!isRevealed)} size="lg" className="gap-2 shadow-soft hover:shadow-elevated transition-smooth bg-accent">
+          {isRevealed ? "Hide them!" : "Take a look"}
+        </Button>
+      </motion.div>
+
+      <div className="relative h-[400px] w-full flex items-center justify-center">
+        {facts.map((fact, i) => (
+          <FactCard key={i} fact={fact} index={i} inView={inView} isRevealed={isRevealed} />
+        ))}
+      </div>
+    </section>
+  );
+};
+
+const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isRevealed: boolean }> = ({ fact, index, inView, isRevealed }) => {
+  const [isFlipped, setIsFlipped] = useState(false);
+  const Icon = fact.icon;
+
+  return (
+    <motion.div
+      className="absolute cursor-pointer"
+      style={{ perspective: 1000 }}
+      initial={{ opacity: 0, scale: 0.9, x: 0, y: 0 }}
+      animate={
+        inView
+          ? {
+              opacity: 0.9,
+              scale: 1,
+              x: isRevealed ? fact.initialPos.x : 0,
+              y: isRevealed ? fact.initialPos.y : 0,
+            }
+          : {}
+      }
+      transition={{ type: "spring", stiffness: 90, damping: 12, delay: index * 0.06 }}
+      onClick={(e) => {
+        e.stopPropagation();
+        setIsFlipped((s) => !s);
+      }}
+    >
+      <motion.div
+        className="relative w-64 h-36"
+        style={{ transformStyle: "preserve-3d" as const }}
+        animate={{ rotateY: isFlipped ? 180 : 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        {/* Front */}
+        <div className="absolute w-full h-full" style={{ backfaceVisibility: "hidden" as const }}>
+          <div className="glass-card rounded-2xl p-4 h-full flex items-center gap-4 shadow-sm">
+            <div className="w-12 h-12 gradient-mystic rounded-xl flex items-center justify-center flex-shrink-0">
+              <Icon className="w-6 h-6 text-white" />
+            </div>
+            <p className="text-gray-700 text-sm font-body">{fact.text}</p>
+          </div>
+        </div>
+
+        {/* Back */}
+        <div className="absolute w-full h-full" style={{ backfaceVisibility: "hidden" as const, transform: "rotateY(180deg)" }}>
+          <div className="rounded-2xl p-4 h-full flex items-center justify-center gradient-mystic">
+            <p className="text-white font-semibold text-center text-md font-body">{fact.backText}</p>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 const About: React.FC = () => {
   const directions = [
     {
@@ -465,83 +546,4 @@ const About: React.FC = () => {
   );
 };
 
-/* FunFactsSection + FactCard components */
-const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.18 });
-  const [isRevealed, setIsRevealed] = useState(false);
-
-  return (
-    <section ref={ref} className="relative">
-      <div className="text-center mb-8">
-        <motion.h2 initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} className="text-5xl font-serif text-accent font-bold mb-4">
-          Random Things About Me
-        </motion.h2>
-        <p className="text-accent text-3xl md:text-2xl font-body">because we're all 27% weird</p>
-      </div>
-
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.08 }} className="flex justify-center mb-8">                       
-        <Button onClick={() => setIsRevealed(!isRevealed)} size="lg" className="gap-2 shadow-soft hover:shadow-elevated transition-smooth bg-accent">
-          {isRevealed ? "Hide them!" : "Take a look"}
-        </Button>
-      </motion.div>
-
-      <div className="relative h-[400px] w-full flex items-center justify-center">
-        {facts.map((fact, i) => (
-          <FactCard key={i} fact={fact} index={i} inView={inView} isRevealed={isRevealed} />
-        ))}
-      </div>
-    </section>
-  );
-};
-
-const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isRevealed: boolean }> = ({ fact, index, inView, isRevealed }) => {
-  const [isFlipped, setIsFlipped] = useState(false);
-  const Icon = fact.icon;
-
-  return (
-    <motion.div
-      className="absolute cursor-pointer"
-      style={{ perspective: 1000 }}
-      initial={{ opacity: 0, scale: 0.9, x: 0, y: 0 }}
-      animate={
-        inView
-          ? {
-              opacity: 0.9,
-              scale: 1,
-              x: isRevealed ? fact.initialPos.x : 0,
-              y: isRevealed ? fact.initialPos.y : 0,
-            }
-          : {}
-      }
-      transition={{ type: "spring", stiffness: 90, damping: 12, delay: index * 0.06 }}
-      onClick={(e) => {
-        e.stopPropagation();
-        setIsFlipped((s) => !s);
-      }}
-    >
-      <motion.div
-        className="relative w-64 h-36"
-        style={{ transformStyle: "preserve-3d" as const }}
-        animate={{ rotateY: isFlipped ? 180 : 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        {/* Front */}
-        <div className="absolute w-full h-full" style={{ backfaceVisibility: "hidden" as const }}>
-          <div className="glass-card rounded-2xl p-4 h-full flex items-center gap-4 shadow-sm">
-            <div className="w-12 h-12 gradient-mystic rounded-xl flex items-center justify-center flex-shrink-0">
-              <Icon className="w-6 h-6 text-white" />
-            </div>
-            <p className="text-gray-700 text-sm font-body">{fact.text}</p>
-          </div>
-        </div>
-
-        {/* Back */}
-        <div className="absolute w-full h-full" style={{ backfaceVisibility: "hidden" as const, transform: "rotateY(180deg)" }}>
-          <div className="rounded-2xl p-4 h-full flex items-center justify-center gradient-mystic">
-            <p className="text-white font-semibold text-center text-md font-body">{fact.backText}</p>
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-};
+export default About;
