@@ -1,6 +1,8 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=Lavishly+Yours&display=swap');
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
@@ -105,17 +107,21 @@ All colors MUST be HSL.
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
 
   body {
-    @apply bg-background text-foreground font-body;
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: 'Quicksand', sans-serif;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif;
+    font-family: 'Cormorant Garamond', serif;
   }
 }
+
+/* ===== Additional project globals for carousel & RandomThings ===== */
 
 @layer utilities {
   .font-script {
@@ -153,4 +159,48 @@ All colors MUST be HSL.
   .transition-smooth {
     transition: var(--transition-smooth);
   }
+
+  /* visual helpers */
+  .text-violeta { color: #6B4FA3; }
+  .text-azul { color: #4A5F8C; }
+  .text-sage { color: #8BA888; }
+
+  .bg-violeta { background-color: #6B4FA3; }
+  .bg-azul { background-color: #4A5F8C; }
+  .bg-sage { background-color: #8BA888; }
+
+  .gradient-feya {
+    background: linear-gradient(135deg, #6B4FA3 0%, #4A5F8C 50%, #8BA888 100%);
+  }
+  .text-gradient-feya {
+    background: linear-gradient(135deg, #6B4FA3 0%, #4A5F8C 50%, #8BA888 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-feya-bg { background: linear-gradient(135deg, #6B4FA3 0%, #4A5F8C 50%, #8BA888 100%); }
+  .hover-lift { transition: transform .3s ease, box-shadow .3s ease; }
+  .hover-lift:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(107,79,163,0.2); }
+
+  .handwritten-underline { position: relative; display: inline-block; }
+  .handwritten-underline::after { content: ''; position: absolute; left: 0; bottom: -4px; width: 100%; height: 3px; background: linear-gradient(135deg, #6B4FA3 0%, #8BA888 100%); transform: scaleX(0); transform-origin: left; transition: transform .6s ease; }
+  .handwritten-underline:hover::after { transform: scaleX(1); }
+
+  /* cards, icons, glass surfaces */
+  .card-surface { background: rgba(255,255,255,0.8); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+  .glass-card { background: rgba(255,255,255,0.76); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+  .icon-bg { background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%); }
+  .back-face-bg { background: linear-gradient(135deg, #a78bfa 0%, #fb7185 100%); }
+
+  .carousel-nav { width: 48px; height: 48px; border-radius: 9999px; background: rgba(255,255,255,0.8); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; color: #6B4FA3; }
+
+  .btn-primary { background: linear-gradient(90deg,#7c3aed,#ec4899); color: #fff; font-weight: 700; padding: .6rem 1rem; border-radius: 9999px; box-shadow: 0 10px 30px rgba(124,58,237,0.12); transition: transform .15s ease; }
+  .btn-primary:hover { transform: scale(1.03); }
+
+  .btn-outline { border: 2px solid #6B4FA3; color: #6B4FA3; background: transparent; padding: .5rem .75rem; border-radius: 9999px; }
+
+  .hero-soft { background-color: #F5F0E8; }
+  .text-subtle { color: #8B8680; }
+  .text-lead { color: #3D3935; }
 }
