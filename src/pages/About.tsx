@@ -80,12 +80,12 @@ const About: React.FC = () => {
   ];
 
   const beliefs = [
-  { text: 'Keeping things functional', rotation: -3, scale: 1.1 },
-  { text: 'Systems should support users', rotation: 2, scale: 1 },
-  { text: 'Accessible design is not "extra work"', rotation: -5, scale: 1.2 },
-  { text: 'AI is the spotlight, not the guidance', rotation: 4, scale: 0.9 },
-  { text: 'What we surround ourselves with matters', rotation: -1, scale: 1.1 },
-];
+    { text: 'Keeping things functional', rotation: -3, scale: 1.1 },
+    { text: 'Systems should support users', rotation: 2, scale: 1 },
+    { text: 'Accessible design is not "extra work"', rotation: -5, scale: 1.2 },
+    { text: 'AI is the spotlight, not the guidance', rotation: 4, scale: 0.9 },
+    { text: 'What we surround ourselves with matters', rotation: -1, scale: 1.1 },
+  ];
 
   const funFactsArr: Fact[] = [
     {
@@ -95,9 +95,7 @@ const About: React.FC = () => {
       initialPos: { y: -60, x: -150 },
     },
     {
-      icon: Music as unknown as React.ComponentType<any>,
-      // Music isn't in the lucide set we imported here, so fall back to Moon as a visual placeholder
-      // (if you have Music imported elsewhere, replace this cast with the real icon)
+      icon: Music,
       text: "Night owl pretending to be a morning person",
       backText: "My best ideas arrive after midnight.",
       initialPos: { y: 70, x: 100 },
@@ -144,7 +142,6 @@ const About: React.FC = () => {
     },
   ];
 
-  // --- Carousel data & hooks (для секции "What I Create") ---
   const creations = [
     { icon: Code, title: "Art & Sculpture", description: "Digital and physical art pieces that spark joy" },
     { icon: Palette, title: "Wearable Art", description: "Fashion that tells a story" },
@@ -155,6 +152,7 @@ const About: React.FC = () => {
   ];
 
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [refBeliefs, inViewBeliefs] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "center" });
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -166,10 +164,8 @@ const About: React.FC = () => {
     if (!api) return;
     const onSelect = () => setSelectedIndex(api.selectedScrollSnap());
     api.on("select", onSelect);
-    // set initial
     onSelect();
     return () => {
-      // NO devolvemos el resultado de `off` — sólo lo llamamos
       api.off("select", onSelect);
     };
   }, [emblaApi]);
@@ -190,7 +186,6 @@ const About: React.FC = () => {
             <div className="space-y-8 font-quicksand">
               <div className="inline-block">
                 <h1 className="text-7xl md:text-8xl font-script text-primary mb-4 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-               {/*<h1 className="text-6xl md:text-7xl lg:text-8xl font-script hero-title mb-4">*/}
                   Hi there, I'm Feya
                 </h1>
                 <div className="h-1 w-32 gradient-feya rounded-full" />
@@ -316,68 +311,57 @@ const About: React.FC = () => {
         </div>
       </section>
 
-      {/* What I Believe */}
+      {/* What I Stand For */}
+      <section ref={refBeliefs} className="py-24 px-6">
+        <div className="max-w-4xl mx-auto">
+          <motion.h2
+            initial={{ opacity: 0, y: 30 }}
+            animate={inViewBeliefs ? { opacity: 1, y: 0 } : {}}
+            className="text-4xl md:text-5xl font-bold text-center gradient-text mb-20"
+          >
+            What I Stand For
+          </motion.h2>
 
-const WhatIStandFor = () => {
-  const { ref, inView } = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-
-  return (
-    <section ref={ref} className="py-24 px-6">
-      <div className="max-w-4xl mx-auto">
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          className="text-4xl md:text-5xl font-bold text-center gradient-text mb-20"
-        >
-          What I Stand For
-        </motion.h2>
-
-        <motion.div 
-          className="relative flex flex-wrap justify-center items-center gap-4 md:gap-8"
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          variants={{
-            visible: {
-              transition: {
-                staggerChildren: 0.2,
+          <motion.div 
+            className="relative flex flex-wrap justify-center items-center gap-4 md:gap-8"
+            initial="hidden"
+            animate={inViewBeliefs ? "visible" : "hidden"}
+            variants={{
+              visible: {
+                transition: {
+                  staggerChildren: 0.2,
+                }
               }
-            }
-          }}
-        >
-          {beliefs.map((value, index) => (
-            <motion.div
-              key={index}
-              variants={{
-                hidden: { opacity: 0, scale: 0.5, y: 50 },
-                visible: { opacity: 1, scale: value.scale, y: 0, rotate: value.rotation }
-              }}
-              transition={{ type: 'spring', damping: 12, stiffness: 100 }}
-              whileHover={{ scale: value.scale * 1.1, rotate: value.rotation + 2, zIndex: 10 }}
-              className="glass-card rounded-2xl p-6 shadow-xl cursor-default"
-            >
-              <p className="text-lg md:text-xl font-semibold text-gray-800 text-center">
-                {value.text}
-              </p>
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
-    </section>
-  );
-};
+            }}
+          >
+            {beliefs.map((value, index) => (
+              <motion.div
+                key={index}
+                variants={{
+                  hidden: { opacity: 0, scale: 0.5, y: 50 },
+                  visible: { opacity: 1, scale: value.scale, y: 0, rotate: value.rotation }
+                }}
+                transition={{ type: 'spring', damping: 12, stiffness: 100 }}
+                whileHover={{ scale: value.scale * 1.1, rotate: value.rotation + 2, zIndex: 10 }}
+                className="glass-card rounded-2xl p-6 shadow-xl cursor-default"
+              >
+                <p className="text-lg md:text-xl font-semibold text-gray-800 text-center">
+                  {value.text}
+                </p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
 
-
-      {/* --- Fun Facts: replaced with interactive RandomThings-like structure --- */}
+      {/* Fun Facts Section */}
       <section className="pt-20 px-6 relative overflow-hidden bg-neutral-100">
         <div className="container mx-auto max-w-6xl">
           <FunFactsSection facts={funFactsArr} />
         </div>
       </section>
 
-      {/* What I Create: Carousel section (structure only, styling via globals) */}
+      {/* What I Create: Carousel section */}
       <section ref={ref} className="pt-20 px-6 bg-white overflow-hidden">
         <div className="container mx-auto max-w-6xl">
           <motion.h2
@@ -388,9 +372,9 @@ const WhatIStandFor = () => {
             What I Create
           </motion.h2>
                      
-            <p className="text-2xl md:text-2xl text-primary">        
+          <p className="text-2xl md:text-2xl text-primary text-center mb-8">        
             Each piece blends intuition with intentional design, beauty with usefulness
-            </p>
+          </p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -481,7 +465,7 @@ const WhatIStandFor = () => {
   );
 };
 
-/* FunFactsSection + FactCard components (kept inside About.tsx to avoid adding new files) */
+/* FunFactsSection + FactCard components */
 const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.18 });
   const [isRevealed, setIsRevealed] = useState(false);
@@ -497,7 +481,6 @@ const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
 
       <motion.div initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.08 }} className="flex justify-center mb-8">                       
         <Button onClick={() => setIsRevealed(!isRevealed)} size="lg" className="gap-2 shadow-soft hover:shadow-elevated transition-smooth bg-accent">
-
           {isRevealed ? "Hide them!" : "Take a look"}
         </Button>
       </motion.div>
@@ -535,9 +518,6 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
         e.stopPropagation();
         setIsFlipped((s) => !s);
       }}
-      // spread out slightly so cards don't fully overlap
-      // allow their stacking order to match index
-      aria-hidden={false}
     >
       <motion.div
         className="relative w-64 h-36"
@@ -557,7 +537,7 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
 
         {/* Back */}
         <div className="absolute w-full h-full" style={{ backfaceVisibility: "hidden" as const, transform: "rotateY(180deg)" }}>
-          <div className = "rounded-2xl p-4 h-full flex items-center justify-center gradient-mystic">
+          <div className="rounded-2xl p-4 h-full flex items-center justify-center gradient-mystic">
             <p className="text-white font-semibold text-center text-md font-body">{fact.backText}</p>
           </div>
         </div>
@@ -565,4 +545,3 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
     </motion.div>
   );
 };
-export default About;
