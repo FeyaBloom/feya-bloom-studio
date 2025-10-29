@@ -1,0 +1,48 @@
+/** -- Added styles for carousel cards & fun facts -- */
+.card-surface {
+  @apply bg-white/80 backdrop-blur-md;
+}
+.icon-bg {
+  background: linear-gradient(135deg, #7c3aed, #ec4899); /* purple to pink */
+}
+.carousel-nav {
+  @apply w-12 h-12 rounded-full bg-white/80 backdrop-blur-sm shadow-lg flex items-center justify-center text-purple-600 hover:bg-white transition-colors duration-300;
+}
+.glass-card {
+  background: rgba(255,255,255,0.76);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.fact-card-wrapper {
+  /* allow stacking and pointer events */
+}
+.back-face-bg {
+  background: linear-gradient(135deg, #a78bfa 0%, #fb7185 100%);
+}
+.btn-primary {
+  @apply bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:scale-105 transition-transform;
+}
+.btn-outline {
+  @apply border-2 border-purple-600 text-purple-600 bg-transparent py-2 px-4 rounded-full;
+}
+.hero-soft {
+  background-color: #F5F0E8;
+}
+.gradient-feya-bg {
+  background: linear-gradient(135deg, #6B4FA3 0%, #4A5F8C 50%, #8BA888 100%);
+}
+.gradient-feya {
+  background: linear-gradient(135deg, #6B4FA3 0%, #4A5F8C 50%, #8BA888 100%);
+}
+.heading-accent {
+  color: #6B4FA3;
+}
+.text-subtle {
+  color: #8B8680;
+}
+.text-lead {
+  color: #3D3935;
+}
+.icon-bg, .glass-card {
+  /* ensure icons and glass have proper display */
+}
