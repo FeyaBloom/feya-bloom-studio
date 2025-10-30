@@ -10,10 +10,40 @@ import forestHero from "@/assets/forest-hero.png";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import useEmblaCarousel from "embla-carousel-react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { 
+  ArrowLeft, 
+  ArrowRight,
+  Code,
+  Palette,
+  FileText,
+  Home,
+  Smartphone,
+  Globe,
+} from "lucide-react";
 
 const Gallery = () => {
   const [activeCategory, setActiveCategory] = useState<string>("All");
+
+  // Хуки для карусели
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "center" });
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  // Функции навигации карусели
+  const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
+
+  // Отслеживание текущего слайда
+  useEffect(() => {
+    const api = emblaApi;
+    if (!api) return;
+    const onSelect = () => setSelectedIndex(api.selectedScrollSnap());
+    api.on("select", onSelect);
+    onSelect();
+    return () => {
+      api.off("select", onSelect);
+    };
+  }, [emblaApi]);
 
   // Fetch published projects from database
   const { data: projects = [], isLoading } = useQuery({
@@ -60,8 +90,8 @@ const Gallery = () => {
     <div className="min-h-screen">
       <Navigation />
       
-  {/* Hero Section with Forest Background */}
-  <section className="relative h-[50vh] flex items-center justify-center overflow-hidden">
+      {/* Hero Section with Forest Background */}
+      <section className="relative h-[50vh] flex items-center justify-center overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${forestHero})` }}
@@ -158,8 +188,8 @@ const Gallery = () => {
         </div>
       </section>
 
-      {/* Projects Grid Section - NO BACKGROUND */}
-      <section className="py-4 px-6 bg-background">
+      {/* Projects Grid Section */}
+      <section className="py-24 px-6 bg-background">
         <div className="container mx-auto max-w-6xl">
           {isLoading ? (
             <div className="text-center py-12">
