@@ -15,14 +15,9 @@ const Home = () => {
 
   const differences = [
     {
-      icon: Heart,
+      icon: Hand,
       title: 'No bullshit',
       description: "I don't make things just to make things. If it doesn't serve a purpose or bring beauty—it doesn't leave my studio.",
-    },
-    {
-      icon: LeafyGreen,
-      title: 'Rooted in nature',
-      description: 'My passion about nature shows up in everything—from the herbs I write about to the colors I choose.',
     },
     {
       icon: Brain,
@@ -30,7 +25,12 @@ const Home = () => {
       description: "Because I have one. My tools aren't just pretty—they actually work.",
     },
     {
-      icon: Hand,
+      icon: LeafyGreen,
+      title: 'Rooted in nature',
+      description: 'My passion about nature shows up in everything—from the herbs I write about to the colors I choose.',
+    },
+    {
+      icon: Heart,
       title: 'Handmade with intention',
       description: 'Every piece, whether digital or physical, carries intention. No mass production. No templates.',
     },
@@ -78,7 +78,7 @@ const Home = () => {
       <section className="py-24 bg-gradient-to-b from-muted to-background">
         <div className="container mx-auto px-6">
           <div className="max-w-3xl mx-auto text-center space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <h2 className="text-4xl md:text-5xl font-serif text-gradient-feya mb-8">
+            <h2 className="text-6xl md:text-7xl font-serif text-gradient-feya mb-8">
               What do you actually do?
             </h2>
             <p className="text-xl text-foreground leading-relaxed">
