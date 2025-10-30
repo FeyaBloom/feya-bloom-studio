@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
@@ -7,7 +7,6 @@ import Footer from "@/components/Footer";
 import { Project } from "@/types/project";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import forestHero from "@/assets/forest-hero.png";
-import { useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import useEmblaCarousel from "embla-carousel-react";
