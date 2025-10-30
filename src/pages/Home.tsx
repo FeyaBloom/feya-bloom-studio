@@ -99,118 +99,137 @@ const Home = () => {
       </section>
 
       {/* What Makes My Work Different Section */}
-      <section ref={diffRef} className="py-24 px-6 relative overflow-hidden gradient-ethereal">
-        <div className="container mx-auto px-6 relative z-10">
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            animate={diffInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8 }}
-            className="text-4xl md:text-5xl font-serif text-center text-gradient-feya mb-20"
-          >
-            What Makes My Work Different
-          </motion.h2>
+<section ref={diffRef} className="py-24 px-6 relative overflow-hidden">
+  {/* Основной фон */}
+  <div className="absolute inset-0 gradient-ethereal" />
+  
+  {/* Glow из центра - Violeta */}
+  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-violeta/20 blur-[120px] pointer-events-none" />
+  
+  {/* Дополнительный акцентный glow - Azul */}
+  <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-azul/15 blur-[100px] pointer-events-none" />
 
-          <div className="max-w-4xl mx-auto relative">
-            {/* Animated Timeline Line */}
-            <svg className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none hidden md:block" viewBox="0 0 200 800" fill="none" preserveAspectRatio="xMidYMid meet">
-              <motion.path
-                d="M 100 50 C 20 180, 180 320, 100 450 C 20 580, 180 720, 100 800"
-                stroke="url(#timeline-gradient)"
-                strokeWidth="3"
-                strokeLinecap="round"
-                fill="none"
-                initial={{ pathLength: 0 }}
-                animate={diffInView ? { pathLength: 1 } : {}}
-                transition={{ duration: 4, ease: "easeInOut" }}
-              />
-              <defs>
-                <linearGradient id="timeline-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" style={{ stopColor: '#6B4FA3', stopOpacity: 1 }} />
-                  <stop offset="50%" style={{ stopColor: '#4A5F8C', stopOpacity: 1 }} />
-                  <stop offset="100%" style={{ stopColor: '#8BA888', stopOpacity: 1 }} />
-                </linearGradient>
-              </defs>
-            </svg>
+  <div className="container mx-auto px-6 relative z-10">
+    <motion.h2
+      initial={{ opacity: 0, y: 30 }}
+      animate={diffInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.8 }}
+      className="text-4xl md:text-5xl font-serif text-center text-gradient-feya mb-20"
+    >
+      What Makes My Work Different
+    </motion.h2>
 
-            {/* Cards */}
-            <div className="space-y-16 relative">
-              {differences.map((item, index) => {
-                const Icon = item.icon;
-                const isEven = index % 2 === 0;
-                
-                return (
-                  <motion.div
-                    key={item.title}
-                    initial={{ opacity: 0, x: isEven ? -60 : 60, scale: 0.9 }}
-                    animate={diffInView ? { opacity: 1, x: 0, scale: 1 } : {}}
-                    transition={{ delay: 0.8 + index * 0.3, duration: 0.8, ease: "easeOut" }}
-                    className={`relative flex items-center ${isEven ? 'md:justify-start' : 'md:justify-end'}`}
-                  >
-                    <div className="w-full md:w-1/2">
-                      <div className="glass-card rounded-2xl p-6 shadow-soft hover:shadow-elevated hover:scale-105 transition-smooth">
-                        <div className="flex items-center gap-4 mb-3">
-                          <div className="w-12 h-12 gradient-feya-bg rounded-full flex items-center justify-center">
-                            <Icon className="w-6 h-6 text-white" />
-                          </div>
-                          <h3 className="text-xl font-bold text-foreground font-serif">
-                            {item.title}
-                          </h3>
-                        </div>
-                        <p className="text-muted-foreground leading-relaxed">
-                          {item.description}
-                        </p>
-                      </div>
+    <div className="max-w-4xl mx-auto relative">
+      {/* Animated Timeline Line */}
+      <svg className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none hidden md:block" viewBox="0 0 200 800" fill="none" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="timeline-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style={{ stopColor: '#6B4FA3', stopOpacity: 1 }} />
+            <stop offset="50%" style={{ stopColor: '#4A5F8C', stopOpacity: 1 }} />
+            <stop offset="100%" style={{ stopColor: '#8BA888', stopOpacity: 1 }} />
+          </linearGradient>
+          
+          {/* Glow фильтр для линии */}
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        
+        <motion.path
+          d="M 100 50 C 20 180, 180 320, 100 450 C 20 580, 180 720, 100 800"
+          stroke="url(#timeline-gradient)"
+          strokeWidth="4"
+          strokeLinecap="round"
+          fill="none"
+          filter="url(#glow)"
+          initial={{ pathLength: 0 }}
+          animate={diffInView ? { pathLength: 1 } : {}}
+          transition={{ duration: 4, ease: "easeInOut" }}
+        />
+      </svg>
+
+      {/* Cards */}
+      <div className="space-y-16 relative">
+        {differences.map((item, index) => {
+          const Icon = item.icon;
+          const isEven = index % 2 === 0;
+          
+          return (
+            <motion.div
+              key={item.title}
+              initial={{ opacity: 0, x: isEven ? -60 : 60, scale: 0.9 }}
+              animate={diffInView ? { opacity: 1, x: 0, scale: 1 } : {}}
+              transition={{ delay: 0.8 + index * 0.3, duration: 0.8, ease: "easeOut" }}
+              className={`relative flex items-center ${isEven ? 'md:justify-start' : 'md:justify-end'}`}
+            >
+              <div className="w-full md:w-1/2">
+                <div className="glass-card rounded-2xl p-6 shadow-soft hover:shadow-elevated hover:scale-105 transition-smooth">
+                  <div className="flex items-center gap-4 mb-3">
+                    <div className="w-12 h-12 gradient-feya-bg rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(107,79,163,0.4)]">
+                      <Icon className="w-6 h-6 text-white" />
                     </div>
-                  </motion.div>
-                );
-              })}
-            </div>
+                    <h3 className="text-xl font-bold text-foreground font-serif">
+                      {item.title}
+                    </h3>
+                  </div>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+    </div>
+  </div>
+</section>
+    {/* How Does It Feel Section */}
+<section className="py-24 gradient-mystic relative">
+  <div className="container mx-auto px-6">
+    <div className="max-w-4xl mx-auto">
+      <h2 className="text-3xl md:text-4xl font-serif text-center mb-8 text-white/90 tracking-wide">
+        Everything I create begins with a question:
+      </h2>
+      <p className="text-6xl md:text-7xl lg:text-8xl font-script text-center mb-20 text-amber-50 leading-tight px-4">
+        How does this feel?
+      </p>
+      
+      <div className="grid md:grid-cols-3 gap-8">
+        <div className="text-center space-y-4 p-8 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-elevated hover:shadow-[0_20px_50px_rgba(168,85,247,0.4)] transition-smooth hover:scale-105 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+          <div className="text-5xl font-script bg-gradient-to-br from-primary via-background to-primary bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(168,85,247,0.8)]">
+            Utility
           </div>
+          <p className="text-white/90">
+            Every creation serves a purpose, thoughtfully designed to enhance functionality
+          </p>
         </div>
-      </section>
-
-      {/* How Does It Feel Section */}
-      <section className="py-24 gradient-mystic relative">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-5xl font-serif text-center mb-12 text-white space-y-8">
-              Everything I create begins with a question: 
-              <span className="block mt-4 text-5xl md:text-6xl lg:text-7xl font-script text-amber-50">
-                How does this feel?
-              </span>
-              So what guides my work:
-            </h2>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="text-center space-y-4 p-8 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-elevated hover:shadow-[0_20px_50px_rgba(168,85,247,0.4)] transition-smooth hover:scale-105 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
-                <div className="text-5xl font-script bg-gradient-to-br from-primary via-background to-primary bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(168,85,247,0.8)]">
-                  Utility
-                </div>
-                <p className="text-white/90">
-                  Every creation serves a purpose, thoughtfully designed to enhance functionality
-                </p>
-              </div>
-              
-              <div className="text-center space-y-4 p-8 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-elevated hover:shadow-[0_20px_50px_rgba(59,130,246,0.8)] transition-smooth hover:scale-105 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
-                <div className="text-5xl font-script bg-gradient-to-br from-secondary via-background to-secondary bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(59,130,246,0.8)]">
-                  Ergonomics
-                </div>
-                <p className="text-white/90">
-                  Intuitive interactions that feel natural and effortless
-                </p>
-              </div>
-              
-              <div className="text-center space-y-4 p-8 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-elevated hover:shadow-[0_20px_50px_rgba(34,197,94,0.4)] transition-smooth hover:scale-105 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
-                <div className="text-5xl font-script bg-gradient-to-br from-accent via-background to-accent bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(34,197,94,0.8)]">
-                  Aesthetics
-                </div>
-                <p className="text-white/90">
-                  Beautiful designs that inspire and captivate the senses
-                </p>            
-              </div>
-            </div>
+        
+        <div className="text-center space-y-4 p-8 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-elevated hover:shadow-[0_20px_50px_rgba(59,130,246,0.8)] transition-smooth hover:scale-105 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
+          <div className="text-5xl font-script bg-gradient-to-br from-secondary via-background to-secondary bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(59,130,246,0.8)]">
+            Ergonomics
           </div>
+          <p className="text-white/90">
+            Intuitive interactions that feel natural and effortless
+          </p>
         </div>
-      </section>
+        
+        <div className="text-center space-y-4 p-8 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-elevated hover:shadow-[0_20px_50px_rgba(34,197,94,0.4)] transition-smooth hover:scale-105 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
+          <div className="text-5xl font-script bg-gradient-to-br from-accent via-background to-accent bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(34,197,94,0.8)]">
+            Aesthetics
+          </div>
+          <p className="text-white/90">
+            Beautiful designs that inspire and captivate the senses
+          </p>            
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* CTA Section */}
       <section className="py-32 gradient-aurora relative overflow-hidden">
