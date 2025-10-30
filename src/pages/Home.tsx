@@ -75,7 +75,7 @@ const Home = () => {
       </section>
 
       {/* What Do You Actually Do Section */}
-      <section className="py-24 bg-gradient-to-b from-muted to-background">
+      <section className="pb-30 bg-gradient-to-b from-muted to-background">
         <div className="container mx-auto px-6">
           <div className="max-w-3xl mx-auto text-center space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <h2 className="text-6xl md:text-7xl font-serif text-gradient-feya mb-8">
@@ -87,10 +87,10 @@ const Home = () => {
               knowledge that connects you to something older than us.
             </p>
             <div className="mt-8 space-y-2">
-              <p className="text-2xl font-script text-violeta">
+              <p className="text-4xl font-script text-violeta">
                 Barcelona taught me that beauty and function aren't opposites.
               </p>
-              <p className="text-2xl font-script text-violeta">
+              <p className="text-3xl font-script text-violeta">
                 They're dance partners.
               </p>
             </div>
