@@ -173,9 +173,9 @@ const Home = () => {
       <section className="py-24 gradient-mystic relative">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-5xl font-serif text-center mb-12 text-white">
+            <h2 className="text-5xl font-serif text-center mb-12 text-white space-y-4">
               Everything I create begins with a question: 
-              <span className="block mt-4 text-5xl md:text-6xl lg:text-7xl font-bold text-amber-50">
+              <span className="block mt-4 text-5xl md:text-6xl lg:text-7xl font-bold font-script text-amber-50">
                 How does this feel?
               </span>
               So what guides my work:
