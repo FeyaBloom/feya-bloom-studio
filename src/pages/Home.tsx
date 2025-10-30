@@ -75,7 +75,7 @@ const Home = () => {
       </section>
 
       {/* What Do You Actually Do Section */}
-      <section className="pb-30 bg-gradient-to-b from-muted to-background">
+      <section className="pb-32 bg-gradient-to-b from-muted to-background">
         <div className="container mx-auto px-6">
           <div className="max-w-3xl mx-auto text-center space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <h2 className="text-6xl md:text-7xl font-serif text-gradient-feya mb-8">
@@ -173,9 +173,9 @@ const Home = () => {
       <section className="py-24 gradient-mystic relative">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-5xl font-serif text-center mb-12 text-white space-y-4">
+            <h2 className="text-5xl font-serif text-center mb-12 text-white space-y-8">
               Everything I create begins with a question: 
-              <span className="block mt-4 text-5xl md:text-6xl lg:text-7xl font-bold font-script text-amber-50">
+              <span className="block mt-4 text-5xl md:text-6xl lg:text-7xl font-script text-amber-50">
                 How does this feel?
               </span>
               So what guides my work:
