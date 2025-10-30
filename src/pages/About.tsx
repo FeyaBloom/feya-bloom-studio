@@ -135,31 +135,6 @@ const About: React.FC = () => {
     },
   ];
 
-  const values = [
-    {
-      icon: Hand,
-      title: "No bullshit",
-      description:
-        "I don't make things just to make things. If it doesn't serve a purpose or bring beauty—it doesn't leave my studio.",
-    },
-    {
-      icon: LeafyGreen,
-      title: "Rooted in nature",
-      description:
-        "My passion about nature shows up in everything—from the herbs I write about to the colors I choose.",
-    },
-    {
-      icon: Brain,
-      title: "Built for neurodivergent minds",
-      description: "Because I have one. My tools aren't just pretty—they actually work.",
-    },
-    {
-      icon: Heart,
-      title: "Handmade with intention",
-      description: "Every piece, whether digital or physical, carries intention. No mass production. No templates.",
-    },
-  ];
-
   const beliefs = [
     { text: 'Keeping things functional', rotation: -3, scale: 1.1 },
     { text: 'Systems should support users', rotation: 2, scale: 1 },
@@ -193,43 +168,6 @@ const About: React.FC = () => {
       backText: "...and taking them apart to find out.",
       initialPos: { y: 30, x: -120 },
     },
-  ];
-
-  const offerings = [
-    {
-      title: "Art & Sculpture",
-      description: "Original pieces that speak to the unspoken",
-      category: "Art",
-    },
-    {
-      title: "Wearable Art",
-      description: "Clothing as creative expression",
-      category: "Wearable",
-    },
-    {
-      title: "Business Systems",
-      description: "Tools that support natural rhythms",
-      category: "Digital",
-    },
-    {
-      title: "Home Decor",
-      description: "Unique pieces that resonate",
-      category: "Decor",
-    },
-    {
-      title: "Wellness & Wisdom",
-      description: "Knowledge that grounds you",
-      category: "Wellness",
-    },
-  ];
-
-  const creations = [
-    { icon: Code, title: "Art & Sculpture", description: "Digital and physical art pieces that spark joy" },
-    { icon: Palette, title: "Wearable Art", description: "Fashion that tells a story" },
-    { icon: FileText, title: "Business Systems", description: "Streamlined workflows that actually work" },
-    { icon: Home, title: "Home Decor", description: "Spaces that feel like home" },
-    { icon: Smartphone, title: "Wellness & Wisdom", description: "Tools for mindful living" },
-    { icon: Globe, title: "Websites", description: "Digital experiences that delight" },
   ];
 
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -330,24 +268,6 @@ Working from Barcelona, where I blend art, function,
               nature-related traditions.
             </p>
 
-            <div className="text-center py-8">
-              <p className="text-4xl md:text-5xl font-lavishly handwritten-underline inline-block">
-                "What do you actually do?"
-              </p>
-            </div>
-
-            <p>
-              I make things that help people live more intentionally—
-              whether it's a planner that works for your brain,
-              a piece of art that makes you stop and feel,
-              or knowledge that connects you to something older than us.
-            </p>
-
-            <p className="text-xl font-cormorant italic text-center py-4 text-sage">
-              Barcelona taught me that beauty and function aren't opposites.
-              <br />They're dance partners.
-            </p>
-
             <p className="text-center font-semibold" style={{ color: '#8B8680' }}>
               My work lives at the intersection of:
             </p>
@@ -372,91 +292,7 @@ Working from Barcelona, where I blend art, function,
         </div>
       </section>
 
-    {/* What I Create: Carousel section */}
-      <section ref={ref} className="pt-20 px-6 bg-white overflow-hidden">
-        <div className="container mx-auto max-w-6xl">
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            className="text-5xl font-serif text-primary font-bold text-center mb-8"
-          >
-            What I Create
-          </motion.h2>
-                     
-          <p className="text-2xl md:text-2xl text-primary text-center mb-8">        
-            Each piece blends intuition with intentional design, beauty with usefulness
-          </p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.15 }}
-            className="relative py-20"
-          >
-            <div className="overflow-hidden" ref={emblaRef}>
-              <div className="flex">
-                {creations.map((item, index) => {
-                  const Icon = item.icon;
-                  const isSelected = index === selectedIndex;
-                  return (
-                    <div key={item.title} className="flex-shrink-0 flex-grow-0 basis-full md:basis-1/3 lg:basis-1/4 px-4">
-                      <motion.div
-                        animate={{
-                          scale: isSelected ? 1 : 0.8,
-                          opacity: isSelected ? 1 : 0.7,
-                        }}
-                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                        className="card-surface rounded-3xl p-8 h-full flex flex-col items-center text-center"
-                      >
-                        <div className="relative mb-6">
-                          <div className="w-16 h-16 gradient-feya rounded-2xl flex items-center justify-center">
-                            <Icon className="w-8 h-8 text-white" />
-                          </div>
-                        </div>
-                        <h3 className="text-4xl font-serif font-semibold mb-2">{item.title}</h3>
-                        <p className="text-xl flex-grow font-body">{item.description}</p>
-                      </motion.div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="absolute top-1/2 -translate-y-1/2 flex justify-between w-full px-0">
-              <button onClick={scrollPrev} className="carousel-nav">
-                <ArrowLeft />
-              </button>
-              <button onClick={scrollNext} className="carousel-nav">
-                <ArrowRight />
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* What Makes My Work Different */}
-      <section className="py-20 px-6 bg-neutral-50">
-        <div className="container mx-auto max-w-6xl">
-          <h2 className="text-5xl font-cormorant font-bold text-center mb-16 heading-accent">
-            What Makes My Work Different
-          </h2>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {values.map((value, index) => (
-              <div 
-                key={value.title} 
-                className="text-center space-y-4 p-6 rounded-2xl bg-white hover-lift"
-              >
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4">
-                  <value.icon className="w-8 h-8" />
-                </div>
-                <h3 className="text-2xl font-cormorant font-semibold">{value.title}</h3>
-                <p className="font-quicksand leading-relaxed">{value.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+    
 
       {/* What I Stand For */}
       <section ref={refBeliefs} className="py-24 px-6">
