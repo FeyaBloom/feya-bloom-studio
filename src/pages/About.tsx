@@ -242,7 +242,7 @@ const About: React.FC = () => {
         className="space-y-6"
       >
         <div className="inline-block">
-          <h1 className="text-6xl md:text-7xl lg:text-8xl font-lavishly text-violeta mb-4">
+          <h1 className="text-6xl md:text-7xl lg:text-8xl font-script text-violeta mb-4">
             Hi there! I'm Feya
           </h1>
           <div className="h-1 w-32 gradient-feya rounded-full" />
