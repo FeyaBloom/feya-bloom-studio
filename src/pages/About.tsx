@@ -357,24 +357,140 @@ const About: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 mt-12">
-            {directions.map((direction, index) => (
-              <Card 
-                key={direction.title} 
-                className="hover-lift border-2 transition-all duration-300"
-              >
-                <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center">
-                    <direction.icon className="w-8 h-8" />
-                  </div>
-                  <h3 className="text-xl font-cormorant font-bold mb-2">{direction.title}</h3>
-                  <p className="text-sm font-quicksand">{direction.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+          {/* Venn Diagram */}
+    <div className="relative w-full h-[500px] mt-16 flex items-center justify-center">
+      <svg viewBox="0 0 400 350" className="w-full max-w-2xl">
+        {/* Определения градиентов */}
+        <defs>
+          {/* Violeta gradient */}
+          <radialGradient id="violetaGradient">
+            <stop offset="0%" style={{ stopColor: '#6B4FA3', stopOpacity: 0.6 }} />
+            <stop offset="100%" style={{ stopColor: '#6B4FA3', stopOpacity: 0.2 }} />
+          </radialGradient>
+          
+          {/* Azul gradient */}
+          <radialGradient id="azulGradient">
+            <stop offset="0%" style={{ stopColor: '#4A5F8C', stopOpacity: 0.6 }} />
+            <stop offset="100%" style={{ stopColor: '#4A5F8C', stopOpacity: 0.2 }} />
+          </radialGradient>
+          
+          {/* Sage gradient */}
+          <radialGradient id="sageGradient">
+            <stop offset="0%" style={{ stopColor: '#8BA888', stopOpacity: 0.6 }} />
+            <stop offset="100%" style={{ stopColor: '#8BA888', stopOpacity: 0.2 }} />
+          </radialGradient>
+        </defs>
+
+        {/* Левый круг - Visual Storytelling (Violeta) */}
+        <motion.circle
+          cx="140"
+          cy="180"
+          r="110"
+          fill="url(#violetaGradient)"
+          stroke="#6B4FA3"
+          strokeWidth="2"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        />
+
+        {/* Правый круг - Functional Design (Azul) */}
+        <motion.circle
+          cx="260"
+          cy="180"
+          r="110"
+          fill="url(#azulGradient)"
+          stroke="#4A5F8C"
+          strokeWidth="2"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+        />
+
+        {/* Нижний круг - Ancestral Wisdom (Sage) */}
+        <motion.circle
+          cx="200"
+          cy="270"
+          r="110"
+          fill="url(#sageGradient)"
+          stroke="#8BA888"
+          strokeWidth="2"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+        />
+
+        {/* Центральная точка пересечения - "My Creative Universe" */}
+        <motion.circle
+          cx="200"
+          cy="210"
+          r="8"
+          fill="#3D3935"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.5, delay: 1.2 }}
+        />
+
+        {/* Иконка + текст - Левый круг (Visual Storytelling) */}
+        <motion.g
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+        >
+          <foreignObject x="80" y="100" width="120" height="80">
+            <div className="flex flex-col items-center text-center">
+              <Brush className="w-8 h-8 text-violeta mb-2" />
+              <p className="text-sm font-semibold text-gray-800">Visual Storytelling</p>
+              <p className="text-xs text-gray-600">Painting, sculpture & wearables</p>
+            </div>
+          </foreignObject>
+        </motion.g>
+
+        {/* Иконка + текст - Правый круг (Functional Design) */}
+        <motion.g
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.0 }}
+        >
+          <foreignObject x="200" y="100" width="120" height="80">
+            <div className="flex flex-col items-center text-center">
+              <Brain className="w-8 h-8 text-azul mb-2" />
+              <p className="text-sm font-semibold text-gray-800">Functional Design</p>
+              <p className="text-xs text-gray-600">ADHD-friendly systems</p>
+            </div>
+          </foreignObject>
+        </motion.g>
+
+        {/* Иконка + текст - Нижний круг (Ancestral Wisdom) */}
+        <motion.g
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.2 }}
+        >
+          <foreignObject x="140" y="280" width="120" height="80">
+            <div className="flex flex-col items-center text-center">
+              <LeafyGreen className="w-8 h-8 text-sage mb-2" />
+              <p className="text-sm font-semibold text-gray-800">Ancestral Wisdom</p>
+              <p className="text-xs text-gray-600">Catalan nature traditions</p>
+            </div>
+          </foreignObject>
+        </motion.g>
+      </svg>
+
+      {/* Текст в центре пересечения (поверх SVG) */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, delay: 1.4 }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none"
+      >
+        <p className="text-lg font-script text-violeta whitespace-nowrap">
+          My Creative Universe
+        </p>
+      </motion.div>
+    </div>
+  </div>
+</section>
 
     
 
