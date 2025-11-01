@@ -197,12 +197,12 @@ const About: React.FC = () => {
       <Navigation />
  
      {/* Hero Section */}
-<section className="relative min-h-screen flex items-center justify-center px-6 py-20 overflow-hidden" style={{ backgroundColor: '#F5F0E8' }}>
-  {/* Декоративные плавающие элементы в фоне */}
+<section className="relative min-h-screen flex items-center justify-center px-4 md:px-6 py-16 md:py-20 overflow-hidden" style={{ backgroundColor: '#F5F0E8' }}>
+  {/* Декоративные плавающие элементы в фоне - адаптивные размеры */}
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
     {/* Violeta круг */}
     <motion.div
-      className="absolute top-20 left-10 w-72 h-72 bg-violeta/20 rounded-full blur-3xl"
+      className="absolute top-10 md:top-20 left-5 md:left-10 w-48 h-48 md:w-72 md:h-72 bg-violeta/20 rounded-full blur-3xl"
       animate={{
         scale: [1, 1.2, 1],
         opacity: [0.2, 0.3, 0.2],
@@ -212,7 +212,7 @@ const About: React.FC = () => {
     
     {/* Azul круг */}
     <motion.div
-      className="absolute bottom-20 right-10 w-96 h-96 bg-azul/20 rounded-full blur-3xl"
+      className="absolute bottom-10 md:bottom-20 right-5 md:right-10 w-64 h-64 md:w-96 md:h-96 bg-azul/20 rounded-full blur-3xl"
       animate={{
         scale: [1, 1.2, 1],
         opacity: [0.2, 0.3, 0.2],
@@ -222,7 +222,7 @@ const About: React.FC = () => {
     
     {/* Sage круг */}
     <motion.div
-      className="absolute top-1/2 right-1/4 w-64 h-64 bg-sage/15 rounded-full blur-3xl"
+      className="absolute top-1/2 right-1/4 w-48 h-48 md:w-64 md:h-64 bg-sage/15 rounded-full blur-3xl"
       animate={{
         scale: [1, 1.1, 1],
         opacity: [0.15, 0.25, 0.15],
@@ -233,52 +233,52 @@ const About: React.FC = () => {
 
   {/* Контент */}
   <div className="container mx-auto max-w-6xl relative z-10">
-    <div className="grid md:grid-cols-2 gap-16 items-center">
+    <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
       {/* Левая колонка - текст */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.8 }}
-        className="space-y-6"
+        className="space-y-4 md:space-y-6"
       >
         <div className="inline-block">
-          <h1 className="text-6xl md:text-7xl lg:text-8xl font-script text-violeta mb-4">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-script text-violeta mb-3 md:mb-4">
             Hi there! I'm Feya
           </h1>
-          <div className="h-1 w-32 gradient-feya rounded-full" />
+          <div className="h-1 w-24 md:w-32 gradient-feya rounded-full" />
         </div>
         
-        <p className="text-2xl font-cormorant leading-relaxed" style={{ color: '#3D3935' }}>
+        <p className="text-lg sm:text-xl md:text-2xl font-cormorant leading-relaxed" style={{ color: '#3D3935' }}>
           I create for minds that won't fit the mold—
           <br />
           and hearts that refuse to settle.
         </p>
         
-        <p className="text-lg leading-relaxed" style={{ color: '#8B8680' }}>
+        <p className="text-base md:text-lg leading-relaxed" style={{ color: '#8B8680' }}>
           Working from Barcelona, where I blend art, function, 
           and timeless wisdom into things that actually matter.
         </p>
         
-        <div className="flex gap-4 pt-4">
-          <Button asChild size="lg" className="bg-violeta hover:bg-opacity-90 shadow-lg font-quicksand">
+        <div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-4">
+          <Button asChild size="lg" className="bg-violeta hover:bg-opacity-90 shadow-lg font-quicksand w-full sm:w-auto">
             <Link to="/contact">Start a Project</Link>
           </Button>
-          <Button asChild variant="outline" size="lg" className="border-2 border-violeta text-violeta hover:bg-violeta hover:text-white font-quicksand">
+          <Button asChild variant="outline" size="lg" className="border-2 border-violeta text-violeta hover:bg-violeta hover:text-white font-quicksand w-full sm:w-auto">
             <Link to="/gallery">View Work</Link>
           </Button>
         </div>
       </motion.div>
 
-      {/* Правая колонка - плавающие изображения */}
-      <div className="relative w-full h-[600px] flex items-center justify-center">
-        {/* Центральное изображение (портрет) - БОЛЬШОЕ */}
+      {/* Правая колонка - плавающие изображения - адаптивные размеры */}
+      <div className="relative w-full h-[400px] md:h-[500px] lg:h-[600px] flex items-center justify-center">
+        {/* Центральное изображение (портрет) - адаптивное */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.3 }}
           className="relative z-20"
         >
-          <div className="relative w-80 h-96 rounded-3xl overflow-hidden shadow-2xl border border-white/50">
+          <div className="relative w-48 h-60 sm:w-56 sm:h-72 md:w-64 md:h-80 lg:w-80 lg:h-96 rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl border border-white/50">
             <img 
               src={heroPortrait} 
               alt="Feya" 
@@ -287,17 +287,17 @@ const About: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Плавающая карточка - Макраме (сверху справа, накладывается) */}
+        {/* Плавающая карточка - Макраме (сверху справа, накладывается) - адаптивная */}
         <motion.div
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.5 }}
-          className="absolute top-8 right-0 z-30"
+          className="absolute top-4 md:top-8 right-0 z-30"
         >
           <motion.div
             animate={{ y: [0, -15, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="w-48 h-48 rounded-2xl overflow-hidden shadow-xl border border-white/50 bg-white/80 backdrop-blur-sm"
+            className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-xl md:rounded-2xl overflow-hidden shadow-xl border border-white/50 bg-white/80 backdrop-blur-sm"
           >
             <img 
               src={heroMacrame} 
@@ -307,17 +307,17 @@ const About: React.FC = () => {
           </motion.div>
         </motion.div>
 
-        {/* Плавающая карточка - Мандала (снизу слева, накладывается) */}
+        {/* Плавающая карточка - Мандала (снизу слева, накладывается) - адаптивная */}
         <motion.div
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.7 }}
-          className="absolute bottom-8 left-0 z-30"
+          className="absolute bottom-4 md:bottom-8 left-0 z-30"
         >
           <motion.div
             animate={{ y: [0, 15, 0] }}
             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            className="w-48 h-48 rounded-2xl overflow-hidden shadow-xl border border-white/50 bg-white/80 backdrop-blur-sm"
+            className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-xl md:rounded-2xl overflow-hidden shadow-xl border border-white/50 bg-white/80 backdrop-blur-sm"
           >
             <img 
               src={heroMandala} 
@@ -333,13 +333,13 @@ const About: React.FC = () => {
 
 
       {/* My Journey Section */}
-      <section className="relative py-32 px-6 overflow-hidden bg-white">
+      <section className="relative py-16 md:py-24 lg:py-32 px-4 md:px-6 overflow-hidden bg-white">
         <div className="container mx-auto max-w-4xl relative z-10">
-          <h2 className="text-5xl font-cormorant font-bold text-center mb-16 heading-accent">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-cormorant font-bold text-center mb-12 md:mb-16 heading-accent px-4">
             How I Got Here
           </h2>
 
-          <div className="space-y-8 font-quicksand text-lg leading-relaxed">
+          <div className="space-y-6 md:space-y-8 font-quicksand text-base md:text-lg leading-relaxed px-4">
             <p>
               I didn't set out to become a multidisciplinary creator.
               I just kept following what felt true.
@@ -357,9 +357,9 @@ const About: React.FC = () => {
             </p>
           </div>
 
-          {/* Venn Diagram */}
-    <div className="relative w-full h-[500px] mt-16 flex items-center justify-center">
-      <svg viewBox="0 0 400 350" className="w-full max-w-2xl">
+          {/* Venn Diagram - адаптивный */}
+    <div className="relative w-full h-[350px] sm:h-[400px] md:h-[450px] lg:h-[500px] mt-12 md:mt-16 flex items-center justify-center px-4">
+      <svg viewBox="0 0 400 350" className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl">
         {/* Определения градиентов */}
         <defs>
           {/* Violeta gradient */}
@@ -439,9 +439,9 @@ const About: React.FC = () => {
         >
           <foreignObject x="80" y="100" width="120" height="80">
             <div className="flex flex-col items-center text-center">
-              <Brush className="w-8 h-8 text-violeta mb-2" />
-              <p className="text-sm font-semibold text-gray-800">Visual Storytelling</p>
-              <p className="text-xs text-gray-600">Painting, sculpture & wearables</p>
+              <Brush className="w-6 h-6 md:w-8 md:h-8 text-violeta mb-2" />
+              <p className="text-xs md:text-sm font-semibold text-gray-800">Visual Storytelling</p>
+              <p className="text-[10px] md:text-xs text-gray-600">Painting, sculpture & wearables</p>
             </div>
           </foreignObject>
         </motion.g>
@@ -454,9 +454,9 @@ const About: React.FC = () => {
         >
           <foreignObject x="200" y="100" width="120" height="80">
             <div className="flex flex-col items-center text-center">
-              <Brain className="w-8 h-8 text-azul mb-2" />
-              <p className="text-sm font-semibold text-gray-800">Functional Design</p>
-              <p className="text-xs text-gray-600">ADHD-friendly systems</p>
+              <Brain className="w-6 h-6 md:w-8 md:h-8 text-azul mb-2" />
+              <p className="text-xs md:text-sm font-semibold text-gray-800">Functional Design</p>
+              <p className="text-[10px] md:text-xs text-gray-600">ADHD-friendly systems</p>
             </div>
           </foreignObject>
         </motion.g>
@@ -469,9 +469,9 @@ const About: React.FC = () => {
         >
           <foreignObject x="140" y="280" width="120" height="80">
             <div className="flex flex-col items-center text-center">
-              <LeafyGreen className="w-8 h-8 text-sage mb-2" />
-              <p className="text-sm font-semibold text-gray-800">Ancestral Wisdom</p>
-              <p className="text-xs text-gray-600">Catalan nature traditions</p>
+              <LeafyGreen className="w-6 h-6 md:w-8 md:h-8 text-sage mb-2" />
+              <p className="text-xs md:text-sm font-semibold text-gray-800">Ancestral Wisdom</p>
+              <p className="text-[10px] md:text-xs text-gray-600">Catalan nature traditions</p>
             </div>
           </foreignObject>
         </motion.g>
@@ -495,18 +495,18 @@ const About: React.FC = () => {
     
 
       {/* What I Stand For */}
-      <section ref={refBeliefs} className="py-24 px-6">
+      <section ref={refBeliefs} className="py-12 md:py-24 px-4 md:px-6">
         <div className="max-w-4xl mx-auto">
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
             animate={inViewBeliefs ? { opacity: 1, y: 0 } : {}}
-            className="text-4xl md:text-5xl font-bold text-center gradient-text mb-20"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-center gradient-text mb-12 md:mb-20 px-4"
           >
             What I Stand For
           </motion.h2>
 
           <motion.div 
-            className="relative flex flex-wrap justify-center items-center gap-4 md:gap-8"
+            className="relative flex flex-wrap justify-center items-center gap-3 md:gap-6 lg:gap-8"
             initial="hidden"
             animate={inViewBeliefs ? "visible" : "hidden"}
             variants={{
@@ -526,9 +526,9 @@ const About: React.FC = () => {
                 }}
                 transition={{ type: 'spring', damping: 12, stiffness: 100 }}
                 whileHover={{ scale: value.scale * 1.1, rotate: value.rotation + 2, zIndex: 10 }}
-                className="glass-card rounded-2xl p-6 shadow-xl cursor-default"
+                className="glass-card rounded-2xl p-4 md:p-6 shadow-xl cursor-default"
               >
-                <p className="text-lg md:text-xl font-semibold text-gray-800 text-center">
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-gray-800 text-center">
                   {value.text}
                 </p>
               </motion.div>
@@ -538,43 +538,41 @@ const About: React.FC = () => {
       </section>
 
       {/* Fun Facts Section */}
-      <section className="pt-20 px-6 relative overflow-hidden bg-neutral-100">
+      <section className="pt-12 md:pt-20 px-4 md:px-6 relative overflow-hidden bg-neutral-100">
         <div className="container mx-auto max-w-6xl">
           <FunFactsSection facts={funFactsArr} />
         </div>
       </section>
 
-  
-
       {/* Call to Action */}
-      <section className="relative py-32 px-6 overflow-hidden gradient-feya">
+      <section className="relative py-16 md:py-24 lg:py-32 px-4 md:px-6 overflow-hidden gradient-feya">
         <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white rounded-full blur-3xl animate-pulse" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] md:w-[600px] md:h-[600px] bg-white rounded-full blur-3xl animate-pulse" />
         </div>
 
         <div className="container mx-auto max-w-5xl relative z-10">
-          <div className="bg-white/90 backdrop-blur-xl rounded-3xl p-12 md:p-16 shadow-2xl">
-            <div className="text-center space-y-8">
-              <Home className="w-16 h-16 mx-auto text-secondary" />
+          <div className="bg-white/90 backdrop-blur-xl rounded-2xl md:rounded-3xl p-8 md:p-12 lg:p-16 shadow-2xl">
+            <div className="text-center space-y-6 md:space-y-8">
+              <Home className="w-12 h-12 md:w-16 md:h-16 mx-auto text-secondary" />
 
-              <h2 className="text-4xl md:text-5xl font-serif text-secondary font-bold leading-tight">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif text-secondary font-bold leading-tight px-4">
                 Ready to bring something
                 <br />
-                <span className="text-gradient-feya font-script text-6xl px-5"> meaningful </span>
+                <span className="text-gradient-feya font-script text-3xl sm:text-4xl md:text-5xl lg:text-6xl px-2 md:px-5"> meaningful </span>
                 <br />
                 into your world?
               </h2>
 
-              <p className="text-xl font-body max-w-2xl mx-auto leading-relaxed text-secondary">
+              <p className="text-base md:text-lg lg:text-xl font-body max-w-2xl mx-auto leading-relaxed text-secondary px-4">
                 What we surround ourselves with shapes our daily experience. 
                 My work invites you to feel genuinely seen and supported.
               </p>
 
-              <div className="flex flex-wrap gap-6 justify-center pt-6">
-                <Button asChild size="lg" className="gap-2 shadow-soft hover:shadow-elevated transition-smooth">
+              <div className="flex flex-col sm:flex-row flex-wrap gap-4 md:gap-6 justify-center pt-4 md:pt-6 px-4">
+                <Button asChild size="lg" className="gap-2 shadow-soft hover:shadow-elevated transition-smooth w-full sm:w-auto">
                   <Link to="/contact">Get in Touch</Link>
                 </Button>              
-                <Button asChild variant="outline" size="lg">
+                <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
                   <Link to="/gallery">View Gallery</Link>
                 </Button>
               </div>

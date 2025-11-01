@@ -61,30 +61,30 @@ const Contact = () => {
       <Navigation />
       
       {/* Hero Section (same as Gallery) */}
-      <section className="relative h-[50vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[40vh] md:h-[50vh] flex items-center justify-center overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${forestHero})` }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background" />
 
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="max-w-4xl mx-auto text-center space-y-4">
-            <h1 className="text-6xl font-serif text-foreground">
+        <div className="container mx-auto px-4 md:px-6 relative z-10">
+          <div className="max-w-4xl mx-auto text-center space-y-3 md:space-y-4">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif text-foreground px-4">
               Get in Touch
             </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
               Let's create something beautiful together. Reach out to discuss your project ideas.
             </p>
           </div>
         </div>
       </section>
 
-      <div className="py-16">
-        <div className="container mx-auto px-6">
+      <div className="py-12 md:py-16">
+        <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-4xl mx-auto">
 
-            <div className="grid md:grid-cols-2 gap-12">
+            <div className="grid md:grid-cols-2 gap-8 md:gap-12">
               <div className="space-y-8">
                 <div className="p-6 rounded-xl bg-card shadow-soft space-y-4">
                   <div className="flex items-center gap-3">

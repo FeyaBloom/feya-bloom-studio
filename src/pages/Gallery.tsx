@@ -91,30 +91,30 @@ const Gallery = () => {
       <Navigation />
       
       {/* Hero Section with Forest Background */}
-      <section className="relative h-[50vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[40vh] md:h-[50vh] flex items-center justify-center overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${forestHero})` }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background" />
 
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="max-w-6xl mx-auto text-center space-y-4">
-            <h1 className="text-6xl md:text-7xl font-serif text-foreground animate-in fade-in slide-in-from-bottom-4 duration-1000">
+        <div className="container mx-auto px-4 md:px-6 relative z-10">
+          <div className="max-w-6xl mx-auto text-center space-y-3 md:space-y-4">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-foreground animate-in fade-in slide-in-from-bottom-4 duration-1000 px-4">
               Project Gallery
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-200">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-200 px-4">
               Discover my creative universe 
             </p>
             
-            <div className="flex justify-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
+            <div className="flex justify-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300 px-4">
               <Tabs value={activeCategory} onValueChange={setActiveCategory}>
-                <TabsList className="bg-card/80 backdrop-blur-sm shadow-soft">
+                <TabsList className="bg-card/80 backdrop-blur-sm shadow-soft flex-wrap h-auto gap-2 p-2">
                   {categories.map((category) => (
                     <TabsTrigger 
                       key={category} 
                       value={category}
-                      className="px-6"
+                      className="px-3 md:px-6 text-xs md:text-sm"
                     >
                       {category}
                     </TabsTrigger>
@@ -127,17 +127,17 @@ const Gallery = () => {
       </section>
 
       {/* What I Create: Carousel section */}
-      <section ref={ref} className="pt-20 px-6 bg-white overflow-hidden">
+      <section ref={ref} className="pt-12 md:pt-20 px-4 md:px-6 bg-white overflow-hidden">
         <div className="container mx-auto max-w-6xl">
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            className="text-5xl font-serif text-primary font-bold text-center mb-8"
+            className="text-3xl sm:text-4xl md:text-5xl font-serif text-primary font-bold text-center mb-6 md:mb-8 px-4"
           >
             What I Create
           </motion.h2>
                      
-          <p className="text-2xl md:text-2xl text-primary text-center mb-8">        
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-primary text-center mb-6 md:mb-8 px-4">        
             Each piece blends intuition with intentional design, beauty with usefulness
           </p>
 
@@ -145,7 +145,7 @@ const Gallery = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.15 }}
-            className="relative py-20"
+            className="relative py-12 md:py-20"
           >
             <div className="overflow-hidden" ref={emblaRef}>
               <div className="flex">
@@ -153,22 +153,22 @@ const Gallery = () => {
                   const Icon = item.icon;
                   const isSelected = index === selectedIndex;
                   return (
-                    <div key={item.title} className="flex-shrink-0 flex-grow-0 basis-full md:basis-1/3 lg:basis-1/4 px-4">
+                    <div key={item.title} className="flex-shrink-0 flex-grow-0 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 px-2 md:px-4">
                       <motion.div
                         animate={{
                           scale: isSelected ? 1 : 0.8,
                           opacity: isSelected ? 1 : 0.7,
                         }}
                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                        className="card-surface rounded-3xl p-8 h-full flex flex-col items-center text-center"
+                        className="card-surface rounded-3xl p-4 md:p-6 lg:p-8 h-full flex flex-col items-center text-center"
                       >
-                        <div className="relative mb-6">
-                          <div className="w-16 h-16 gradient-feya rounded-2xl flex items-center justify-center">
-                            <Icon className="w-8 h-8 text-white" />
+                        <div className="relative mb-4 md:mb-6">
+                          <div className="w-12 h-12 md:w-16 md:h-16 gradient-feya rounded-2xl flex items-center justify-center">
+                            <Icon className="w-6 h-6 md:w-8 md:h-8 text-white" />
                           </div>
                         </div>
-                        <h3 className="text-4xl font-serif font-semibold mb-2">{item.title}</h3>
-                        <p className="text-xl flex-grow font-body">{item.description}</p>
+                        <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-serif font-semibold mb-2">{item.title}</h3>
+                        <p className="text-sm sm:text-base md:text-lg lg:text-xl flex-grow font-body">{item.description}</p>
                       </motion.div>
                     </div>
                   );
@@ -176,12 +176,12 @@ const Gallery = () => {
               </div>
             </div>
 
-            <div className="absolute top-1/2 -translate-y-1/2 flex justify-between w-full px-0">
-              <button onClick={scrollPrev} className="carousel-nav">
-                <ArrowLeft />
+            <div className="absolute top-1/2 -translate-y-1/2 flex justify-between w-full px-0 md:px-2">
+              <button onClick={scrollPrev} className="carousel-nav w-10 h-10 md:w-12 md:h-12" aria-label="Previous">
+                <ArrowLeft className="w-5 h-5 md:w-6 md:h-6" />
               </button>
-              <button onClick={scrollNext} className="carousel-nav">
-                <ArrowRight />
+              <button onClick={scrollNext} className="carousel-nav w-10 h-10 md:w-12 md:h-12" aria-label="Next">
+                <ArrowRight className="w-5 h-5 md:w-6 md:h-6" />
               </button>
             </div>
           </motion.div>
@@ -189,7 +189,7 @@ const Gallery = () => {
       </section>
 
       {/* Projects Grid Section */}
-      <section className="py-24 px-6 bg-background">
+      <section className="py-12 md:py-24 px-4 md:px-6 bg-background">
         <div className="container mx-auto max-w-6xl">
           {isLoading ? (
             <div className="text-center py-12">
@@ -197,15 +197,15 @@ const Gallery = () => {
             </div>
           ) : (
             <>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
                 {filteredProjects.map((project) => (
                   <ProjectCard key={project.id} project={project} />
                 ))}
               </div>
 
               {filteredProjects.length === 0 && (
-                <div className="text-center py-16">
-                  <p className="text-muted-foreground text-lg">
+                <div className="text-center py-12 md:py-16">
+                  <p className="text-muted-foreground text-base md:text-lg px-4">
                     No projects found in this category yet.
                   </p>
                 </div>
