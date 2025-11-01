@@ -358,7 +358,7 @@ const About: React.FC = () => {
           </div>
 
           {/* Venn Diagram - адаптивный */}
-    <div className="relative w-full h-[350px] sm:h-[400px] md:h-[450px] lg:h-[500px] mt-12 md:mt-16 flex items-center justify-center px-4">
+    <div className="relative w-full h-[350px] sm:h-[400px] md:h-[450px] lg:h-[500px] mt-4 md:mt-6 mb-12 md:mb-20 flex items-center justify-center px-4">
       <svg viewBox="0 0 400 350" className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl">
         {/* Определения градиентов */}
         <defs>
