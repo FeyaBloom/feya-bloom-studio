@@ -420,16 +420,22 @@ const About: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.6 }}
         />
 
-        {/* Центральная точка пересечения - "My Creative Universe" */}
-        <motion.circle
-          cx="200"
-          cy="210"
-          r="8"
-          fill="#3D3935"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 0.5, delay: 1.2 }}
-        />
+        {/* ЛОГО В ЦЕНТРЕ - Феечка FB */}
+<motion.g
+  initial={{ opacity: 0, scale: 0 }}
+  animate={{ opacity: 1, scale: 1 }}
+  transition={{ duration: 0.8, delay: 1.4 }}
+>
+  <foreignObject x="150" y="143" width="100" height="100">
+    <div className="w-full h-full flex items-center justify-center bg-white/95 backdrop-blur-sm rounded-full shadow-lg p-3">
+      <img 
+        src={logo} 
+        alt="Feya Bloom Studio" 
+        className="w-full h-full object-contain"
+      />
+    </div>
+  </foreignObject>
+</motion.g>
 
         {/* Иконка + текст - Левый круг (Visual Storytelling) */}
         <motion.g
@@ -475,19 +481,7 @@ const About: React.FC = () => {
             </div>
           </foreignObject>
         </motion.g>
-      </svg>
-
-      {/* Текст в центре пересечения (поверх SVG) */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.5 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6, delay: 1.4 }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none"
-      >
-        <p className="text-lg font-script text-violeta whitespace-nowrap">
-          My Creative Universe
-        </p>
-      </motion.div>
+      </svg>  
     </div>
   </div>
 </section>
