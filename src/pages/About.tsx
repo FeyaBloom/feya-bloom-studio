@@ -340,7 +340,7 @@ const About: React.FC = () => {
             How I Got Here
           </h2>
 
-          <div className="space-y-6 md:space-y-8 font-quicksand text-base md:text-lg leading-relaxed px-4">
+          <div className="space-y-6 md:space-y-8 font-body text-base md:text-lg leading-relaxed px-4">
             <p>
               I didn't set out to become a multidisciplinary creator.
               I just kept following what felt true.
@@ -360,7 +360,7 @@ const About: React.FC = () => {
 
           {/* Venn Diagram - адаптивный */}
     <div className="relative w-full h-[400px] sm:h-[450px] md:h-[500px] lg:h-[600px] mt-4 md:mt-6 mb-12 md:mb-20 flex items-center justify-center px-4">
-      <svg viewBox="0 0 400 400" className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl">
+      <svg viewBox="0 0 600 600" className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl">
         {/* Определения градиентов */}
         <defs>
           {/* Violeta gradient */}
@@ -447,8 +447,8 @@ const About: React.FC = () => {
           <foreignObject x="80" y="100" width="120" height="80">
             <div className="flex flex-col items-center text-center">
               <Brush className="w-6 h-6 md:w-8 md:h-8 text-violeta mb-2" />
-              <p className="text-xs md:text-sm font-semibold text-gray-800">Visual Storytelling</p>
-              <p className="text-[10px] md:text-xs text-gray-600">Painting, sculpture & wearables</p>
+              <p className="text-xs md:text-sm font-semibold text-gray-800">Visual <br/> Storytelling</p>
+            
             </div>
           </foreignObject>
         </motion.g>
@@ -462,8 +462,8 @@ const About: React.FC = () => {
           <foreignObject x="200" y="100" width="120" height="80">
             <div className="flex flex-col items-center text-center">
               <Brain className="w-6 h-6 md:w-8 md:h-8 text-azul mb-2" />
-              <p className="text-xs md:text-sm font-semibold text-gray-800">Functional Design</p>
-              <p className="text-[10px] md:text-xs text-gray-600">ADHD-friendly systems</p>
+              <p className="text-xs md:text-sm font-semibold text-gray-800">Functional <br/> Design</p>
+              
             </div>
           </foreignObject>
         </motion.g>
@@ -477,8 +477,8 @@ const About: React.FC = () => {
           <foreignObject x="140" y="280" width="120" height="80">
             <div className="flex flex-col items-center text-center">
               <LeafyGreen className="w-6 h-6 md:w-8 md:h-8 text-sage mb-2" />
-              <p className="text-xs md:text-sm font-semibold text-gray-800">Ancestral Wisdom</p>
-              <p className="text-[10px] md:text-xs text-gray-600">Catalan nature traditions</p>
+              <p className="text-xs md:text-sm font-semibold text-gray-800">Ancestral <br/> Wisdom</p>
+              
             </div>
           </foreignObject>
         </motion.g>
