@@ -11,6 +11,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import heroPortrait from "@/assets/hero-portrait.jpg";
 import heroMacrame from "@/assets/hero-macrame.png";
 import heroMandala from "@/assets/hero-mandala.png";
+import logo from "@/assets/logo.svg";
 import {
   Heart,
   Hand,
@@ -358,8 +359,8 @@ const About: React.FC = () => {
           </div>
 
           {/* Venn Diagram - адаптивный */}
-    <div className="relative w-full h-[350px] sm:h-[400px] md:h-[450px] lg:h-[500px] mt-4 md:mt-6 mb-12 md:mb-20 flex items-center justify-center px-4">
-      <svg viewBox="0 0 400 350" className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl">
+    <div className="relative w-full h-[400px] sm:h-[450px] md:h-[500px] lg:h-[600px] mt-4 md:mt-6 mb-12 md:mb-20 flex items-center justify-center px-4">
+      <svg viewBox="0 0 400 400" className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl">
         {/* Определения градиентов */}
         <defs>
           {/* Violeta gradient */}
