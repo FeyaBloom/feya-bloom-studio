@@ -358,35 +358,31 @@ const About: React.FC = () => {
             </p>
           </div>
 
-          {/* Venn Diagram - адаптивный */}
-<div className="relative w-full flex items-center justify-center mt-4 md:mt-6 mb-12 md:mb-20 px-4">
+ <div className="relative w-full flex items-center justify-center mt-4 md:mt-6 mb-12 md:mb-20 px-4">
   <svg
-    viewBox="0 0 600 600"
+    viewBox="0 0 400 400"   // меньшее окно = крупнее контент
     preserveAspectRatio="xMidYMid meet"
-    className="w-full h-auto max-w-4xl" // <-- убрали фиксированные sm/md/lg, оставили гибкий максимум
+    className="w-full h-auto max-w-[700px] sm:max-w-[800px] md:max-w-[900px]"
   >
-    {/* Градиенты */}
     <defs>
       <radialGradient id="violetaGradient">
         <stop offset="0%" style={{ stopColor: '#6B4FA3', stopOpacity: 0.6 }} />
         <stop offset="100%" style={{ stopColor: '#6B4FA3', stopOpacity: 0.2 }} />
       </radialGradient>
-
       <radialGradient id="azulGradient">
         <stop offset="0%" style={{ stopColor: '#4A5F8C', stopOpacity: 0.6 }} />
         <stop offset="100%" style={{ stopColor: '#4A5F8C', stopOpacity: 0.2 }} />
       </radialGradient>
-
       <radialGradient id="sageGradient">
         <stop offset="0%" style={{ stopColor: '#8BA888', stopOpacity: 0.6 }} />
         <stop offset="100%" style={{ stopColor: '#8BA888', stopOpacity: 0.2 }} />
       </radialGradient>
     </defs>
 
-    {/* Левый круг */}
+    {/* Круги */}
     <motion.circle
-      cx="140"
-      cy="180"
+      cx="130"
+      cy="160"
       r="110"
       fill="url(#violetaGradient)"
       stroke="#6B4FA3"
@@ -395,11 +391,9 @@ const About: React.FC = () => {
       animate={{ scale: 1, opacity: 1 }}
       transition={{ duration: 0.8, delay: 0.2 }}
     />
-
-    {/* Правый круг */}
     <motion.circle
-      cx="260"
-      cy="180"
+      cx="270"
+      cy="160"
       r="110"
       fill="url(#azulGradient)"
       stroke="#4A5F8C"
@@ -408,8 +402,6 @@ const About: React.FC = () => {
       animate={{ scale: 1, opacity: 1 }}
       transition={{ duration: 0.8, delay: 0.4 }}
     />
-
-    {/* Нижний круг */}
     <motion.circle
       cx="200"
       cy="270"
@@ -422,26 +414,22 @@ const About: React.FC = () => {
       transition={{ duration: 0.8, delay: 0.6 }}
     />
 
-    {/* Логотип по центру */}
+    {/* Центр (лого) */}
     <motion.g
       initial={{ opacity: 0, scale: 0 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.8, delay: 1.4 }}
     >
-      <foreignObject x="150" y="143" width="100" height="100">
+      <foreignObject x="150" y="150" width="100" height="100">
         <div className="w-full h-full flex items-center justify-center bg-white/95 backdrop-blur-sm rounded-full shadow-lg p-3">
-          <img
-            src={logo}
-            alt="Feya Bloom Studio"
-            className="w-full h-full object-contain"
-          />
+          <img src={logo} alt="Feya Bloom Studio" className="w-full h-full object-contain" />
         </div>
       </foreignObject>
     </motion.g>
 
-    {/* Подписи */}
+    {/* Тексты */}
     <motion.g initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.8 }}>
-      <foreignObject x="80" y="100" width="120" height="80">
+      <foreignObject x="60" y="70" width="120" height="80">
         <div className="flex flex-col items-center text-center">
           <Brush className="w-6 h-6 md:w-8 md:h-8 text-violeta mb-2" />
           <p className="text-xs md:text-sm font-semibold text-gray-800">Visual <br /> Storytelling</p>
@@ -450,7 +438,7 @@ const About: React.FC = () => {
     </motion.g>
 
     <motion.g initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.0 }}>
-      <foreignObject x="200" y="100" width="120" height="80">
+      <foreignObject x="220" y="70" width="120" height="80">
         <div className="flex flex-col items-center text-center">
           <Brain className="w-6 h-6 md:w-8 md:h-8 text-azul mb-2" />
           <p className="text-xs md:text-sm font-semibold text-gray-800">Functional <br /> Design</p>
@@ -459,7 +447,7 @@ const About: React.FC = () => {
     </motion.g>
 
     <motion.g initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.2 }}>
-      <foreignObject x="140" y="280" width="120" height="80">
+      <foreignObject x="140" y="300" width="120" height="80">
         <div className="flex flex-col items-center text-center">
           <LeafyGreen className="w-6 h-6 md:w-8 md:h-8 text-sage mb-2" />
           <p className="text-xs md:text-sm font-semibold text-gray-800">Ancestral <br /> Wisdom</p>
