@@ -359,131 +359,115 @@ const About: React.FC = () => {
           </div>
 
           {/* Venn Diagram - адаптивный */}
-    <div className="relative w-full h-[400px] sm:h-[450px] md:h-[500px] lg:h-[600px] mt-4 md:mt-6 mb-12 md:mb-20 flex items-center justify-center px-4">
-      <svg viewBox="0 0 600 600" className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl">
-        {/* Определения градиентов */}
-        <defs>
-          {/* Violeta gradient */}
-          <radialGradient id="violetaGradient">
-            <stop offset="0%" style={{ stopColor: '#6B4FA3', stopOpacity: 0.6 }} />
-            <stop offset="100%" style={{ stopColor: '#6B4FA3', stopOpacity: 0.2 }} />
-          </radialGradient>
-          
-          {/* Azul gradient */}
-          <radialGradient id="azulGradient">
-            <stop offset="0%" style={{ stopColor: '#4A5F8C', stopOpacity: 0.6 }} />
-            <stop offset="100%" style={{ stopColor: '#4A5F8C', stopOpacity: 0.2 }} />
-          </radialGradient>
-          
-          {/* Sage gradient */}
-          <radialGradient id="sageGradient">
-            <stop offset="0%" style={{ stopColor: '#8BA888', stopOpacity: 0.6 }} />
-            <stop offset="100%" style={{ stopColor: '#8BA888', stopOpacity: 0.2 }} />
-          </radialGradient>
-        </defs>
+<div className="relative w-full flex items-center justify-center mt-4 md:mt-6 mb-12 md:mb-20 px-4">
+  <svg
+    viewBox="0 0 600 600"
+    preserveAspectRatio="xMidYMid meet"
+    className="w-full h-auto max-w-4xl" // <-- убрали фиксированные sm/md/lg, оставили гибкий максимум
+  >
+    {/* Градиенты */}
+    <defs>
+      <radialGradient id="violetaGradient">
+        <stop offset="0%" style={{ stopColor: '#6B4FA3', stopOpacity: 0.6 }} />
+        <stop offset="100%" style={{ stopColor: '#6B4FA3', stopOpacity: 0.2 }} />
+      </radialGradient>
 
-        {/* Левый круг - Visual Storytelling (Violeta) */}
-        <motion.circle
-          cx="140"
-          cy="180"
-          r="110"
-          fill="url(#violetaGradient)"
-          stroke="#6B4FA3"
-          strokeWidth="2"
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        />
+      <radialGradient id="azulGradient">
+        <stop offset="0%" style={{ stopColor: '#4A5F8C', stopOpacity: 0.6 }} />
+        <stop offset="100%" style={{ stopColor: '#4A5F8C', stopOpacity: 0.2 }} />
+      </radialGradient>
 
-        {/* Правый круг - Functional Design (Azul) */}
-        <motion.circle
-          cx="260"
-          cy="180"
-          r="110"
-          fill="url(#azulGradient)"
-          stroke="#4A5F8C"
-          strokeWidth="2"
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-        />
+      <radialGradient id="sageGradient">
+        <stop offset="0%" style={{ stopColor: '#8BA888', stopOpacity: 0.6 }} />
+        <stop offset="100%" style={{ stopColor: '#8BA888', stopOpacity: 0.2 }} />
+      </radialGradient>
+    </defs>
 
-        {/* Нижний круг - Ancestral Wisdom (Sage) */}
-        <motion.circle
-          cx="200"
-          cy="270"
-          r="110"
-          fill="url(#sageGradient)"
-          stroke="#8BA888"
-          strokeWidth="2"
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-        />
+    {/* Левый круг */}
+    <motion.circle
+      cx="140"
+      cy="180"
+      r="110"
+      fill="url(#violetaGradient)"
+      stroke="#6B4FA3"
+      strokeWidth="2"
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ duration: 0.8, delay: 0.2 }}
+    />
 
-        {/* ЛОГО В ЦЕНТРЕ - Феечка FB */}
-<motion.g
-  initial={{ opacity: 0, scale: 0 }}
-  animate={{ opacity: 1, scale: 1 }}
-  transition={{ duration: 0.8, delay: 1.4 }}
->
-  <foreignObject x="150" y="143" width="100" height="100">
-    <div className="w-full h-full flex items-center justify-center bg-white/95 backdrop-blur-sm rounded-full shadow-lg p-3">
-      <img 
-        src={logo} 
-        alt="Feya Bloom Studio" 
-        className="w-full h-full object-contain"
-      />
-    </div>
-  </foreignObject>
-</motion.g>
+    {/* Правый круг */}
+    <motion.circle
+      cx="260"
+      cy="180"
+      r="110"
+      fill="url(#azulGradient)"
+      stroke="#4A5F8C"
+      strokeWidth="2"
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ duration: 0.8, delay: 0.4 }}
+    />
 
-        {/* Иконка + текст - Левый круг (Visual Storytelling) */}
-        <motion.g
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-        >
-          <foreignObject x="80" y="100" width="120" height="80">
-            <div className="flex flex-col items-center text-center">
-              <Brush className="w-6 h-6 md:w-8 md:h-8 text-violeta mb-2" />
-              <p className="text-xs md:text-sm font-semibold text-gray-800">Visual <br/> Storytelling</p>
-            
-            </div>
-          </foreignObject>
-        </motion.g>
+    {/* Нижний круг */}
+    <motion.circle
+      cx="200"
+      cy="270"
+      r="110"
+      fill="url(#sageGradient)"
+      stroke="#8BA888"
+      strokeWidth="2"
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ duration: 0.8, delay: 0.6 }}
+    />
 
-        {/* Иконка + текст - Правый круг (Functional Design) */}
-        <motion.g
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.0 }}
-        >
-          <foreignObject x="200" y="100" width="120" height="80">
-            <div className="flex flex-col items-center text-center">
-              <Brain className="w-6 h-6 md:w-8 md:h-8 text-azul mb-2" />
-              <p className="text-xs md:text-sm font-semibold text-gray-800">Functional <br/> Design</p>
-              
-            </div>
-          </foreignObject>
-        </motion.g>
+    {/* Логотип по центру */}
+    <motion.g
+      initial={{ opacity: 0, scale: 0 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.8, delay: 1.4 }}
+    >
+      <foreignObject x="150" y="143" width="100" height="100">
+        <div className="w-full h-full flex items-center justify-center bg-white/95 backdrop-blur-sm rounded-full shadow-lg p-3">
+          <img
+            src={logo}
+            alt="Feya Bloom Studio"
+            className="w-full h-full object-contain"
+          />
+        </div>
+      </foreignObject>
+    </motion.g>
 
-        {/* Иконка + текст - Нижний круг (Ancestral Wisdom) */}
-        <motion.g
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.2 }}
-        >
-          <foreignObject x="140" y="280" width="120" height="80">
-            <div className="flex flex-col items-center text-center">
-              <LeafyGreen className="w-6 h-6 md:w-8 md:h-8 text-sage mb-2" />
-              <p className="text-xs md:text-sm font-semibold text-gray-800">Ancestral <br/> Wisdom</p>
-              
-            </div>
-          </foreignObject>
-        </motion.g>
-      </svg>  
-    </div>
+    {/* Подписи */}
+    <motion.g initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.8 }}>
+      <foreignObject x="80" y="100" width="120" height="80">
+        <div className="flex flex-col items-center text-center">
+          <Brush className="w-6 h-6 md:w-8 md:h-8 text-violeta mb-2" />
+          <p className="text-xs md:text-sm font-semibold text-gray-800">Visual <br /> Storytelling</p>
+        </div>
+      </foreignObject>
+    </motion.g>
+
+    <motion.g initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.0 }}>
+      <foreignObject x="200" y="100" width="120" height="80">
+        <div className="flex flex-col items-center text-center">
+          <Brain className="w-6 h-6 md:w-8 md:h-8 text-azul mb-2" />
+          <p className="text-xs md:text-sm font-semibold text-gray-800">Functional <br /> Design</p>
+        </div>
+      </foreignObject>
+    </motion.g>
+
+    <motion.g initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.2 }}>
+      <foreignObject x="140" y="280" width="120" height="80">
+        <div className="flex flex-col items-center text-center">
+          <LeafyGreen className="w-6 h-6 md:w-8 md:h-8 text-sage mb-2" />
+          <p className="text-xs md:text-sm font-semibold text-gray-800">Ancestral <br /> Wisdom</p>
+        </div>
+      </foreignObject>
+    </motion.g>
+  </svg>
+</div>
   </div>
 </section>
 
