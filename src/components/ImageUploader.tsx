@@ -11,9 +11,11 @@ interface ImageUploaderProps {
   onChange: (url: string) => void;
   label?: string;
   preview?: boolean;
+  multiple?: boolean;
+  onMultipleChange?: (urls: string[]) => void;
 }
 
-export const ImageUploader = ({ value, onChange, label, preview = true }: ImageUploaderProps) => {
+export const ImageUploader = ({ value, onChange, label, preview = true, multiple = false, onMultipleChange }: ImageUploaderProps) => {
   const [uploading, setUploading] = useState(false);
   const { toast } = useToast();
 
@@ -57,9 +59,67 @@ export const ImageUploader = ({ value, onChange, label, preview = true }: ImageU
     }
   };
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    if (multiple && onMultipleChange) {
+      // Upload multiple files
+      setUploading(true);
+      const uploadedUrls: string[] = [];
+      
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (file.size > 10 * 1024 * 1024) {
+          toast({
+            title: "Ошибка",
+            description: `${file.name} слишком большой (макс. 10MB)`,
+            variant: "destructive",
+          });
+          continue;
+        }
+
+        try {
+          const fileExt = file.name.split('.').pop();
+          const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+          const filePath = fileName;
+
+          const { error: uploadError } = await supabase.storage
+            .from('project-images')
+            .upload(filePath, file, {
+              cacheControl: '3600',
+              upsert: false
+            });
+
+          if (uploadError) {
+            throw uploadError;
+          }
+
+          const { data: { publicUrl } } = supabase.storage
+            .from('project-images')
+            .getPublicUrl(filePath);
+
+          uploadedUrls.push(publicUrl);
+        } catch (error: any) {
+          toast({
+            title: "Ошибка",
+            description: `${file.name}: ${error.message}`,
+            variant: "destructive",
+          });
+        }
+      }
+
+      if (uploadedUrls.length > 0) {
+        onMultipleChange(uploadedUrls);
+        toast({
+          title: "Успешно",
+          description: `Загружено ${uploadedUrls.length} изображений`,
+        });
+      }
+      setUploading(false);
+    } else {
+      // Upload single file
+      const file = files[0];
       if (file.size > 10 * 1024 * 1024) {
         toast({
           title: "Ошибка",
@@ -84,6 +144,7 @@ export const ImageUploader = ({ value, onChange, label, preview = true }: ImageU
         <Input
           type="file"
           accept="image/jpeg,image/png,image/webp,image/gif"
+          multiple={multiple}
           onChange={handleFileSelect}
           disabled={uploading}
           className="hidden"
