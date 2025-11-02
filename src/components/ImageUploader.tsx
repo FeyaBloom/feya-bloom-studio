@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useId } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +18,7 @@ interface ImageUploaderProps {
 export const ImageUploader = ({ value, onChange, label, preview = true, multiple = false, onMultipleChange }: ImageUploaderProps) => {
   const [uploading, setUploading] = useState(false);
   const { toast } = useToast();
+  const uniqueId = useId();
 
   const uploadImage = async (file: File) => {
     try {
@@ -148,12 +149,12 @@ export const ImageUploader = ({ value, onChange, label, preview = true, multiple
           onChange={handleFileSelect}
           disabled={uploading}
           className="hidden"
-          id={`image-upload-${label}`}
+          id={uniqueId}
         />
         <Button
           type="button"
           variant="outline"
-          onClick={() => document.getElementById(`image-upload-${label}`)?.click()}
+          onClick={() => document.getElementById(uniqueId)?.click()}
           disabled={uploading}
           className="w-full"
         >
