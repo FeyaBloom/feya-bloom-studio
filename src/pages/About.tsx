@@ -13,8 +13,6 @@ import heroMacrame from "@/assets/hero-macrame.png";
 import heroMandala from "@/assets/hero-mandala.png";
 import logo from "@/assets/logo.svg";
 import {
-  Heart,
-  Hand,
   Brain,
   Home,
   LeafyGreen,
@@ -23,13 +21,7 @@ import {
   Music,
   BookOpen,
   Brush,
-  Code,
-  Palette,
-  FileText,
-  Smartphone,
   Globe,
-  ArrowLeft,
-  ArrowRight,
 } from "lucide-react";
 
 type Fact = {
@@ -47,10 +39,10 @@ const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
   return (
     <section ref={ref} className="relative">
       <div className="text-center mb-8">
-        <motion.h2 initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} className="text-3xl sm:text-4xl md:text-5xl font-cormorant font-bold text-center text-secondary mb-4">
+        <motion.h2 initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-center text-primary mb-4">
           Random Things About Me
         </motion.h2>
-        <p className="text-accent text-3xl md:text-2xl font-body">because we're all 27% weird</p>
+        <p className="text-primary text-3xl md:text-2xl font-body">because we're all 27% weird</p>
       </div>
 
       <motion.div initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.08 }} className="flex justify-center mb-8">                       
@@ -121,23 +113,7 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
 };
 
 const About: React.FC = () => {
-  const directions = [
-    {
-      icon: Brush,
-      title: "Visual Storytelling",
-      description: "Painting, sculpture & wearables",
-    },
-    {
-      icon: Brain,
-      title: "Functional Design",
-      description: "ADHD-friendly systems",
-    },
-    {
-      icon: LeafyGreen,
-      title: "Ancestral Wisdom",
-      description: "Catalan nature-related traditions",
-    },
-  ];
+ 
 
   const beliefs = [
     { text: 'Keeping things functional', rotation: -3, scale: 1.1 },
@@ -174,24 +150,7 @@ const About: React.FC = () => {
     },
   ];
 
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [refBeliefs, inViewBeliefs] = useInView({ triggerOnce: true, threshold: 0.1 });
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "center" });
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
-  const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
-  const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
-
-  useEffect(() => {
-    const api = emblaApi;
-    if (!api) return;
-    const onSelect = () => setSelectedIndex(api.selectedScrollSnap());
-    api.on("select", onSelect);
-    onSelect();
-    return () => {
-      api.off("select", onSelect);
-    };
-  }, [emblaApi]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -250,24 +209,23 @@ const About: React.FC = () => {
         </div>
         
         <p className="text-lg sm:text-xl md:text-2xl font-cormorant leading-relaxed" style={{ color: '#3D3935' }}>
-          I create for minds that won't fit the mold—
-          <br />
+          I create for minds that won't fit the mold —
           and hearts that refuse to settle.
         </p>
         
         <p className="text-base md:text-lg leading-relaxed" style={{ color: '#8B8680' }}>
-          Working from Barcelona, where I blend art, function, 
+          Working from Spain, where I blend art, function, 
           and timeless wisdom into things that actually matter.
         </p>
         
-        <div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-4">
+        {/*<div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-4">
           <Button asChild size="lg" className="bg-violeta hover:bg-opacity-90 shadow-lg font-quicksand w-full sm:w-auto">
             <Link to="/contact">Start a Project</Link>
           </Button>
           <Button asChild variant="outline" size="lg" className="border-2 border-violeta text-violeta hover:bg-violeta hover:text-white font-quicksand w-full sm:w-auto">
             <Link to="/gallery">View Work</Link>
           </Button>
-        </div>
+        </div>*/}
       </motion.div>
 
       {/* Правая колонка - плавающие изображения - адаптивные размеры */}
@@ -447,7 +405,7 @@ const About: React.FC = () => {
     </motion.g>
 
     <motion.g initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.2 }}>
-      <foreignObject x="140" y="300" width="120" height="80">
+      <foreignObject x="140" y="280" width="120" height="80">
         <div className="flex flex-col items-center text-center">
           <LeafyGreen className="w-6 h-6 md:w-8 md:h-8 text-sage mb-2" />
           <p className="text-xs md:text-sm font-semibold text-gray-800">Ancestral <br /> Wisdom</p>
@@ -467,7 +425,7 @@ const About: React.FC = () => {
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
             animate={inViewBeliefs ? { opacity: 1, y: 0 } : {}}
-            className="text-3xl sm:text-4xl md:text-5xl font-cormorant font-bold text-center text-secondary mb-12 md:mb-20"
+            className="text-3xl sm:text-4xl md:text-5xl font-cormorant font-bold text-center text-accent mb-12 md:mb-20"
           >
             What I Stand For
           </motion.h2>
