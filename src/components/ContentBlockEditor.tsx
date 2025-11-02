@@ -55,6 +55,15 @@ const ContentBlockEditor = ({ blocks, onChange }: ContentBlockEditorProps) => {
     }
   };
 
+  const addMultipleImagesToGallery = (blockIndex: number, urls: string[]) => {
+    const block = blocks[blockIndex];
+    if (block.type === "gallery" && Array.isArray(block.content)) {
+      updateBlock(blockIndex, {
+        content: [...block.content, ...urls]
+      });
+    }
+  };
+
   const removeImageFromGallery = (blockIndex: number, imageIndex: number) => {
     const block = blocks[blockIndex];
     if (block.type === "gallery" && Array.isArray(block.content)) {
@@ -169,6 +178,9 @@ const ContentBlockEditor = ({ blocks, onChange }: ContentBlockEditorProps) => {
                   value=""
                   onChange={(url) => addImageToGallery(index, url)}
                   preview={false}
+                  multiple={true}
+                  onMultipleChange={(urls) => addMultipleImagesToGallery(index, urls)}
+                  label="Добавить изображения (можно выбрать сразу несколько)"
                 />
                 <div className="grid grid-cols-4 gap-2 mt-2">
                   {Array.isArray(block.content) && block.content.map((img, imgIdx) => (
@@ -176,7 +188,7 @@ const ContentBlockEditor = ({ blocks, onChange }: ContentBlockEditorProps) => {
                       <img 
                         src={img} 
                         alt="" 
-                        className="w-full aspect-square object-cover rounded"
+                        className="w-full aspect-square object-cover rounded border"
                       />
                       <Button
                         type="button"

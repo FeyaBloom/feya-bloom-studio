@@ -321,51 +321,6 @@ const ProjectForm = ({ project, onSave, onCancel }: ProjectFormProps) => {
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label>Project Images</Label>
-        <p className="text-sm text-muted-foreground">Добавьте дополнительные изображения проекта (можно выбрать сразу несколько)</p>
-        <ImageUploader
-          label="Project Images"
-          value=""
-          onChange={() => {}}
-          preview={false}
-          multiple={true}
-          onMultipleChange={(urls) => {
-            setFormData({
-              ...formData,
-              images: [...(formData.images || []), ...urls]
-            });
-          }}
-        />
-        {formData.images && formData.images.length > 0 && (
-          <div className="grid grid-cols-4 gap-3 mt-3">
-            {formData.images.map((img, idx) => (
-              <div key={idx} className="relative group">
-                <img 
-                  src={img} 
-                  alt={`Image ${idx + 1}`}
-                  className="w-full aspect-square object-cover rounded-lg border"
-                />
-                <Button
-                  type="button"
-                  variant="destructive"
-                  size="icon"
-                  className="absolute -top-2 -right-2 h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
-                  onClick={() => {
-                    setFormData({
-                      ...formData,
-                      images: formData.images?.filter((_, i) => i !== idx)
-                    });
-                  }}
-                >
-                  <Trash className="h-4 w-4" />
-                </Button>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
       <ContentBlockEditor
         blocks={formData.content || []}
         onChange={(content) => setFormData({...formData, content})}
