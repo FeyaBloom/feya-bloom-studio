@@ -8,7 +8,7 @@ import heroImage from "@/assets/mood-aurora.png";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import useEmblaCarousel from "embla-carousel-react";
-import heroPortrait from "@/assets/hero-portrait.jpg";
+import heroPortrait from "@/assets/hero-portrait-new.jpg";
 import heroMacrame from "@/assets/hero-macrame.png";
 import heroMandala from "@/assets/hero-mandala.png";
 import logo from "@/assets/logo.svg";
