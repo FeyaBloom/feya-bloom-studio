@@ -237,7 +237,7 @@ const About: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="relative z-20"
         >
-          <div className="relative w-48 h-60 sm:w-56 sm:h-72 md:w-64 md:h-80 lg:w-80 lg:h-96 rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl border border-white/50">
+          <div className="relative w-full max-w-sm h-[400px] sm:w-56 sm:h-72 md:w-64 md:h-80 lg:w-80 lg:h-96 rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl border border-white/50">
             <img 
               src={heroPortrait} 
               alt="Feya" 
