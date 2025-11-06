@@ -71,8 +71,8 @@ const Home = () => {
       <section className="py-16 md:py-24 lg:pb-32 bg-gradient-to-b from-muted to-background">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-3xl mx-auto text-center space-y-4 md:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif text-gradient-feya mb-6 md:mb-8 px-4">
-              What do you actually do?
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif text-gradient-feya mb-6 md:mb-8 px-4 font-bold">
+              What do I actually do?
             </h2>
             <p className="text-base md:text-lg lg:text-xl text-foreground leading-relaxed px-4">
               I make things that help people live more intentionally— whether it's a planner 
@@ -111,7 +111,7 @@ const Home = () => {
           y: 0
         } : {}} transition={{
           duration: 0.8
-        }} className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif text-center text-gradient-feya mb-12 md:mb-20 px-4">
+        }} className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif text-center text-gradient-feya mb-12 md:mb-20 px-4 font-bold">
       What Makes My Work Different
     </motion.h2>
 
@@ -240,7 +240,7 @@ const Home = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-accent/40 via-transparent to-primary/20" />
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           <div className="max-w-3xl mx-auto text-center space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif text-secondary drop-shadow-lg px-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif text-secondary drop-shadow-lg px-4 font-bold">
               Have an idea in mind?
             </h2>
             <p className="text-base md:text-lg lg:text-xl text-secondary px-4">
