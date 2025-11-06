@@ -175,11 +175,11 @@ const Gallery = () => {
       </section>
 
       {/* Projects Grid Section */}
-      <section className="py-12 md:py-24 px-4 md:px-6 bg-white">
+      <section className="py-6 md:py-12 px-4 md:px-6 bg-white">
 
 <div className="flex justify-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300 px-4">
               <Tabs value={activeCategory} onValueChange={setActiveCategory}>
-                <TabsList className="bg-card/80 backdrop-blur-sm shadow-xl flex-wrap h-auto gap-2 p-2">
+                <TabsList className="bg-card/80 backdrop-blur-sm shadow-xl flex-wrap h-auto gap-2 p-2 py-6">
                   {categories.map((category) => (
                     <TabsTrigger 
                       key={category} 
