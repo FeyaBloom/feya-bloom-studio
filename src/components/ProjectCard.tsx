@@ -106,7 +106,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
     <>
       <div
         onClick={() => setIsOpen(true)}
-        className="group cursor-pointer rounded-xl overflow-hidden shadow-soft hover:shadow-elevated transition-smooth bg-card"
+        className="group cursor-pointer rounded-xl overflow-hidden shadow-xl hover:shadow-elevated transition-smooth bg-card"
       >
         <div className="aspect-[4/3] overflow-hidden">
           <img
