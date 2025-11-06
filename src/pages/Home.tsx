@@ -154,7 +154,7 @@ const Home = () => {
       </svg>
 
       {/* Cards */}
-      <div className="space-y-8 md:space-y-16 relative">
+      <div className="space-y-8 md:space-y-16 relative -mx-4 md:mx-0">
         {differences.map((item, index) => {
               const Icon = item.icon;
               const isEven = index % 2 === 0;
@@ -172,7 +172,7 @@ const Home = () => {
                 ease: "easeOut"
               }} className={`relative flex items-center ${isEven ? 'lg:justify-start' : 'lg:justify-end'}`}>
               <div className="w-full lg:w-1/2">
-                <div className="glass-card rounded-2xl p-4 md:p-6 shadow-soft hover:shadow-elevated hover:scale-105 transition-smooth">
+                <div className="glass-card rounded-none md:rounded-2xl p-4 md:p-6 shadow-soft hover:shadow-elevated hover:scale-105 transition-smooth">
                   <div className="flex items-center gap-3 md:gap-4 mb-3">
                     <div className="w-10 h-10 md:w-12 md:h-12 gradient-feya-bg rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(107,79,163,0.4)] flex-shrink-0">
                       <Icon className="w-5 h-5 md:w-6 md:h-6 text-white" />
