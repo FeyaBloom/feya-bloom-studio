@@ -113,7 +113,7 @@ const Gallery = () => {
       </section>
 
       {/* What I Create: Carousel section */}
-      <section ref={ref} className="pt-12 md:pt-20 px-4 md:px-6 bg-background overflow-hidden">
+      <section ref={ref} className="pt-8 md:pt-12 px-4 md:px-6 bg-background overflow-hidden">
         <div className="container mx-auto max-w-6xl">
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
