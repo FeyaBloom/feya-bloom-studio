@@ -113,7 +113,7 @@ const Gallery = () => {
       </section>
 
       {/* What I Create: Carousel section */}
-      <section ref={ref} className="pt-8 md:pt-12 px-4 md:px-6 bg-background overflow-hidden">
+      <section ref={ref} className="pt-6 md:pt-12 px-4 md:px-6 bg-background overflow-hidden">
         <div className="container mx-auto max-w-6xl">
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
@@ -131,7 +131,7 @@ const Gallery = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.15 }}
-            className="relative py-12 md:py-20"
+            className="relative py-6 md:py-12"
           >
             <div className="overflow-hidden" ref={emblaRef}>
               <div className="flex">
@@ -179,7 +179,7 @@ const Gallery = () => {
 
 <div className="flex justify-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300 px-4">
               <Tabs value={activeCategory} onValueChange={setActiveCategory}>
-                <TabsList className="bg-card/80 backdrop-blur-sm shadow-soft flex-wrap h-auto gap-2 p-2">
+                <TabsList className="bg-card/80 backdrop-blur-sm shadow-xl flex-wrap h-auto gap-2 p-2">
                   {categories.map((category) => (
                     <TabsTrigger 
                       key={category} 
