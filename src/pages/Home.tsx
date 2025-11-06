@@ -116,8 +116,8 @@ const Home = () => {
     </motion.h2>
 
     <div className="max-w-4xl mx-auto relative">
-      {/* Animated Timeline Line - только на больших экранах */}
-      <svg className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none hidden lg:block" viewBox="0 0 200 800" fill="none" preserveAspectRatio="xMidYMid meet">
+      {/* Animated Timeline Line - показывается с планшетов */}
+      <svg className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none hidden md:block" viewBox="0 0 200 800" fill="none" preserveAspectRatio="xMidYMid meet">
         <defs>
           <linearGradient id="timeline-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" style={{
@@ -170,8 +170,8 @@ const Home = () => {
                 delay: 0.8 + index * 0.3,
                 duration: 0.8,
                 ease: "easeOut"
-              }} className={`relative flex items-center ${isEven ? 'lg:justify-start' : 'lg:justify-end'}`}>
-              <div className="w-full lg:w-1/2">
+              }} className={`relative flex items-center ${isEven ? 'md:justify-start' : 'md:justify-end'}`}>
+              <div className="w-full md:w-1/2">
                 <div className="glass-card rounded-none md:rounded-2xl p-4 md:p-6 shadow-soft hover:shadow-elevated hover:scale-105 transition-smooth">
                   <div className="flex items-center gap-3 md:gap-4 mb-3">
                     <div className="w-10 h-10 md:w-12 md:h-12 gradient-feya-bg rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(107,79,163,0.4)] flex-shrink-0">
