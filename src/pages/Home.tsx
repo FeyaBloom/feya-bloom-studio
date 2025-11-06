@@ -79,11 +79,11 @@ const Home = () => {
               that works for your brain, a piece of art that makes you stop and feel, or 
               knowledge that connects you to something older than us.
             </p>
-            <div className="mt-6 md:mt-8 space-y-2 px-4">
-              <p className="text-2xl sm:text-3xl md:text-4xl font-script text-violeta">
-                Barcelona taught me that beauty and function aren't opposites.
+            <div className="mt-6 md:mt-8 space-y-2 px-4 text-3xl sm:text-4xl md:text-5xl font-script text-violeta">
+              <p>
+                Life here taught me that beauty and function aren't opposites.
               </p>
-              <p className="text-xl sm:text-2xl md:text-3xl font-script text-violeta">
+              <p>
                 They're dance partners.
               </p>
             </div>
