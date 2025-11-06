@@ -67,7 +67,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* What Do You Actually Do Section */}
+      {/* What Do I Actually Do Section */}
       <section className="py-16 md:py-24 lg:pb-32 bg-gradient-to-b from-muted to-background">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-3xl mx-auto text-center space-y-4 md:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -81,9 +81,9 @@ const Home = () => {
             </p>
             <div className="mt-6 md:mt-8 space-y-2 px-4 text-3xl sm:text-4xl md:text-5xl font-script text-violeta">
               <p>
-                Life here taught me that beauty and function aren't opposites.
+                Life taught me - beauty and function aren't opposites.
               </p>
-              <p>
+              <p className="py-6">
                 They're dance partners.
               </p>
             </div>
