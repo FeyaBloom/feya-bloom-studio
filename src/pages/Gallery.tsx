@@ -107,27 +107,13 @@ const Gallery = () => {
               Discover my creative universe 
             </p>
             
-            <div className="flex justify-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300 px-4">
-              <Tabs value={activeCategory} onValueChange={setActiveCategory}>
-                <TabsList className="bg-card/80 backdrop-blur-sm shadow-soft flex-wrap h-auto gap-2 p-2">
-                  {categories.map((category) => (
-                    <TabsTrigger 
-                      key={category} 
-                      value={category}
-                      className="px-3 md:px-6 text-xs md:text-sm"
-                    >
-                      {category}
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-              </Tabs>
-            </div>
+            
           </div>
         </div>
       </section>
 
       {/* What I Create: Carousel section */}
-      <section ref={ref} className="pt-12 md:pt-20 px-4 md:px-6 bg-white overflow-hidden">
+      <section ref={ref} className="pt-12 md:pt-20 px-4 md:px-6 bg-background overflow-hidden">
         <div className="container mx-auto max-w-6xl">
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
@@ -189,7 +175,24 @@ const Gallery = () => {
       </section>
 
       {/* Projects Grid Section */}
-      <section className="py-12 md:py-24 px-4 md:px-6 bg-background">
+      <section className="py-12 md:py-24 px-4 md:px-6 bg-white">
+
+<div className="flex justify-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300 px-4">
+              <Tabs value={activeCategory} onValueChange={setActiveCategory}>
+                <TabsList className="bg-card/80 backdrop-blur-sm shadow-soft flex-wrap h-auto gap-2 p-2">
+                  {categories.map((category) => (
+                    <TabsTrigger 
+                      key={category} 
+                      value={category}
+                      className="px-3 md:px-6 text-xs md:text-sm"
+                    >
+                      {category}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </Tabs>
+            </div>
+
         <div className="container mx-auto max-w-6xl">
           {isLoading ? (
             <div className="text-center py-12">
