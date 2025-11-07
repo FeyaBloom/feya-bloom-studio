@@ -46,7 +46,7 @@ const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
         >
           Random Things About Me
         </motion.h2>
-        <p className="text-primary text-lg md:text-2xl font-body">
+        <p className="text-lg md:text-2xl font-body">
           because we're all 27% weird
         </p>
       </div>
@@ -567,7 +567,7 @@ const About: React.FC = () => {
       <foreignObject x="60" y="70" width="120" height="80">
         <div className="flex flex-col items-center text-center">
           <Brush className="w-6 h-6 md:w-8 md:h-8 text-violeta mb-2" />
-          <p className="text-sm md:text-xl font-serif text-gray-800">Visual <br /> Storytelling</p>
+          <p className="text-lg md:text-2xl font-serif text-gray-800">Visual <br /> Storytelling</p>
         </div>
       </foreignObject>
     </motion.g>
@@ -576,7 +576,7 @@ const About: React.FC = () => {
       <foreignObject x="220" y="70" width="120" height="80">
         <div className="flex flex-col items-center text-center">
           <Brain className="w-6 h-6 md:w-8 md:h-8 text-azul mb-2" />
-          <p className="text-sm md:text-xl font-serif text-gray-800">Functional <br /> Design</p>
+          <p className="text-lg md:text-2xl font-serif text-gray-800">Functional <br /> Design</p>
         </div>
       </foreignObject>
     </motion.g>
@@ -585,7 +585,7 @@ const About: React.FC = () => {
       <foreignObject x="140" y="280" width="120" height="80">
         <div className="flex flex-col items-center text-center">
           <LeafyGreen className="w-6 h-6 md:w-8 md:h-8 text-sage mb-2" />
-          <p className="text-sm md:text-xl font-serif text-gray-800">Ancestral <br /> Wisdom</p>
+          <p className="text-lg md:text-2xl font-serif text-gray-800">Ancestral <br /> Wisdom</p>
         </div>
       </foreignObject>
     </motion.g>
