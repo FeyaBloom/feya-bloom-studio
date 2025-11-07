@@ -212,9 +212,13 @@ const About: React.FC = () => {
       <Navigation />
  
      
+
+
+
      {/* Hero Section */}
-      <section className="relative h-[40vh] md:h-[50vh] flex items-center justify-center overflow-hidden">
-  <div className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+
+      <section className="relative h-[60vh] md:h-[70vh] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${forestHero})` }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background" />
@@ -289,7 +293,7 @@ const About: React.FC = () => {
       </motion.div>
 
       {/* Правая колонка - плавающие изображения - адаптивные размеры */}
-      <div className="relative w-full h-[400px] md:h-[500px] lg:h-[600px] flex items-center justify-center">
+      <div className="relative w-full h-[250px] md:h-[350px] lg:h-[500px] flex items-center justify-center">
         {/* Центральное изображение (портрет) - адаптивное */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
@@ -297,10 +301,10 @@ const About: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="relative z-20"
         >
-          <div className="relative w-full max-w-sm aspect-square sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-80 lg:h-80 rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl border border-white/50">
+          <div className="relative w-full max-w-sm aspect-square sm:w-64 sm:h-64 md:w-80 md:h-80 lg:w-100 lg:h-100 rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl border border-white/50">
             <img 
               src={heroPortrait} 
-              alt="Feya" 
+              alt="Feya Bloom Portrait" 
               className="w-full h-full object-cover"
             />
           </div>
