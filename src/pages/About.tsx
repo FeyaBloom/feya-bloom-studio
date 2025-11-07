@@ -25,176 +25,154 @@ import {
   Globe,
 } from "lucide-react";
 
-/* FunFactsSection + FactCard */
 type Fact = {
   icon: React.ComponentType<any>;
   text: string;
   backText: string;
+  initialPos: { x: number; y: number };
 };
 
+/* FunFactsSection + FactCard components */
 const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.18 });
   const [isRevealed, setIsRevealed] = useState(false);
 
   return (
-    <section ref={ref} className="relative py-12 md:py-16">
-      <div className="text-center mb-8 md:mb-12">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-center text-primary mb-4"
-        >
+    <section ref={ref} className="relative">
+      <div className="text-center mb-8">
+        <motion.h2 initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-center text-primary mb-4">
           Random Things About Me
         </motion.h2>
-        <p className="text-primary text-lg md:text-2xl font-body">
-          because we're all 27% weird
-        </p>
+        <p className="text-primary text-3xl md:text-2xl font-body">because we're all 27% weird</p>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ delay: 0.08 }}
-        className="flex justify-center mb-8 md:mb-12"
-      >
-        <Button
-          onClick={() => setIsRevealed(!isRevealed)}
-          size="lg"
-          className="gap-2 shadow-soft hover:shadow-elevated transition-smooth bg-accent"
-        >
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.08 }} className="flex justify-center mb-8">                       
+        <Button onClick={() => setIsRevealed(!isRevealed)} size="lg" className="gap-2 shadow-soft hover:shadow-elevated transition-smooth bg-accent">
           {isRevealed ? "Hide them!" : "Take a look"}
         </Button>
       </motion.div>
 
-      {/* ✅ ВНЕШНИЙ контейнер на всю ширину экрана, фикс высота — НЕТ */}
-      <div className="relative w-full flex justify-center px-4 overflow-visible">
-
-        {/* ✅ ВНУТРЕННИЙ контейнер: занимает ширину экрана, не обрезает карточки */}
-        <div
-  id="fun-facts-container"
-  className="relative w-full min-h-[50vh] sm:min-h-[60vh] md:min-h-[70vh] lg:min-h-[75vh] overflow-hidden">
-          {facts.map((fact, i) => (
-            <FactCard
-              key={i}
-              fact={fact}
-              index={i}
-              inView={inView}
-              isRevealed={isRevealed}
-            />
-          ))}
-        </div>
+      <div className="relative h-[600px] md:h-[700px] lg:h-[800px] w-full flex items-center justify-center overflow-hidden">
+        {facts.map((fact, i) => (
+          <FactCard key={i} fact={fact} index={i} inView={inView} isRevealed={isRevealed} />
+        ))}
       </div>
     </section>
   );
 };
 
-const FactCard: React.FC<{
-  fact: Fact;
-  index: number;
-  inView: boolean;
-  isRevealed: boolean;
-}> = ({ fact, index, inView, isRevealed }) => {
+const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isRevealed: boolean }> = ({ fact, index, inView, isRevealed }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const Icon = fact.icon;
 
-  const [pos, setPos] = useState<{ x: number; y: number; rot: number }>({
-    x: 0,
-    y: 0,
-    rot: 0,
-  });
+  // Адаптивное позиционирование - умное расположение без сильных перекрытий
+  const getResponsivePosition = () => {
+    if (typeof window === 'undefined') return { x: 0, y: 0 };
 
-  useEffect(() => {
-    const container = document.getElementById("fun-facts-container");
-    if (!container) return;
+    const isMobile = window.innerWidth < 640;
+    const isSmall = window.innerWidth >= 640 && window.innerWidth < 768;
+    const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
 
-    const total = container.children.length;
-    const width = container.clientWidth;
-    const height = container.clientHeight;
+    // Базовые позиции для разных карточек (более равномерное распределение)
+    const positions = [
+      { x: -120, y: -80 },   // Верхний левый
+      { x: 100, y: -100 },   // Верхний правый
+      { x: -140, y: 20 },    // Средний левый
+      { x: 120, y: 30 },     // Средний правый
+      { x: -100, y: 100 },   // Нижний левый
+      { x: 110, y: 110 },    // Нижний правый
+      { x: 0, y: -120 },     // Верхний центр
+      { x: -160, y: -30 },   // Дополнительный левый
+    ];
 
-    const cardW = 250;
-    const cardH = 150;
+    const basePosition = positions[index % positions.length];
 
-    const safeR = Math.min(
-      (width - cardW) / 2,
-      (height - cardH) / 2
-    );
-
-    // меньше радиус на мобилках
-    const radius = width < 500 ? safeR * 0.6 : safeR * 0.75;
-
-    if (!isRevealed) {
-      // ❗ стопка строго по центру
-      setPos({ x: 0, y: 0, rot: 0 });
-      return;
+    if (isMobile) {
+      // На мобильных - вертикальное расположение с минимальными горизонтальными смещениями
+      return {
+        x: isRevealed ? basePosition.x * 0.15 : 0,
+        y: isRevealed ? basePosition.y * 0.5 + (index * 35) : 0, // Вертикальный стек с небольшими смещениями
+      };
+    } else if (isSmall) {
+      // Small screens - чуть больше разброса
+      return {
+        x: isRevealed ? basePosition.x * 0.3 : 0,
+        y: isRevealed ? basePosition.y * 0.6 + (index * 25) : 0,
+      };
+    } else if (isTablet) {
+      // На планшетах - средний разброс
+      return {
+        x: isRevealed ? basePosition.x * 0.6 : 0,
+        y: isRevealed ? basePosition.y * 0.7 : 0,
+      };
+    } else {
+      // На десктопе - полный разброс
+      return {
+        x: isRevealed ? basePosition.x : 0,
+        y: isRevealed ? basePosition.y : 0,
+      };
     }
+  };
 
-    // ❗ ровное распределение по кругу
-    const angle = (index / total) * Math.PI * 2;
-
-    const x = Math.cos(angle) * radius;
-    const y = Math.sin(angle) * radius + 40; // опустить ниже кнопки
-    const rot = Math.sin(angle) * 10; // легкий разворот, чтобы не были ровно
-
-    setPos({ x, y, rot });
-  }, [isRevealed, index]);
+  const position = getResponsivePosition();
 
   return (
     <motion.div
-      className="absolute"
-      style={{
-        left: "50%",
-        top: "20px",
-        transform: "translateX(-50%)",
+      className="absolute cursor-pointer"
+      style={{ 
         perspective: 1000,
-        zIndex: isFlipped ? 50 : 10 + index,
+        zIndex: isFlipped ? 50 : 10 + index, // Перевернутая карточка всегда сверху
       }}
-      initial={{ opacity: 0, scale: 0.85 }}
+      initial={{ opacity: 0, scale: 0.9, x: 0, y: 0 }}
       animate={
         inView
           ? {
-              opacity: 1,
-              scale: isFlipped ? 1.05 : 1,
-              x: pos.x,
-              y: pos.y,
-              rotate: pos.rot,
+              opacity: isFlipped ? 1 : 0.95, // Перевернутая карточка более непрозрачна
+              scale: isFlipped ? 1.05 : 1, // Перевернутая карточка чуть больше
+              x: position.x,
+              y: position.y,
             }
-          : { opacity: 0, scale: 0.85 }
+          : {}
       }
-      transition={{
-        type: "spring",
-        stiffness: 90,
-        damping: 14,
+      transition={{ 
+        type: "spring", 
+        stiffness: 90, 
+        damping: 12, 
         delay: index * 0.06,
+        scale: { duration: 0.2 }, // Быстрое изменение масштаба при переворачивании
       }}
       onClick={(e) => {
         e.stopPropagation();
         setIsFlipped((s) => !s);
       }}
-      whileHover={{ scale: 1.03, zIndex: 100 }}
+      whileHover={{ 
+        scale: 1.03,
+        zIndex: 40, // При hover тоже поднимаем
+        transition: { duration: 0.2 }
+      }}
     >
       <motion.div
-        className="relative w-48 h-28 sm:w-52 sm:h-32 md:w-60 md:h-36"
+        className="relative w-52 h-28 sm:w-56 sm:h-30 md:w-64 md:h-36 lg:w-72 lg:h-40"
         style={{ transformStyle: "preserve-3d" as const }}
         animate={{ rotateY: isFlipped ? 180 : 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.6 }}
       >
         {/* Front */}
-        <div className="absolute w-full h-full" style={{ backfaceVisibility: "hidden" }}>
-          <div className="glass-card rounded-xl p-3 h-full flex items-center gap-3 shadow-lg">
-            <div className="w-10 h-10 gradient-mystic rounded-lg flex items-center justify-center">
-              <Icon className="w-5 h-5 text-white" />
+        <div className="absolute w-full h-full" style={{ backfaceVisibility: "hidden" as const }}>
+          <div className="glass-card rounded-2xl p-3 md:p-4 h-full flex items-center gap-3 md:gap-4 shadow-lg hover:shadow-xl transition-shadow">
+            <div className="w-10 h-10 md:w-12 md:h-12 gradient-mystic rounded-xl flex items-center justify-center flex-shrink-0">
+              <Icon className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
-            <p className="text-gray-700 text-sm font-body">{fact.text}</p>
+            <p className="text-gray-700 text-xs sm:text-sm md:text-base font-body leading-snug">
+              {fact.text}
+            </p>
           </div>
         </div>
 
         {/* Back */}
-        <div
-          className="absolute w-full h-full"
-          style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
-        >
-          <div className="rounded-xl p-4 h-full flex items-center justify-center gradient-mystic shadow-2xl">
-            <p className="text-white font-semibold text-center text-sm font-body leading-relaxed px-2">
+        <div className="absolute w-full h-full" style={{ backfaceVisibility: "hidden" as const, transform: "rotateY(180deg)" }}>
+          <div className="rounded-2xl p-3 md:p-4 h-full flex items-center justify-center gradient-mystic shadow-2xl">
+            <p className="text-white font-semibold text-center text-sm md:text-base lg:text-lg font-body leading-relaxed px-2">
               {fact.backText}
             </p>
           </div>
@@ -203,7 +181,9 @@ const FactCard: React.FC<{
     </motion.div>
   );
 };
+
 const About: React.FC = () => {
+ 
 
   const beliefs = [
     { text: 'Keeping things functional', rotation: -3, scale: 1.1 },
@@ -218,49 +198,49 @@ const About: React.FC = () => {
       icon: Coffee,
       text: "Herbal tea addict (it's basically my personality now)",
       backText: "It's a hot bean water ritual.",
-      
+      initialPos: { y: -150, x: -220 },
     },
     {
       icon: Music,
       text: "Night owl pretending to be a morning person",
       backText: "My best ideas arrive after midnight.",
-      
+      initialPos: { y: 160, x: 200 },
     },
     {
       icon: BookOpen,
       text: "Can't pass a craft store without buying at least one thing",
       backText: "My yarn collection is getting out of hand.",
-      
+      initialPos: { y: -80, x: 240 },
     },
     {
       icon: Globe,
       text: "Obsessively curious about how things work",
       backText: "...and taking them apart to find out.",
-      
+      initialPos: { y: 80, x: -240 },
     },
     {
       icon: Brain,
       text: "I have ADHD and my work reflects it",
       backText: "Hyperfocus is my superpower.",
-      
+      initialPos: { y: -200, x: 60 },
     },
     {
       icon: Moon,
       text: "Moon phases guide my creative cycles",
       backText: "I plan projects around lunar energy.",
-      
+      initialPos: { y: 200, x: -100 },
     },
     {
       icon: Brush,
       text: "Started with traditional painting, now I code",
       backText: "Both are just different canvases.",
-      
+      initialPos: { y: 0, x: -280 },
     },
     {
       icon: LeafyGreen,
       text: "Foraging herbs is my meditation",
       backText: "Nature is the best teacher.",
-      
+      initialPos: { y: -20, x: 280 },
     },
   ];
 
