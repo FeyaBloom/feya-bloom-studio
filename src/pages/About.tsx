@@ -67,7 +67,7 @@ const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
       </motion.div>
 
       {/* Увеличена высота контейнера */}
-      <div className="relative w-full min-h-[700px] sm:min-h-[800px] md:min-h-[900px] lg:min-h-[1000px] px-4">
+      <div className="relative w-full min-h-[500px] sm:min-h-[600px] md:min-h-[700px] lg:min-h-[700px] px-4">
         {facts.map((fact, i) => (
           <FactCard 
             key={i} 
