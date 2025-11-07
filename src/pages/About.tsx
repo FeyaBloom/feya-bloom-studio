@@ -125,14 +125,12 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
 
   return (
     <motion.div
-      className="absolute"
-      style={{
-        left: "50%",
-        top: "20px",
-        transform: "translateX(-50%)",
-        perspective: 1000,
-        zIndex: isFlipped ? 50 : 10 + index
-      }}
+  className="absolute inset-0 flex items-start justify-center pointer-events-auto"
+  style={{
+    top: "0",
+    zIndex: isFlipped ? 50 : 10 + index,
+  }}
+      
       initial={{ opacity: 0, scale: 0.85, x: 0, y: 0 }}
       animate={
         inView
