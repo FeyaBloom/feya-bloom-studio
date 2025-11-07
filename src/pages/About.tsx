@@ -71,14 +71,8 @@ const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
 
         {/* ✅ ВНУТРЕННИЙ контейнер: занимает ширину экрана, не обрезает карточки */}
         <div
-          id="fun-facts-container"
-          className="
-            relative w-full
-            max-w-screen-xl
-            min-h-[55vh] sm:min-h-[60vh] md:min-h-[65vh] lg:min-h-[70vh]
-            mx-auto overflow-visible
-          "
-        >
+  id="fun-facts-container"
+  className="relative w-full min-h-[50vh] sm:min-h-[60vh] md:min-h-[70vh] lg:min-h-[75vh] overflow-hidden">
           {facts.map((fact, i) => (
             <FactCard
               key={i}
