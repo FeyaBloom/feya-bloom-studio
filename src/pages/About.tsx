@@ -12,7 +12,7 @@ import forestHero from "@/assets/forest-hero.png";
 import heroPortrait from "@/assets/hero-portrait-new.jpg";
 import heroMacrame from "@/assets/hero-macrame.png";
 import heroMandala from "@/assets/hero-mandala.png";
-import logo from "@/assets/logo.svg";
+import {React.Component as Logo} from "@/assets/logo.svg";
 import {
   Brain,
   Home,
@@ -368,7 +368,7 @@ const About: React.FC = () => {
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="w-full text-center md:text-left md:pl-8 order-1 pt-8"
+          className="w-full text-center md:text-right order-1 pt-8"
         >
           <div className="inline-block">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-script gradient-mystic mb-3 md:mb-4 drop-shadow-lg ">
@@ -557,7 +557,7 @@ const About: React.FC = () => {
     >
       <foreignObject x="150" y="150" width="100" height="100">
         <div className="w-full h-full flex items-center justify-center gradient-feya-bg backdrop-blur-sm rounded-full shadow-lg p-3">
-          <img src={logo} alt="Feya Bloom Studio" className="w-full h-full object-contain text-sage" />
+          <Logo className="w-full h-full object-contain text-white/50" />
         </div>
       </foreignObject>
     </motion.g>
