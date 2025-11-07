@@ -43,7 +43,7 @@ const Home = () => {
         
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           <div className="max-w-4xl mx-auto text-center space-y-6 md:space-y-8">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-script text-primary mb-4 animate-in fade-in slide-in-from-bottom-4 duration-1000 px-4">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-script text-mystic mb-4 animate-in fade-in slide-in-from-bottom-4 duration-1000 px-4">
               Feya Bloom Studio
             </h1>
             <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-serif text-foreground animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-200 px-4">
