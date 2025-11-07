@@ -1,18 +1,15 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import heroImage from "@/assets/mood-aurora.png";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import useEmblaCarousel from "embla-carousel-react";
 import forestHero from "@/assets/forest-hero.png";
 import heroPortrait from "@/assets/hero-portrait-new.jpg";
 import heroMacrame from "@/assets/hero-macrame.png";
 import heroMandala from "@/assets/hero-mandala.png";
-import {React.Component as Logo} from "@/assets/logo.svg";
+import { ReactComponent as Logo} from "@/assets/logo.svg";
 import {
   Brain,
   Home,
