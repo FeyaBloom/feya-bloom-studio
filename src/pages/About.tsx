@@ -56,7 +56,7 @@ const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
         initial={{ opacity: 0, y: 10 }} 
         animate={inView ? { opacity: 1, y: 0 } : {}} 
         transition={{ delay: 0.08 }} 
-        className="flex justify-center mb-8 md:mb-12"
+        className="flex justify-center mb-12 md:mb-16"
       >                       
         <Button 
           onClick={() => setIsRevealed(!isRevealed)} 
@@ -67,21 +67,17 @@ const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
         </Button>
       </motion.div>
 
-      {/* ВНЕШНИЙ контейнер - дает общее пространство */}
-      <div className="relative w-full min-h-[500px] sm:min-h-[600px] md:min-h-[700px] lg:min-h-[800px] flex items-center justify-center px-4 overflow-hidden">
-        
-        {/* ВНУТРЕННИЙ контейнер - точка отсчета для карточек */}
-        <div className="relative w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-4xl h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px]">
-          {facts.map((fact, i) => (
-            <FactCard 
-              key={i} 
-              fact={fact} 
-              index={i} 
-              inView={inView} 
-              isRevealed={isRevealed} 
-            />
-          ))}
-        </div>
+      {/* Контейнер на всю ширину с минимальной высотой */}
+      <div className="relative w-full min-h-[600px] sm:min-h-[700px] md:min-h-[800px] lg:min-h-[900px] px-4">
+        {facts.map((fact, i) => (
+          <FactCard 
+            key={i} 
+            fact={fact} 
+            index={i} 
+            inView={inView} 
+            isRevealed={isRevealed} 
+          />
+        ))}
       </div>
     </section>
   );
@@ -91,39 +87,41 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
   const [isFlipped, setIsFlipped] = useState(false);
   const Icon = fact.icon;
 
-  // Улучшенное позиционирование с учетом размера контейнера
+  // Позиционирование: старт по центру сверху, разлет вниз и в стороны
   const getResponsivePosition = () => {
-    if (typeof window === 'undefined') return { x: 0, y: 0 };
+    if (typeof window === 'undefined') return { x: 0, y: 0, rotate: 0 };
 
     const isMobile = window.innerWidth < 640;
     const isSmall = window.innerWidth >= 640 && window.innerWidth < 768;
     const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
 
-    // Позиции относительно ЦЕНТРА контейнера (0,0 - это центр)
+    // Позиции: максимальное распределение (x от -400 до +400, y только вниз 0-400)
     const positions = [
-      { x: -150, y: -120 },  // Левый верх
-      { x: 150, y: -130 },   // Правый верх
-      { x: -180, y: -20 },   // Левый центр
-      { x: 170, y: 0 },      // Правый центр
-      { x: -160, y: 100 },   // Левый низ
-      { x: 160, y: 110 },    // Правый низ
-      { x: -50, y: -150 },   // Верх центр-лево
-      { x: 50, y: 140 },     // Низ центр-право
+      { x: -380, y: 50, rotate: -8 },    // Крайний левый верх
+      { x: -250, y: 120, rotate: 5 },    // Левый верх
+      { x: -120, y: 80, rotate: -3 },    // Центр-левый верх
+      { x: 120, y: 100, rotate: 7 },     // Центр-правый верх
+      { x: 250, y: 140, rotate: -5 },    // Правый верх
+      { x: 380, y: 70, rotate: 4 },      // Крайний правый верх
+      { x: -300, y: 280, rotate: 6 },    // Левый низ
+      { x: -100, y: 320, rotate: -7 },   // Центр-левый низ
+      { x: 100, y: 300, rotate: 8 },     // Центр-правый низ
+      { x: 300, y: 340, rotate: -4 },    // Правый низ
     ];
 
     const basePosition = positions[index % positions.length];
 
     if (isMobile) {
-      // На мобильных - компактное вертикальное расположение
+      // На мобильных - компактное вертикальное распределение с небольшим разбросом
       const mobilePositions = [
-        { x: -15, y: -140 },
-        { x: 20, y: -80 },
-        { x: -25, y: -20 },
-        { x: 15, y: 40 },
-        { x: -20, y: 100 },
-        { x: 25, y: 160 },
-        { x: -10, y: -100 },
-        { x: 10, y: 120 },
+        { x: -80, y: 20, rotate: -6 },
+        { x: 70, y: 80, rotate: 5 },
+        { x: -60, y: 140, rotate: -4 },
+        { x: 80, y: 200, rotate: 7 },
+        { x: -70, y: 260, rotate: 6 },
+        { x: 60, y: 320, rotate: -5 },
+        { x: -50, y: 380, rotate: 4 },
+        { x: 70, y: 440, rotate: -7 },
       ];
       
       const mobilePos = mobilePositions[index % mobilePositions.length];
@@ -131,24 +129,28 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
       return {
         x: isRevealed ? mobilePos.x : 0,
         y: isRevealed ? mobilePos.y : 0,
+        rotate: isRevealed ? mobilePos.rotate : 0,
       };
     } else if (isSmall) {
       // Small screens - средний разброс
       return {
         x: isRevealed ? basePosition.x * 0.5 : 0,
-        y: isRevealed ? basePosition.y * 0.6 : 0,
+        y: isRevealed ? basePosition.y * 0.7 : 0,
+        rotate: isRevealed ? basePosition.rotate : 0,
       };
     } else if (isTablet) {
-      // Планшеты - больше пространства
+      // Планшеты - больше разброса
       return {
-        x: isRevealed ? basePosition.x * 0.75 : 0,
-        y: isRevealed ? basePosition.y * 0.8 : 0,
+        x: isRevealed ? basePosition.x * 0.7 : 0,
+        y: isRevealed ? basePosition.y * 0.85 : 0,
+        rotate: isRevealed ? basePosition.rotate : 0,
       };
     } else {
       // Десктоп - полный разброс
       return {
         x: isRevealed ? basePosition.x : 0,
         y: isRevealed ? basePosition.y : 0,
+        rotate: isRevealed ? basePosition.rotate : 0,
       };
     }
   };
@@ -157,36 +159,45 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
 
   return (
     <motion.div
-      className="absolute left-1/2 top-0 cursor-pointer" // Центрируем относительно середины контейнера
+      className="absolute left-1/2 top-0 cursor-pointer" // Старт: горизонтально по центру, вертикально сверху
       style={{ 
         perspective: 1000,
         zIndex: isFlipped ? 50 : 10 + index,
-        transform: 'translate(-50%, -50%)', // Центрируем саму карточку
+        transformOrigin: 'center center',
       }}
-      initial={{ opacity: 0, scale: 0.8, x: 0, y: 0 }}
+      initial={{ opacity: 0, scale: 0.8, x: '-50%', y: 0, rotate: 0 }} // x: -50% центрирует карточку
       animate={
         inView
           ? {
               opacity: isFlipped ? 1 : 0.96,
               scale: isFlipped ? 1.05 : 1,
-              x: position.x,
+              x: `calc(-50% + ${position.x}px)`, // Смещение от центра с сохранением центрирования
               y: position.y,
+              rotate: position.rotate,
             }
-          : { opacity: 0, scale: 0.8, x: 0, y: 0 }
+          : { 
+              opacity: 0, 
+              scale: 0.8, 
+              x: '-50%', 
+              y: 0, 
+              rotate: 0 
+            }
       }
       transition={{ 
         type: "spring", 
-        stiffness: 80, 
+        stiffness: 70, 
         damping: 15, 
         delay: index * 0.08,
         scale: { duration: 0.2 },
+        rotate: { duration: 0.5 },
       }}
       onClick={(e) => {
         e.stopPropagation();
         setIsFlipped((s) => !s);
       }}
       whileHover={{ 
-        scale: 1.03,
+        scale: 1.05,
+        rotate: position.rotate + (position.rotate > 0 ? 2 : -2),
         zIndex: 40,
         transition: { duration: 0.2 }
       }}
