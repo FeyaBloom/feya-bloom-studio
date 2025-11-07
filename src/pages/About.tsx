@@ -51,7 +51,7 @@ const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
         </Button>
       </motion.div>
 
-      <div className="relative h-[500px] md:h-[600px] w-full flex items-center justify-center overflow-hidden">
+      <div className="relative h-[600px] md:h-[700px] lg:h-[800px] w-full flex items-center justify-center overflow-hidden">
         {facts.map((fact, i) => (
           <FactCard key={i} fact={fact} index={i} inView={inView} isRevealed={isRevealed} />
         ))}
@@ -72,16 +72,16 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
     const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
     
     if (isMobile) {
-      // На мобильных - меньший разброс
+      // На мобильных - минимальный горизонтальный разброс, больше вертикального
       return {
-        x: isRevealed ? fact.initialPos.x * 0.3 : 0,
-        y: isRevealed ? fact.initialPos.y * 0.5 : 0,
+        x: isRevealed ? fact.initialPos.x * 0.2 : 0,
+        y: isRevealed ? fact.initialPos.y * 0.7 : 0,
       };
     } else if (isTablet) {
       // На планшетах - средний разброс
       return {
-        x: isRevealed ? fact.initialPos.x * 0.6 : 0,
-        y: isRevealed ? fact.initialPos.y * 0.7 : 0,
+        x: isRevealed ? fact.initialPos.x * 0.5 : 0,
+        y: isRevealed ? fact.initialPos.y * 0.8 : 0,
       };
     } else {
       // На десктопе - полный разброс
@@ -158,49 +158,49 @@ const About: React.FC = () => {
       icon: Coffee,
       text: "Herbal tea addict (it's basically my personality now)",
       backText: "It's a hot bean water ritual.",
-      initialPos: { y: -80, x: -200 },
+      initialPos: { y: -150, x: -220 },
     },
     {
       icon: Music,
       text: "Night owl pretending to be a morning person",
       backText: "My best ideas arrive after midnight.",
-      initialPos: { y: 90, x: 180 },
+      initialPos: { y: 160, x: 200 },
     },
     {
       icon: BookOpen,
       text: "Can't pass a craft store without buying at least one thing",
       backText: "My yarn collection is getting out of hand.",
-      initialPos: { y: -40, x: 220 },
+      initialPos: { y: -80, x: 240 },
     },
     {
       icon: Globe,
       text: "Obsessively curious about how things work",
       backText: "...and taking them apart to find out.",
-      initialPos: { y: 40, x: -180 },
+      initialPos: { y: 80, x: -240 },
     },
     {
       icon: Brain,
       text: "I have ADHD and my work reflects it",
       backText: "Hyperfocus is my superpower.",
-      initialPos: { y: -120, x: 50 },
+      initialPos: { y: -200, x: 60 },
     },
     {
       icon: Moon,
       text: "Moon phases guide my creative cycles",
       backText: "I plan projects around lunar energy.",
-      initialPos: { y: 130, x: -80 },
+      initialPos: { y: 200, x: -100 },
     },
     {
       icon: Brush,
       text: "Started with traditional painting, now I code",
       backText: "Both are just different canvases.",
-      initialPos: { y: 80, x: -250 },
+      initialPos: { y: 0, x: -280 },
     },
     {
       icon: LeafyGreen,
       text: "Foraging herbs is my meditation",
       backText: "Nature is the best teacher.",
-      initialPos: { y: -90, x: -80 },
+      initialPos: { y: -20, x: 280 },
     },
   ];
 
