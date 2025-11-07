@@ -371,7 +371,7 @@ const About: React.FC = () => {
           className="w-full text-center md:text-left order-1 pt-8"
         >
           <div className="inline-block">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-script text-violeta mb-3 md:mb-4 shadow-xl font-bold">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-script text-gradient-aurora mb-3 md:mb-4 shadow-xl bg-background/50">
               Hi there! I'm Feya
             </h1>
             <div className="h-1 w-24 md:w-32 gradient-feya rounded-full mx-auto md:mx-0" />
