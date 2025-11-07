@@ -28,8 +28,7 @@ import {
 type Fact = {
   icon: React.ComponentType<any>;
   text: string;
-  backText: string;
-  initialPos: { x: number; y: number };
+  backText: string;  
 };
 
 /* FunFactsSection + FactCard components */
@@ -67,11 +66,17 @@ const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
         </Button>
       </motion.div>
 
-      {/* ВНЕШНИЙ контейнер - дает общее пространство */}
-      <div className="relative w-full min-h-[500px] sm:min-h-[600px] md:min-h-[700px] lg:min-h-[800px] flex items-center justify-center px-4 overflow-hidden">
-        
-        {/* ВНУТРЕННИЙ контейнер - точка отсчета для карточек */}
-        <div className="relative w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-4xl h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px]">
+      {/* ВНЕШНИЙ контейнер — растягивается под контент, не фиксированные высоты */}
+<div className="relative w-full flex justify-center px-4 overflow-hidden py-6 sm:py-8 md:py-10">
+  
+  {/* ВНУТРЕННИЙ контейнер — адаптивная высота и ширина, без пиксельных ограничений */}
+  <div
+    id="fun-facts-container"
+    className=" relative w-full 
+      max-w-[100%] sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[1200px]
+      min-h-[45vh] sm:min-h-[55vh] md:min-h-[65vh] lg:min-h-[70vh] 
+      max-h-[80vh]
+      mx-auto overflow-hidden">
           {facts.map((fact, i) => (
             <FactCard 
               key={i} 
@@ -91,106 +96,64 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
   const [isFlipped, setIsFlipped] = useState(false);
   const Icon = fact.icon;
 
-  // Улучшенное позиционирование с учетом размера контейнера
-  const getResponsivePosition = () => {
-    if (typeof window === 'undefined') return { x: 0, y: 0 };
+  const getRandomPosition = () => {
+  if (!isRevealed) return { x: 0, y: 0 };
 
-    const isMobile = window.innerWidth < 640;
-    const isSmall = window.innerWidth >= 640 && window.innerWidth < 768;
-    const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
+  const container = document.getElementById("fun-facts-container");
+  if (!container) return { x: 0, y: 0 };
 
-    // Позиции относительно ЦЕНТРА контейнера (0,0 - это центр)
-    const positions = [
-      { x: -150, y: -120 },  // Левый верх
-      { x: 150, y: -130 },   // Правый верх
-      { x: -180, y: -20 },   // Левый центр
-      { x: 170, y: 0 },      // Правый центр
-      { x: -160, y: 100 },   // Левый низ
-      { x: 160, y: 110 },    // Правый низ
-      { x: -50, y: -150 },   // Верх центр-лево
-      { x: 50, y: 140 },     // Низ центр-право
-    ];
+  const width = container.clientWidth;
+  const height = container.clientHeight;
 
-    const basePosition = positions[index % positions.length];
+  // размеры карточки примерно (с запасом)
+  const cardW = 260;
+  const cardH = 160;
 
-    if (isMobile) {
-      // На мобильных - компактное вертикальное расположение
-      const mobilePositions = [
-        { x: -15, y: -140 },
-        { x: 20, y: -80 },
-        { x: -25, y: -20 },
-        { x: 15, y: 40 },
-        { x: -20, y: 100 },
-        { x: 25, y: 160 },
-        { x: -10, y: -100 },
-        { x: 10, y: 120 },
-      ];
-      
-      const mobilePos = mobilePositions[index % mobilePositions.length];
-      
-      return {
-        x: isRevealed ? mobilePos.x : 0,
-        y: isRevealed ? mobilePos.y : 0,
-      };
-    } else if (isSmall) {
-      // Small screens - средний разброс
-      return {
-        x: isRevealed ? basePosition.x * 0.5 : 0,
-        y: isRevealed ? basePosition.y * 0.6 : 0,
-      };
-    } else if (isTablet) {
-      // Планшеты - больше пространства
-      return {
-        x: isRevealed ? basePosition.x * 0.75 : 0,
-        y: isRevealed ? basePosition.y * 0.8 : 0,
-      };
-    } else {
-      // Десктоп - полный разброс
-      return {
-        x: isRevealed ? basePosition.x : 0,
-        y: isRevealed ? basePosition.y : 0,
-      };
-    }
-  };
+  // внутри контейнера, с отступами
+  const x = Math.random() * (width - cardW) - (width / 2 - cardW / 2);
+  const y = Math.random() * (height - cardH) - (height / 2 - cardH / 2);
 
-  const position = getResponsivePosition();
+  return { x, y };
+};
+
+  const position = getRandomPosition();
 
   return (
     <motion.div
-      className="absolute left-1/3 top-1/3 cursor-pointer" // Центрируем относительно середины контейнера
-      style={{ 
-        perspective: 1000,
-        zIndex: isFlipped ? 50 : 10 + index,
-        transform: 'translate(-50%, -50%)', // Центрируем саму карточку
-      }}
-      initial={{ opacity: 0, scale: 0.8, x: 0, y: 0 }}
-      animate={
-        inView
-          ? {
-              opacity: isFlipped ? 1 : 0.96,
-              scale: isFlipped ? 1.05 : 1,
-              x: position.x,
-              y: position.y,
-            }
-          : { opacity: 0, scale: 0.8, x: 0, y: 0 }
-      }
-      transition={{ 
-        type: "spring", 
-        stiffness: 80, 
-        damping: 15, 
-        delay: index * 0.08,
-        scale: { duration: 0.2 },
-      }}
-      onClick={(e) => {
-        e.stopPropagation();
-        setIsFlipped((s) => !s);
-      }}
-      whileHover={{ 
-        scale: 1.03,
-        zIndex: 40,
-        transition: { duration: 0.2 }
-      }}
-    >
+  className="absolute left-1/2"
+  style={{
+    top: "30px", // прямо под кнопкой
+    transform: "translateX(-50%)",
+    perspective: 1000,
+    zIndex: isFlipped ? 50 : 10 + index,
+  }}
+  initial={{ opacity: 0, scale: 0.8, x: 0, y: 0 }}
+  animate={
+    inView
+      ? {
+          opacity: isFlipped ? 1 : 0.96,
+          scale: isFlipped ? 1.05 : 1,
+          x: position.x,
+          y: position.y,
+        }
+      : { opacity: 0, scale: 0.8, x: 0, y: 0 }
+  }
+  transition={{
+    type: "spring",
+    stiffness: 80,
+    damping: 15,
+    delay: index * 0.08,
+  }}
+  onClick={(e) => {
+    e.stopPropagation();
+    setIsFlipped((s) => !s);
+  }}
+  whileHover={{
+    scale: 1.03,
+    zIndex: 40,
+    transition: { duration: 0.2 },
+  }}
+>
       <motion.div
         className="relative w-48 h-28 sm:w-52 sm:h-30 md:w-60 md:h-34 lg:w-64 lg:h-36"
         style={{ transformStyle: "preserve-3d" as const }}
