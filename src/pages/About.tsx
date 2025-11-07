@@ -371,10 +371,10 @@ const About: React.FC = () => {
           className="w-full text-center md:text-left order-1 pt-8"
         >
           <div className="inline-block">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-script text-gradient-aurora mb-3 md:mb-4 shadow-xl bg-background/50">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-script gradient-ethereal mb-3 md:mb-4 drop-shadow-lg ">
               Hi there! I'm Feya
             </h1>
-            <div className="h-1 w-24 md:w-32 gradient-feya rounded-full mx-auto md:mx-0" />
+            
           </div>
         </motion.div>
 
@@ -557,7 +557,7 @@ const About: React.FC = () => {
     >
       <foreignObject x="150" y="150" width="100" height="100">
         <div className="w-full h-full flex items-center justify-center gradient-feya-bg backdrop-blur-sm rounded-full shadow-lg p-3">
-          <img src={logo} alt="Feya Bloom Studio" className="w-full h-full object-contain" />
+          <img src={logo} alt="Feya Bloom Studio" className="w-full h-full object-contain text-white" />
         </div>
       </foreignObject>
     </motion.g>
