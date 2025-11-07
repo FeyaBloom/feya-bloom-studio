@@ -368,10 +368,10 @@ const About: React.FC = () => {
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="w-full text-center md:text-left md:pl-8 order-1 pt-8"
+          className="w-full text-center md:text-right md:pl-8 order-1 pt-8"
         >
           <div className="inline-block">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-script gradient-mystic mb-3 md:mb-4 drop-shadow-lg ">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-script text-mystic mb-3 md:mb-4 drop-shadow-lg ">
               Hi there! I'm Feya
             </h1>
             
