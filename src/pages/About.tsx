@@ -575,7 +575,7 @@ const About: React.FC = () => {
       <foreignObject x="220" y="70" width="120" height="80">
         <div className="flex flex-col items-center text-center">
           <Brain className="w-6 h-6 md:w-8 md:h-8 text-azul mb-2" />
-          <p className="text-sm md:text-lg font-serif text-foreground">Functional <br /> Design</p>
+          <p className="text-sm md:text-md font-serif text-foreground">Functional <br /> Design</p>
         </div>
       </foreignObject>
     </motion.g>
