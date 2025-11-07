@@ -157,7 +157,7 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
 
   return (
     <motion.div
-      className="absolute left-1/2 top-1/2 cursor-pointer" // Центрируем относительно середины контейнера
+      className="absolute left-1/3 top-1/3 cursor-pointer" // Центрируем относительно середины контейнера
       style={{ 
         perspective: 1000,
         zIndex: isFlipped ? 50 : 10 + index,
