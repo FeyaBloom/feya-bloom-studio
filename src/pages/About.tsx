@@ -564,7 +564,7 @@ const About: React.FC = () => {
     {/* Тексты */}
     <motion.g initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.8 }}>
       <foreignObject x="60" y="70" width="130" height="100">
-        <div className="flex flex-col items-center text-left mr-8">
+        <div className="flex flex-col items-center text-left pr-12">
           <Brush className="w-6 h-6 md:w-8 md:h-8 text-violeta mb-1" />
           <p className="text-md md:text-lg font-serif text-foreground">Visual <br /> Storytelling</p>
         </div>
@@ -573,7 +573,7 @@ const About: React.FC = () => {
 
     <motion.g initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.0 }}>
       <foreignObject x="220" y="70" width="130" height="100">
-        <div className="flex flex-col items-center text-right ml-8">
+        <div className="flex flex-col items-center text-right pl-12">
           <Brain className="w-6 h-6 md:w-8 md:h-8 text-azul mb-1" />
           <p className="text-md md:text-lg font-serif text-foreground">Functional <br /> Design</p>
         </div>
