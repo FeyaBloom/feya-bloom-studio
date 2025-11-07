@@ -32,7 +32,6 @@ type Fact = {
   initialPos: { x: number; y: number };
 };
 
-/* FunFactsSection + FactCard components */
 const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.18 });
   const [isRevealed, setIsRevealed] = useState(false);
@@ -67,8 +66,8 @@ const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
         </Button>
       </motion.div>
 
-      {/* Контейнер на всю ширину с минимальной высотой */}
-      <div className="relative w-full min-h-[600px] sm:min-h-[700px] md:min-h-[800px] lg:min-h-[900px] px-4">
+      {/* Увеличена высота контейнера */}
+      <div className="relative w-full min-h-[700px] sm:min-h-[800px] md:min-h-[900px] lg:min-h-[1000px] px-4">
         {facts.map((fact, i) => (
           <FactCard 
             key={i} 
@@ -87,7 +86,7 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
   const [isFlipped, setIsFlipped] = useState(false);
   const Icon = fact.icon;
 
-  // Позиционирование: старт по центру сверху, разлет вниз и в стороны
+  // Позиционирование: распределение по всей высоте контейнера
   const getResponsivePosition = () => {
     if (typeof window === 'undefined') return { x: 0, y: 0, rotate: 0 };
 
@@ -95,33 +94,42 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
     const isSmall = window.innerWidth >= 640 && window.innerWidth < 768;
     const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
 
-    // Позиции: максимальное распределение (x от -400 до +400, y только вниз 0-400)
+    // НОВАЯ СТРАТЕГИЯ: 3 ряда по высоте, разброс по ширине
+    // Ряд 1: y = 50-150
+    // Ряд 2: y = 200-350
+    // Ряд 3: y = 400-550
+    
     const positions = [
-      { x: -380, y: 50, rotate: -8 },    // Крайний левый верх
-      { x: -250, y: 120, rotate: 5 },    // Левый верх
-      { x: -120, y: 80, rotate: -3 },    // Центр-левый верх
-      { x: 120, y: 100, rotate: 7 },     // Центр-правый верх
-      { x: 250, y: 140, rotate: -5 },    // Правый верх
-      { x: 380, y: 70, rotate: 4 },      // Крайний правый верх
-      { x: -300, y: 280, rotate: 6 },    // Левый низ
-      { x: -100, y: 320, rotate: -7 },   // Центр-левый низ
-      { x: 100, y: 300, rotate: 8 },     // Центр-правый низ
-      { x: 300, y: 340, rotate: -4 },    // Правый низ
+      // РЯД 1 (верхний)
+      { x: -350, y: 80, rotate: -7 },    
+      { x: -120, y: 60, rotate: 5 },    
+      { x: 150, y: 100, rotate: -4 },     
+      
+      // РЯД 2 (средний)
+      { x: -280, y: 250, rotate: 6 },    
+      { x: -50, y: 280, rotate: -5 },    
+      { x: 200, y: 230, rotate: 7 },    
+      { x: 380, y: 270, rotate: -3 },    
+      
+      // РЯД 3 (нижний)
+      { x: -200, y: 450, rotate: 5 },   
+      { x: 80, y: 480, rotate: -6 },     
+      { x: 320, y: 440, rotate: 4 },     
     ];
 
     const basePosition = positions[index % positions.length];
 
     if (isMobile) {
-      // На мобильных - компактное вертикальное распределение с небольшим разбросом
+      // На мобильных - вертикальная колонка с небольшими смещениями
       const mobilePositions = [
-        { x: -80, y: 20, rotate: -6 },
-        { x: 70, y: 80, rotate: 5 },
-        { x: -60, y: 140, rotate: -4 },
-        { x: 80, y: 200, rotate: 7 },
-        { x: -70, y: 260, rotate: 6 },
-        { x: 60, y: 320, rotate: -5 },
-        { x: -50, y: 380, rotate: 4 },
-        { x: 70, y: 440, rotate: -7 },
+        { x: -60, y: 40, rotate: -5 },
+        { x: 50, y: 120, rotate: 4 },
+        { x: -45, y: 200, rotate: -6 },
+        { x: 55, y: 280, rotate: 5 },
+        { x: -50, y: 360, rotate: -4 },
+        { x: 45, y: 440, rotate: 6 },
+        { x: -55, y: 520, rotate: -5 },
+        { x: 50, y: 600, rotate: 4 },
       ];
       
       const mobilePos = mobilePositions[index % mobilePositions.length];
@@ -132,21 +140,21 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
         rotate: isRevealed ? mobilePos.rotate : 0,
       };
     } else if (isSmall) {
-      // Small screens - средний разброс
+      // Small screens
       return {
         x: isRevealed ? basePosition.x * 0.5 : 0,
-        y: isRevealed ? basePosition.y * 0.7 : 0,
+        y: isRevealed ? basePosition.y * 0.8 : 0,
         rotate: isRevealed ? basePosition.rotate : 0,
       };
     } else if (isTablet) {
-      // Планшеты - больше разброса
+      // Планшеты
       return {
         x: isRevealed ? basePosition.x * 0.7 : 0,
-        y: isRevealed ? basePosition.y * 0.85 : 0,
+        y: isRevealed ? basePosition.y * 0.9 : 0,
         rotate: isRevealed ? basePosition.rotate : 0,
       };
     } else {
-      // Десктоп - полный разброс
+      // Десктоп
       return {
         x: isRevealed ? basePosition.x : 0,
         y: isRevealed ? basePosition.y : 0,
@@ -159,19 +167,19 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
 
   return (
     <motion.div
-      className="absolute left-1/2 top-0 cursor-pointer" // Старт: горизонтально по центру, вертикально сверху
+      className="absolute left-1/2 top-0 cursor-pointer"
       style={{ 
         perspective: 1000,
         zIndex: isFlipped ? 50 : 10 + index,
         transformOrigin: 'center center',
       }}
-      initial={{ opacity: 0, scale: 0.8, x: '-50%', y: 0, rotate: 0 }} // x: -50% центрирует карточку
+      initial={{ opacity: 0, scale: 0.8, x: '-50%', y: 0, rotate: 0 }}
       animate={
         inView
           ? {
               opacity: isFlipped ? 1 : 0.96,
-              scale: isFlipped ? 1.05 : 1,
-              x: `calc(-50% + ${position.x}px)`, // Смещение от центра с сохранением центрирования
+              scale: isFlipped ? 1.08 : 1, // Только флип увеличивает
+              x: `calc(-50% + ${position.x}px)`,
               y: position.y,
               rotate: position.rotate,
             }
@@ -188,19 +196,14 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
         stiffness: 70, 
         damping: 15, 
         delay: index * 0.08,
-        scale: { duration: 0.2 },
+        scale: { duration: 0.3 },
         rotate: { duration: 0.5 },
       }}
       onClick={(e) => {
         e.stopPropagation();
         setIsFlipped((s) => !s);
       }}
-      whileHover={{ 
-        scale: 1.05,
-        rotate: position.rotate + (position.rotate > 0 ? 2 : -2),
-        zIndex: 40,
-        transition: { duration: 0.2 }
-      }}
+      // Убран whileHover - не нужен для мобилок
     >
       <motion.div
         className="relative w-48 h-28 sm:w-52 sm:h-30 md:w-60 md:h-34 lg:w-64 lg:h-36"
@@ -213,7 +216,7 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
           className="absolute w-full h-full" 
           style={{ backfaceVisibility: "hidden" as const }}
         >
-          <div className="glass-card rounded-xl md:rounded-2xl p-2.5 md:p-3.5 h-full flex items-center gap-2.5 md:gap-3 shadow-lg hover:shadow-xl transition-shadow">
+          <div className="glass-card rounded-xl md:rounded-2xl p-2.5 md:p-3.5 h-full flex items-center gap-2.5 md:gap-3 shadow-lg transition-shadow">
             <div className="w-9 h-9 md:w-11 md:h-11 gradient-mystic rounded-lg md:rounded-xl flex items-center justify-center flex-shrink-0">
               <Icon className="w-4.5 h-4.5 md:w-5.5 md:h-5.5 text-white" />
             </div>
