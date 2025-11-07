@@ -217,6 +217,7 @@ const About: React.FC = () => {
   <div className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${forestHero})` }}
         />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background" />
   {/* Декоративные плавающие элементы в фоне - адаптивные размеры */}
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
     {/* Violeta круг */}
