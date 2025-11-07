@@ -26,8 +26,8 @@ const Gallery = () => {
 
   // Хуки для карусели
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "center" });
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "center", startIndex: 3 });
+  const [selectedIndex, setSelectedIndex] = useState(3);
 
   // Функции навигации карусели
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
@@ -102,6 +102,14 @@ const Gallery = () => {
     { icon: Wand, title: "Digital Experiences", description: "Apps, tools, websites & code" },
     { icon: Feather, title: "Written Worlds", description: "Books, essays & poetry" },
   ];
+
+  const categoryDescriptions: Record<string, string> = {
+    "Fiber Arts": "Where ancient craft meets contemporary vision. Each piece woven, stitched, or knotted with intention—wearable art that tells a story.",
+    "Tactile Dreams": "Dreams you can hold. Sculptural objects and art that invite touch, contemplation, and connection—each piece a tangible meditation.",
+    "Visual Works": "Two-dimensional worlds that hold depth. From canvas to screen, images that capture the delicate dance between human experience and wild nature.",
+    "Digital Experiences": "Technology with empathy. Apps and digital tools designed for minds that work differently—where functionality feels like magic, not friction.",
+    "Written Worlds": "Words that breathe. Stories and thoughts in long form—for those who still believe in the magic of reading."
+  };
 
   return (
     <div className="min-h-screen">
@@ -203,6 +211,9 @@ const Gallery = () => {
               <h2 className="text-2xl md:text-3xl font-serif text-primary font-bold mb-2">
                 {activeMainCategory}
               </h2>
+              <p className="text-base md:text-lg text-muted-foreground max-w-3xl mx-auto mb-4 px-4">
+                {categoryDescriptions[activeMainCategory]}
+              </p>
               <button
                 onClick={() => {
                   setActiveMainCategory(null);
