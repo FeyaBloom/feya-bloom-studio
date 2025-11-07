@@ -159,7 +159,8 @@ const Admin = () => {
               <Button onClick={() => {
                 setCurrentProject({ 
                   title: '', 
-                  category: 'Digital', 
+                  main_category: 'Digital Experiences',
+                  category: '', 
                   short_description: '',
                   cover_image: '',
                   year: '',
@@ -204,7 +205,9 @@ const Admin = () => {
                       <span className="text-xs bg-gray-500/20 text-gray-300 px-2 py-1 rounded">Draft</span>
                     )}
                   </div>
-                  <p className="text-sm text-muted-foreground">{project.category}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {project.main_category} {project.category && `→ ${project.category}`}
+                  </p>
                 </div>
                 <div className="flex gap-2">
                   <Button
@@ -279,17 +282,29 @@ const ProjectForm = ({ project, onSave, onCancel }: ProjectFormProps) => {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="category">Category *</Label>
+        <Label htmlFor="main_category">Main Category *</Label>
         <select
-          id="category"
+          id="main_category"
           className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          value={formData.main_category || ''}
+          onChange={(e) => setFormData({...formData, main_category: e.target.value})}
+        >
+          <option value="Fiber Arts">Fiber Arts</option>
+          <option value="Tactile Dreams">Tactile Dreams</option>
+          <option value="Visual Works">Visual Works</option>
+          <option value="Digital Experiences">Digital Experiences</option>
+          <option value="Written Worlds">Written Worlds</option>
+        </select>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="category">Subcategory</Label>
+        <Input
+          id="category"
+          placeholder="e.g. Web Design, Macramé, Photography"
           value={formData.category}
           onChange={(e) => setFormData({...formData, category: e.target.value})}
-        >
-          <option value="Digital">Digital</option>
-          <option value="Physical">Physical</option>
-          <option value="Mixed">Mixed</option>
-        </select>
+        />
       </div>
 
       <div className="space-y-2">
@@ -404,7 +419,7 @@ const ProjectForm = ({ project, onSave, onCancel }: ProjectFormProps) => {
       </div>
       
       <div className="flex gap-2 pt-4">
-        <Button onClick={() => onSave(formData)} disabled={!formData.title || !formData.category}>
+        <Button onClick={() => onSave(formData)} disabled={!formData.title || !formData.main_category}>
           Save Project
         </Button>
         <Button variant="outline" onClick={onCancel}>Cancel</Button>

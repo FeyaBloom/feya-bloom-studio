@@ -10,6 +10,7 @@ export interface Project {
   created_at?: string;
   updated_at?: string;
   title: string;
+  main_category?: string;
   category: string;
   short_description?: string;
   cover_image?: string;

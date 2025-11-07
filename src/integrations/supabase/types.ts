@@ -24,6 +24,7 @@ export type Database = {
           id: string
           images: string[] | null
           links: Json | null
+          main_category: string | null
           order_index: number | null
           published: boolean | null
           short_description: string | null
@@ -41,6 +42,7 @@ export type Database = {
           id?: string
           images?: string[] | null
           links?: Json | null
+          main_category?: string | null
           order_index?: number | null
           published?: boolean | null
           short_description?: string | null
@@ -58,6 +60,7 @@ export type Database = {
           id?: string
           images?: string[] | null
           links?: Json | null
+          main_category?: string | null
           order_index?: number | null
           published?: boolean | null
           short_description?: string | null

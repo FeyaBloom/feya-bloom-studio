@@ -21,7 +21,8 @@ import {
 } from "lucide-react";
 
 const Gallery = () => {
-  const [activeCategory, setActiveCategory] = useState<string>("All");
+  const [activeMainCategory, setActiveMainCategory] = useState<string | null>(null);
+  const [activeSubCategory, setActiveSubCategory] = useState<string>("All");
 
   // Хуки для карусели
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -66,15 +67,33 @@ const Gallery = () => {
     }
   });
 
-  // Get unique categories from projects
-  const categories = ["All", ...(projects 
-    ? [...new Set(projects.map(p => p.category))]
+  // Filter projects by main category first
+  const mainCategoryProjects = activeMainCategory
+    ? projects.filter(p => p.main_category === activeMainCategory)
+    : projects;
+
+  // Get unique subcategories from filtered projects
+  const subCategories = ["All", ...(mainCategoryProjects 
+    ? [...new Set(mainCategoryProjects.map(p => p.category))]
     : []
   )];
 
-  const filteredProjects = activeCategory === "All" 
-    ? projects 
-    : projects.filter(project => project.category === activeCategory);
+  // Filter by subcategory
+  const filteredProjects = activeSubCategory === "All" 
+    ? mainCategoryProjects 
+    : mainCategoryProjects.filter(project => project.category === activeSubCategory);
+
+  // Handle card click - set main category and scroll to projects
+  const handleCreationClick = (mainCategory: string) => {
+    setActiveMainCategory(mainCategory);
+    setActiveSubCategory("All");
+    
+    // Scroll to projects section
+    const projectsSection = document.querySelector('#projects-section');
+    if (projectsSection) {
+      projectsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   const creations = [
     { icon: Waves, title: "Fiber Arts", description: "Threads, textiles & wearables" },
@@ -136,6 +155,7 @@ const Gallery = () => {
                 {creations.map((item, index) => {
                   const Icon = item.icon;
                   const isSelected = index === selectedIndex;
+                  const isActiveCategory = activeMainCategory === item.title;
                   return (
                     <div key={item.title} className="flex-shrink-0 flex-grow-0 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 px-2 md:px-4">
                       <motion.div
@@ -144,7 +164,10 @@ const Gallery = () => {
                           opacity: isSelected ? 1 : 0.7,
                         }}
                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                        className="card-surface rounded-3xl p-4 md:p-6 lg:p-8 h-full flex flex-col items-center text-center"
+                        onClick={() => handleCreationClick(item.title)}
+                        className={`card-surface rounded-3xl p-4 md:p-6 lg:p-8 h-full flex flex-col items-center text-center cursor-pointer transition-all hover:scale-105 ${
+                          isActiveCategory ? 'ring-2 ring-primary shadow-lg' : ''
+                        }`}
                       >
                         <div className="relative mb-4 md:mb-6">
                           <div className="w-12 h-12 md:w-16 md:h-16 gradient-feya rounded-2xl flex items-center justify-center">
@@ -173,12 +196,30 @@ const Gallery = () => {
       </section>
 
       {/* Projects Grid Section */}
-      <section className="py-6 md:py-12 px-4 md:px-6 bg-white">
+      <section id="projects-section" className="py-6 md:py-12 px-4 md:px-6 bg-white">
+        <div className="container mx-auto max-w-6xl mb-6">
+          {activeMainCategory && (
+            <div className="text-center mb-4">
+              <h2 className="text-2xl md:text-3xl font-serif text-primary font-bold mb-2">
+                {activeMainCategory}
+              </h2>
+              <button
+                onClick={() => {
+                  setActiveMainCategory(null);
+                  setActiveSubCategory("All");
+                }}
+                className="text-sm text-muted-foreground hover:text-primary transition-colors"
+              >
+                ← Back to all categories
+              </button>
+            </div>
+          )}
 
-<div className="flex justify-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300 px-4 pb-4">
-              <Tabs value={activeCategory} onValueChange={setActiveCategory}>
+          {(activeMainCategory ? subCategories.length > 2 : subCategories.length > 1) && (
+            <div className="flex justify-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300 px-4 pb-4">
+              <Tabs value={activeSubCategory} onValueChange={setActiveSubCategory}>
                 <TabsList className="bg-card/80 backdrop-blur-sm shadow-xl flex-wrap h-auto gap-2 p-2">
-                  {categories.map((category) => (
+                  {subCategories.map((category) => (
                     <TabsTrigger 
                       key={category} 
                       value={category}
@@ -190,6 +231,8 @@ const Gallery = () => {
                 </TabsList>
               </Tabs>
             </div>
+          )}
+        </div>
 
         <div className="container mx-auto max-w-6xl">
           {isLoading ? (
