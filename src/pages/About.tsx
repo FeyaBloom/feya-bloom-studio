@@ -368,10 +368,10 @@ const About: React.FC = () => {
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="w-full text-center md:text-left order-1 pt-8"
+          className="w-full text-center md:text-left md:pl-8 order-1 pt-8"
         >
           <div className="inline-block">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-script gradient-ethereal mb-3 md:mb-4 drop-shadow-lg ">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-script gradient-mystic mb-3 md:mb-4 drop-shadow-lg ">
               Hi there! I'm Feya
             </h1>
             
@@ -557,7 +557,7 @@ const About: React.FC = () => {
     >
       <foreignObject x="150" y="150" width="100" height="100">
         <div className="w-full h-full flex items-center justify-center gradient-feya-bg backdrop-blur-sm rounded-full shadow-lg p-3">
-          <img src={logo} alt="Feya Bloom Studio" className="w-full h-full object-contain text-white" />
+          <img src={logo} alt="Feya Bloom Studio" className="w-full h-full object-contain text-sage" />
         </div>
       </foreignObject>
     </motion.g>
