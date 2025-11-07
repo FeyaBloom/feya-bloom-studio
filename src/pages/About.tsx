@@ -469,7 +469,7 @@ const About: React.FC = () => {
 
 
       {/* My Journey Section */}
-      <section className="relative py-16 md:py-24 lg:py-32 px-4 md:px-6 overflow-hidden bg-white">
+      <section className="relative py-16 md:py-24 lg:py-32 px-4 md:px-6 overflow-hidden bg-neutral-100">
         <div className="container mx-auto max-w-4xl relative z-10">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-cormorant font-bold text-center mb-12 md:mb-16 text-secondary">
             How I Got Here
@@ -567,7 +567,7 @@ const About: React.FC = () => {
       <foreignObject x="60" y="70" width="120" height="80">
         <div className="flex flex-col items-center text-center">
           <Brush className="w-6 h-6 md:w-8 md:h-8 text-violeta mb-2" />
-          <p className="text-xs md:text-sm font-semibold text-gray-800">Visual <br /> Storytelling</p>
+          <p className="text-xs md:text-sm font-serif text-gray-800">Visual <br /> Storytelling</p>
         </div>
       </foreignObject>
     </motion.g>
@@ -576,7 +576,7 @@ const About: React.FC = () => {
       <foreignObject x="220" y="70" width="120" height="80">
         <div className="flex flex-col items-center text-center">
           <Brain className="w-6 h-6 md:w-8 md:h-8 text-azul mb-2" />
-          <p className="text-xs md:text-sm font-semibold text-gray-800">Functional <br /> Design</p>
+          <p className="text-xs md:text-sm font-serif text-gray-800">Functional <br /> Design</p>
         </div>
       </foreignObject>
     </motion.g>
@@ -585,7 +585,7 @@ const About: React.FC = () => {
       <foreignObject x="140" y="280" width="120" height="80">
         <div className="flex flex-col items-center text-center">
           <LeafyGreen className="w-6 h-6 md:w-8 md:h-8 text-sage mb-2" />
-          <p className="text-xs md:text-sm font-semibold text-gray-800">Ancestral <br /> Wisdom</p>
+          <p className="text-xs md:text-sm font-serif text-gray-800">Ancestral <br /> Wisdom</p>
         </div>
       </foreignObject>
     </motion.g>
