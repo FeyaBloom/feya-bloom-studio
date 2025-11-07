@@ -25,13 +25,13 @@ import {
   Globe,
 } from "lucide-react";
 
+/* FunFactsSection + FactCard */
 type Fact = {
   icon: React.ComponentType<any>;
   text: string;
-  backText: string;  
+  backText: string;
 };
 
-/* FunFactsSection + FactCard components */
 const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.18 });
   const [isRevealed, setIsRevealed] = useState(false);
@@ -39,9 +39,9 @@ const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
   return (
     <section ref={ref} className="relative py-12 md:py-16">
       <div className="text-center mb-8 md:mb-12">
-        <motion.h2 
-          initial={{ opacity: 0, y: 20 }} 
-          animate={inView ? { opacity: 1, y: 0 } : {}} 
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
           className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-center text-primary mb-4"
         >
           Random Things About Me
@@ -51,39 +51,41 @@ const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
         </p>
       </div>
 
-      <motion.div 
-        initial={{ opacity: 0, y: 10 }} 
-        animate={inView ? { opacity: 1, y: 0 } : {}} 
-        transition={{ delay: 0.08 }} 
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ delay: 0.08 }}
         className="flex justify-center mb-8 md:mb-12"
-      >                       
-        <Button 
-          onClick={() => setIsRevealed(!isRevealed)} 
-          size="lg" 
+      >
+        <Button
+          onClick={() => setIsRevealed(!isRevealed)}
+          size="lg"
           className="gap-2 shadow-soft hover:shadow-elevated transition-smooth bg-accent"
         >
           {isRevealed ? "Hide them!" : "Take a look"}
         </Button>
       </motion.div>
 
-      {/* ВНЕШНИЙ контейнер — растягивается под контент, не фиксированные высоты */}
-<div className="relative w-full flex justify-center px-4 overflow-hidden py-6 sm:py-8 md:py-10">
-  
-  {/* ВНУТРЕННИЙ контейнер — адаптивная высота и ширина, без пиксельных ограничений */}
-  <div
-    id="fun-facts-container"
-    className=" relative w-full 
-      max-w-[100%] sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[1200px]
-      min-h-[45vh] sm:min-h-[55vh] md:min-h-[65vh] lg:min-h-[70vh] 
-      max-h-[80vh]
-      mx-auto overflow-hidden">
+      {/* ✅ ВНЕШНИЙ контейнер на всю ширину экрана, фикс высота — НЕТ */}
+      <div className="relative w-full flex justify-center px-4 overflow-visible">
+
+        {/* ✅ ВНУТРЕННИЙ контейнер: занимает ширину экрана, не обрезает карточки */}
+        <div
+          id="fun-facts-container"
+          className="
+            relative w-full
+            max-w-screen-xl
+            min-h-[55vh] sm:min-h-[60vh] md:min-h-[65vh] lg:min-h-[70vh]
+            mx-auto overflow-visible
+          "
+        >
           {facts.map((fact, i) => (
-            <FactCard 
-              key={i} 
-              fact={fact} 
-              index={i} 
-              inView={inView} 
-              isRevealed={isRevealed} 
+            <FactCard
+              key={i}
+              fact={fact}
+              index={i}
+              inView={inView}
+              isRevealed={isRevealed}
             />
           ))}
         </div>
@@ -96,93 +98,84 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
   const [isFlipped, setIsFlipped] = useState(false);
   const Icon = fact.icon;
 
-  const getRandomPosition = () => {
-  if (!isRevealed) return { x: 0, y: 0 };
+  const [position, setPosition] = useState({ x: 0, y: 0 });
 
-  const container = document.getElementById("fun-facts-container");
-  if (!container) return { x: 0, y: 0 };
+  // ✅ При клике "Take a look" пересчитать нормальный рандом внутри контейнера
+  useEffect(() => {
+    if (!isRevealed) return setPosition({ x: 0, y: 0 });
 
-  const width = container.clientWidth;
-  const height = container.clientHeight;
+    const container = document.getElementById("fun-facts-container");
+    if (!container) return;
 
-  // размеры карточки примерно (с запасом)
-  const cardW = 260;
-  const cardH = 160;
+    const width = container.clientWidth;
+    const height = container.clientHeight;
 
-  // внутри контейнера, с отступами
-  const x = Math.random() * (width - cardW) - (width / 2 - cardW / 2);
-  const y = Math.random() * (height - cardH) - (height / 2 - cardH / 2);
+    // реальные размеры карточки
+    const cardW = 250;
+    const cardH = 150;
 
-  return { x, y };
-};
+    // ✅ рандом по всей площади контейнера с отступами
+    const x = (Math.random() * (width - cardW)) - (width / 2 - cardW / 2);
+    const y = Math.random() * (height - cardH - 60);
 
-  const position = getRandomPosition();
+    setPosition({ x, y });
+  }, [isRevealed]);
 
   return (
     <motion.div
-  className="absolute left-1/2"
-  style={{
-    top: "30px", // прямо под кнопкой
-    transform: "translateX(-50%)",
-    perspective: 1000,
-    zIndex: isFlipped ? 50 : 10 + index,
-  }}
-  initial={{ opacity: 0, scale: 0.8, x: 0, y: 0 }}
-  animate={
-    inView
-      ? {
-          opacity: isFlipped ? 1 : 0.96,
-          scale: isFlipped ? 1.05 : 1,
-          x: position.x,
-          y: position.y,
-        }
-      : { opacity: 0, scale: 0.8, x: 0, y: 0 }
-  }
-  transition={{
-    type: "spring",
-    stiffness: 80,
-    damping: 15,
-    delay: index * 0.08,
-  }}
-  onClick={(e) => {
-    e.stopPropagation();
-    setIsFlipped((s) => !s);
-  }}
-  whileHover={{
-    scale: 1.03,
-    zIndex: 40,
-    transition: { duration: 0.2 },
-  }}
->
+      className="absolute left-1/2"
+      style={{
+        top: "20px",           // ✅ стопка сверху
+        transform: "translateX(-50%)",
+        perspective: 1000,
+        zIndex: isFlipped ? 50 : 10 + index,
+      }}
+      initial={{ opacity: 0, scale: 0.8, x: 0, y: 0 }}
+      animate={
+        inView
+          ? {
+              opacity: isFlipped ? 1 : 0.96,
+              scale: isFlipped ? 1.05 : 1,
+              x: position.x,
+              y: position.y,
+            }
+          : { opacity: 0, scale: 0.8, x: 0, y: 0 }
+      }
+      transition={{
+        type: "spring",
+        stiffness: 80,
+        damping: 15,
+        delay: index * 0.08,
+      }}
+      onClick={(e) => {
+        e.stopPropagation();
+        setIsFlipped((s) => !s);
+      }}
+      whileHover={{
+        scale: 1.03,
+        zIndex: 40,
+        transition: { duration: 0.2 },
+      }}
+    >
+      {/* карточка */}
       <motion.div
         className="relative w-48 h-28 sm:w-52 sm:h-30 md:w-60 md:h-34 lg:w-64 lg:h-36"
         style={{ transformStyle: "preserve-3d" as const }}
         animate={{ rotateY: isFlipped ? 180 : 0 }}
         transition={{ duration: 0.6 }}
       >
-        {/* Front */}
-        <div 
-          className="absolute w-full h-full" 
-          style={{ backfaceVisibility: "hidden" as const }}
-        >
+        {/* front */}
+        <div className="absolute w-full h-full" style={{ backfaceVisibility: "hidden" }}>
           <div className="glass-card rounded-xl md:rounded-2xl p-2.5 md:p-3.5 h-full flex items-center gap-2.5 md:gap-3 shadow-lg hover:shadow-xl transition-shadow">
             <div className="w-9 h-9 md:w-11 md:h-11 gradient-mystic rounded-lg md:rounded-xl flex items-center justify-center flex-shrink-0">
               <Icon className="w-4.5 h-4.5 md:w-5.5 md:h-5.5 text-white" />
             </div>
-            <p className="text-gray-700 text-xs md:text-sm font-body leading-snug pr-1">
-              {fact.text}
-            </p>
+            <p className="text-gray-700 text-xs md:text-sm font-body leading-snug pr-1">{fact.text}</p>
           </div>
         </div>
 
-        {/* Back */}
-        <div 
-          className="absolute w-full h-full" 
-          style={{ 
-            backfaceVisibility: "hidden" as const, 
-            transform: "rotateY(180deg)" 
-          }}
-        >
+        {/* back */}
+        <div className="absolute w-full h-full" style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
           <div className="rounded-xl md:rounded-2xl p-3 md:p-4 h-full flex items-center justify-center gradient-mystic shadow-2xl">
             <p className="text-white font-semibold text-center text-xs md:text-sm lg:text-base font-body leading-relaxed px-2">
               {fact.backText}
@@ -209,49 +202,49 @@ const About: React.FC = () => {
       icon: Coffee,
       text: "Herbal tea addict (it's basically my personality now)",
       backText: "It's a hot bean water ritual.",
-      initialPos: { y: -150, x: -220 },
+      
     },
     {
       icon: Music,
       text: "Night owl pretending to be a morning person",
       backText: "My best ideas arrive after midnight.",
-      initialPos: { y: 160, x: 200 },
+      
     },
     {
       icon: BookOpen,
       text: "Can't pass a craft store without buying at least one thing",
       backText: "My yarn collection is getting out of hand.",
-      initialPos: { y: -80, x: 240 },
+      
     },
     {
       icon: Globe,
       text: "Obsessively curious about how things work",
       backText: "...and taking them apart to find out.",
-      initialPos: { y: 80, x: -240 },
+      
     },
     {
       icon: Brain,
       text: "I have ADHD and my work reflects it",
       backText: "Hyperfocus is my superpower.",
-      initialPos: { y: -200, x: 60 },
+      
     },
     {
       icon: Moon,
       text: "Moon phases guide my creative cycles",
       backText: "I plan projects around lunar energy.",
-      initialPos: { y: 200, x: -100 },
+      
     },
     {
       icon: Brush,
       text: "Started with traditional painting, now I code",
       backText: "Both are just different canvases.",
-      initialPos: { y: 0, x: -280 },
+      
     },
     {
       icon: LeafyGreen,
       text: "Foraging herbs is my meditation",
       backText: "Nature is the best teacher.",
-      initialPos: { y: -20, x: 280 },
+      
     },
   ];
 
