@@ -46,7 +46,7 @@ const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
         >
           Random Things About Me
         </motion.h2>
-        <p className="text-lg md:text-2xl font-body">
+        <p className="text-lg md:text-2xl font-body text-muted-foreground">
           because we're all 27% weird
         </p>
       </div>
@@ -67,7 +67,7 @@ const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
       </motion.div>
 
       {/* Увеличена высота контейнера */}
-      <div className="relative w-full min-h-[500px] sm:min-h-[700px] md:min-h-[600px] lg:min-h-[700px] px-4">
+      <div className="relative w-full min-h-[700px] sm:min-h-[700px] md:min-h-[600px] lg:min-h-[700px] px-4">
         {facts.map((fact, i) => (
           <FactCard 
             key={i} 
@@ -203,7 +203,6 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
         e.stopPropagation();
         setIsFlipped((s) => !s);
       }}
-      // Убран whileHover - не нужен для мобилок
     >
       <motion.div
         className="relative w-48 h-28 sm:w-52 sm:h-30 md:w-60 md:h-34 lg:w-64 lg:h-36"
@@ -576,7 +575,7 @@ const About: React.FC = () => {
       <foreignObject x="220" y="70" width="120" height="80">
         <div className="flex flex-col items-center text-center">
           <Brain className="w-6 h-6 md:w-8 md:h-8 text-azul mb-2" />
-          <p className="text-lg md:text-2xl font-serif text-gray-800">Functional <br /> Design</p>
+          <p className="text-sm md:text-lg font-serif text-foreground">Functional <br /> Design</p>
         </div>
       </foreignObject>
     </motion.g>
