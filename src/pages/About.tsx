@@ -564,8 +564,8 @@ const About: React.FC = () => {
     {/* Тексты */}
     <motion.g initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.8 }}>
       <foreignObject x="60" y="70" width="130" height="100">
-        <div className="flex flex-col items-center text-left">
-          <Brush className="w-6 h-6 md:w-8 md:h-8 text-violeta mb-2" />
+        <div className="flex flex-col items-center text-left px-4">
+          <Brush className="w-6 h-6 md:w-8 md:h-8 text-violeta mb-1" />
           <p className="text-md md:text-lg font-serif text-foreground">Visual <br /> Storytelling</p>
         </div>
       </foreignObject>
@@ -573,8 +573,8 @@ const About: React.FC = () => {
 
     <motion.g initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.0 }}>
       <foreignObject x="220" y="70" width="130" height="100">
-        <div className="flex flex-col items-center text-right">
-          <Brain className="w-6 h-6 md:w-8 md:h-8 text-azul mb-2" />
+        <div className="flex flex-col items-center text-right px-4">
+          <Brain className="w-6 h-6 md:w-8 md:h-8 text-azul mb-1" />
           <p className="text-md md:text-lg font-serif text-foreground">Functional <br /> Design</p>
         </div>
       </foreignObject>
@@ -583,7 +583,7 @@ const About: React.FC = () => {
     <motion.g initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.2 }}>
       <foreignObject x="140" y="280" width="120" height="100">
         <div className="flex flex-col items-center text-center">
-          <LeafyGreen className="w-6 h-6 md:w-8 md:h-8 text-sage mb-2" />
+          <LeafyGreen className="w-6 h-6 md:w-8 md:h-8 text-sage mb-1" />
           <p className="text-md md:text-lg font-serif text-foreground">Ancestral <br /> Wisdom</p>
         </div>
       </foreignObject>
