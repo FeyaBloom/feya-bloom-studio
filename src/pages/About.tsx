@@ -88,83 +88,120 @@ const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
   );
 };
 
-const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isRevealed: boolean }> = ({
-  fact,
-  index,
-  inView,
-  isRevealed
-}) => {
+// Заменить текущий FactCard на этот
+const FactCard: React.FC<{
+  fact: Fact;
+  index: number;
+  inView: boolean;
+  isRevealed: boolean;
+}> = ({ fact, index, inView, isRevealed }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const Icon = fact.icon;
 
-  const [position, setPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  // хранит финальную позицию карточки (фиксируется при раскрытии)
+  const [pos, setPos] = useState<{ x: number; y: number; rot: number }>({ x: 0, y: 0, rot: 0 });
 
-  // ✅ вычисляем нормальный рандом после клика
   useEffect(() => {
     const container = document.getElementById("fun-facts-container");
-    if (!container) return;
-
-    if (!isRevealed) {
-      // стопка ровно сверху по центру
-      setPosition({ x: 0, y: 0 });
+    if (!container) {
+      setPos({ x: 0, y: 0, rot: 0 });
       return;
     }
 
+    // вычисляем количество карточек — реально рендеренных детей контейнера
+    // (защита от ситуаций, когда children могут быть не только карточками)
+    const children = Array.from(container.children).filter((c) => (c as HTMLElement).offsetParent !== null);
+    const total = Math.max(children.length, 1);
+
+    // размеры контейнера
     const width = container.clientWidth;
     const height = container.clientHeight;
 
-    const cardW = 260;
-    const cardH = 160;
+    // ориентировочные размеры карточки (можно скорректировать под твои классы)
+    const cardW = 250;
+    const cardH = 150;
 
-    // ✅ ровный рандом внутри контейнера без вылезаний
-    const x = Math.random() * (width - cardW) - (width / 2 - cardW / 2);
-    const y = 40 + Math.random() * (height - cardH - 80);
+    // центр системы — 0,0 (мы используем translate X/Y от центра)
+    // радиус — так чтобы карточки не выпадали за края
+    const safeRadiusX = (width - cardW) / 2;
+    const safeRadiusY = (height - cardH) / 2;
 
-    setPosition({ x, y });
-  }, [isRevealed]);
+    // базовый радиус — берем минимум, чтобы поместились в контейнер
+    const baseRadius = Math.min(safeRadiusX, safeRadiusY);
+    // если контейнер узкий/мал, уменьшаем радиус
+    const radius = Math.max(baseRadius * 0.45, 40);
+
+    if (!isRevealed) {
+      // стопка: в центре сверху под кнопкой (y небольшое смещение)
+      setPos({ x: 0, y: 0, rot: 0 });
+      return;
+    }
+
+    // равномерный угол для текущей карточки
+    const angle = (index / total) * Math.PI * 2;
+
+    // добавляем небольшой случайный сдвиг по углу и по радиусу — выглядит естественно
+    const angleJitter = (Math.random() - 0.5) * (Math.PI / (total * 0.25)); // меньше jitter при большом total
+    const radiusJitter = (Math.random() - 0.5) * Math.min(40, radius * 0.15);
+
+    const finalR = Math.max(20, radius + radiusJitter);
+
+    // позиция относительно центра контейнера
+    const x = Math.cos(angle + angleJitter) * finalR;
+    const y = Math.sin(angle + angleJitter) * finalR * 0.9 + 40; // 0.9 чтобы чуть сместить вниз от кнопки
+
+    // лёгкий поворот
+    const rot = (Math.random() - 0.5) * 10; // -5..+5 градусов
+
+    setPos({ x, y, rot });
+  }, [isRevealed, index]);
 
   return (
     <motion.div
-  className="absolute inset-0 flex items-start justify-center pointer-events-auto"
-  style={{
-    top: "0",
-    zIndex: isFlipped ? 50 : 10 + index,
-  }}
-      
-      initial={{ opacity: 0, scale: 0.85, x: 0, y: 0 }}
+      // контейнер карточки позиционируем относительно центра верхней зоны:
+      className="absolute"
+      style={{
+        left: "50%",
+        top: "20px", // точно под кнопкой — меняй, если кнопка выше/ниже
+        transform: "translateX(-50%)",
+        perspective: 1000,
+        zIndex: isFlipped ? 50 : 10 + index,
+      }}
+      initial={{ opacity: 0, scale: 0.85, x: 0, y: 0, rotate: 0 }}
       animate={
         inView
           ? {
               opacity: 1,
               scale: isFlipped ? 1.05 : 1,
-              x: position.x,
-              y: position.y
+              x: pos.x,
+              y: pos.y,
+              rotate: pos.rot,
             }
-          : { opacity: 0, scale: 0.85, x: 0, y: 0 }
+          : { opacity: 0, scale: 0.85, x: 0, y: 0, rotate: 0 }
       }
       transition={{
         type: "spring",
         stiffness: 90,
-        damping: 12,
-        delay: index * 0.08
+        damping: 14,
+        delay: index * 0.06,
       }}
       onClick={(e) => {
         e.stopPropagation();
         setIsFlipped((s) => !s);
       }}
       whileHover={{
-        scale: 1.04,
+        scale: 1.03,
         zIndex: 100,
-        transition: { duration: 0.2 }
+        transition: { duration: 0.18 },
       }}
     >
       <motion.div
         className="relative w-48 h-28 sm:w-52 sm:h-32 md:w-60 md:h-36 lg:w-64 lg:h-40"
-        style={{ transformStyle: "preserve-3d" }}
+        style={{ transformStyle: "preserve-3d" as const }}
         animate={{ rotateY: isFlipped ? 180 : 0 }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.5 }}
       >
-        {/* front */}
+        {/* Front */}
         <div className="absolute w-full h-full" style={{ backfaceVisibility: "hidden" }}>
           <div className="glass-card rounded-xl p-3 h-full flex items-center gap-3 shadow-lg hover:shadow-xl">
             <div className="w-10 h-10 gradient-mystic rounded-lg flex items-center justify-center">
@@ -174,7 +211,7 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
           </div>
         </div>
 
-        {/* back */}
+        {/* Back */}
         <div
           className="absolute w-full h-full"
           style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
