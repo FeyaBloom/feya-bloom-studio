@@ -38,24 +38,50 @@ const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
   const [isRevealed, setIsRevealed] = useState(false);
 
   return (
-    <section ref={ref} className="relative">
-      <div className="text-center mb-8">
-        <motion.h2 initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-center text-primary mb-4">
+    <section ref={ref} className="relative py-12 md:py-16">
+      <div className="text-center mb-8 md:mb-12">
+        <motion.h2 
+          initial={{ opacity: 0, y: 20 }} 
+          animate={inView ? { opacity: 1, y: 0 } : {}} 
+          className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-center text-primary mb-4"
+        >
           Random Things About Me
         </motion.h2>
-        <p className="text-primary text-3xl md:text-2xl font-body">because we're all 27% weird</p>
+        <p className="text-primary text-lg md:text-2xl font-body">
+          because we're all 27% weird
+        </p>
       </div>
 
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.08 }} className="flex justify-center mb-8">                       
-        <Button onClick={() => setIsRevealed(!isRevealed)} size="lg" className="gap-2 shadow-soft hover:shadow-elevated transition-smooth bg-accent">
+      <motion.div 
+        initial={{ opacity: 0, y: 10 }} 
+        animate={inView ? { opacity: 1, y: 0 } : {}} 
+        transition={{ delay: 0.08 }} 
+        className="flex justify-center mb-8 md:mb-12"
+      >                       
+        <Button 
+          onClick={() => setIsRevealed(!isRevealed)} 
+          size="lg" 
+          className="gap-2 shadow-soft hover:shadow-elevated transition-smooth bg-accent"
+        >
           {isRevealed ? "Hide them!" : "Take a look"}
         </Button>
       </motion.div>
 
-      <div className="relative h-[600px] md:h-[700px] lg:h-[800px] w-full flex items-center justify-center overflow-hidden">
-        {facts.map((fact, i) => (
-          <FactCard key={i} fact={fact} index={i} inView={inView} isRevealed={isRevealed} />
-        ))}
+      {/* ВНЕШНИЙ контейнер - дает общее пространство */}
+      <div className="relative w-full min-h-[500px] sm:min-h-[600px] md:min-h-[700px] lg:min-h-[800px] flex items-center justify-center px-4 overflow-hidden">
+        
+        {/* ВНУТРЕННИЙ контейнер - точка отсчета для карточек */}
+        <div className="relative w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-4xl h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px]">
+          {facts.map((fact, i) => (
+            <FactCard 
+              key={i} 
+              fact={fact} 
+              index={i} 
+              inView={inView} 
+              isRevealed={isRevealed} 
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -65,7 +91,7 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
   const [isFlipped, setIsFlipped] = useState(false);
   const Icon = fact.icon;
 
-  // Адаптивное позиционирование - умное расположение без сильных перекрытий
+  // Улучшенное позиционирование с учетом размера контейнера
   const getResponsivePosition = () => {
     if (typeof window === 'undefined') return { x: 0, y: 0 };
 
@@ -73,40 +99,53 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
     const isSmall = window.innerWidth >= 640 && window.innerWidth < 768;
     const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
 
-    // Базовые позиции для разных карточек (более равномерное распределение)
+    // Позиции относительно ЦЕНТРА контейнера (0,0 - это центр)
     const positions = [
-      { x: -120, y: -80 },   // Верхний левый
-      { x: 100, y: -100 },   // Верхний правый
-      { x: -140, y: 20 },    // Средний левый
-      { x: 120, y: 30 },     // Средний правый
-      { x: -100, y: 100 },   // Нижний левый
-      { x: 110, y: 110 },    // Нижний правый
-      { x: 0, y: -120 },     // Верхний центр
-      { x: -160, y: -30 },   // Дополнительный левый
+      { x: -150, y: -120 },  // Левый верх
+      { x: 150, y: -130 },   // Правый верх
+      { x: -180, y: -20 },   // Левый центр
+      { x: 170, y: 0 },      // Правый центр
+      { x: -160, y: 100 },   // Левый низ
+      { x: 160, y: 110 },    // Правый низ
+      { x: -50, y: -150 },   // Верх центр-лево
+      { x: 50, y: 140 },     // Низ центр-право
     ];
 
     const basePosition = positions[index % positions.length];
 
     if (isMobile) {
-      // На мобильных - вертикальное расположение с минимальными горизонтальными смещениями
+      // На мобильных - компактное вертикальное расположение
+      const mobilePositions = [
+        { x: -15, y: -140 },
+        { x: 20, y: -80 },
+        { x: -25, y: -20 },
+        { x: 15, y: 40 },
+        { x: -20, y: 100 },
+        { x: 25, y: 160 },
+        { x: -10, y: -100 },
+        { x: 10, y: 120 },
+      ];
+      
+      const mobilePos = mobilePositions[index % mobilePositions.length];
+      
       return {
-        x: isRevealed ? basePosition.x * 0.15 : 0,
-        y: isRevealed ? basePosition.y * 0.5 + (index * 35) : 0, // Вертикальный стек с небольшими смещениями
+        x: isRevealed ? mobilePos.x : 0,
+        y: isRevealed ? mobilePos.y : 0,
       };
     } else if (isSmall) {
-      // Small screens - чуть больше разброса
+      // Small screens - средний разброс
       return {
-        x: isRevealed ? basePosition.x * 0.3 : 0,
-        y: isRevealed ? basePosition.y * 0.6 + (index * 25) : 0,
+        x: isRevealed ? basePosition.x * 0.5 : 0,
+        y: isRevealed ? basePosition.y * 0.6 : 0,
       };
     } else if (isTablet) {
-      // На планшетах - средний разброс
+      // Планшеты - больше пространства
       return {
-        x: isRevealed ? basePosition.x * 0.6 : 0,
-        y: isRevealed ? basePosition.y * 0.7 : 0,
+        x: isRevealed ? basePosition.x * 0.75 : 0,
+        y: isRevealed ? basePosition.y * 0.8 : 0,
       };
     } else {
-      // На десктопе - полный разброс
+      // Десктоп - полный разброс
       return {
         x: isRevealed ? basePosition.x : 0,
         y: isRevealed ? basePosition.y : 0,
@@ -118,28 +157,29 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
 
   return (
     <motion.div
-      className="absolute cursor-pointer"
+      className="absolute left-1/2 top-1/2 cursor-pointer" // Центрируем относительно середины контейнера
       style={{ 
         perspective: 1000,
-        zIndex: isFlipped ? 50 : 10 + index, // Перевернутая карточка всегда сверху
+        zIndex: isFlipped ? 50 : 10 + index,
+        transform: 'translate(-50%, -50%)', // Центрируем саму карточку
       }}
-      initial={{ opacity: 0, scale: 0.9, x: 0, y: 0 }}
+      initial={{ opacity: 0, scale: 0.8, x: 0, y: 0 }}
       animate={
         inView
           ? {
-              opacity: isFlipped ? 1 : 0.95, // Перевернутая карточка более непрозрачна
-              scale: isFlipped ? 1.05 : 1, // Перевернутая карточка чуть больше
+              opacity: isFlipped ? 1 : 0.96,
+              scale: isFlipped ? 1.05 : 1,
               x: position.x,
               y: position.y,
             }
-          : {}
+          : { opacity: 0, scale: 0.8, x: 0, y: 0 }
       }
       transition={{ 
         type: "spring", 
-        stiffness: 90, 
-        damping: 12, 
-        delay: index * 0.06,
-        scale: { duration: 0.2 }, // Быстрое изменение масштаба при переворачивании
+        stiffness: 80, 
+        damping: 15, 
+        delay: index * 0.08,
+        scale: { duration: 0.2 },
       }}
       onClick={(e) => {
         e.stopPropagation();
@@ -147,32 +187,41 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
       }}
       whileHover={{ 
         scale: 1.03,
-        zIndex: 40, // При hover тоже поднимаем
+        zIndex: 40,
         transition: { duration: 0.2 }
       }}
     >
       <motion.div
-        className="relative w-52 h-28 sm:w-56 sm:h-30 md:w-64 md:h-36 lg:w-72 lg:h-40"
+        className="relative w-48 h-28 sm:w-52 sm:h-30 md:w-60 md:h-34 lg:w-64 lg:h-36"
         style={{ transformStyle: "preserve-3d" as const }}
         animate={{ rotateY: isFlipped ? 180 : 0 }}
         transition={{ duration: 0.6 }}
       >
         {/* Front */}
-        <div className="absolute w-full h-full" style={{ backfaceVisibility: "hidden" as const }}>
-          <div className="glass-card rounded-2xl p-3 md:p-4 h-full flex items-center gap-3 md:gap-4 shadow-lg hover:shadow-xl transition-shadow">
-            <div className="w-10 h-10 md:w-12 md:h-12 gradient-mystic rounded-xl flex items-center justify-center flex-shrink-0">
-              <Icon className="w-5 h-5 md:w-6 md:h-6 text-white" />
+        <div 
+          className="absolute w-full h-full" 
+          style={{ backfaceVisibility: "hidden" as const }}
+        >
+          <div className="glass-card rounded-xl md:rounded-2xl p-2.5 md:p-3.5 h-full flex items-center gap-2.5 md:gap-3 shadow-lg hover:shadow-xl transition-shadow">
+            <div className="w-9 h-9 md:w-11 md:h-11 gradient-mystic rounded-lg md:rounded-xl flex items-center justify-center flex-shrink-0">
+              <Icon className="w-4.5 h-4.5 md:w-5.5 md:h-5.5 text-white" />
             </div>
-            <p className="text-gray-700 text-xs sm:text-sm md:text-base font-body leading-snug">
+            <p className="text-gray-700 text-xs md:text-sm font-body leading-snug pr-1">
               {fact.text}
             </p>
           </div>
         </div>
 
         {/* Back */}
-        <div className="absolute w-full h-full" style={{ backfaceVisibility: "hidden" as const, transform: "rotateY(180deg)" }}>
-          <div className="rounded-2xl p-3 md:p-4 h-full flex items-center justify-center gradient-mystic shadow-2xl">
-            <p className="text-white font-semibold text-center text-sm md:text-base lg:text-lg font-body leading-relaxed px-2">
+        <div 
+          className="absolute w-full h-full" 
+          style={{ 
+            backfaceVisibility: "hidden" as const, 
+            transform: "rotateY(180deg)" 
+          }}
+        >
+          <div className="rounded-xl md:rounded-2xl p-3 md:p-4 h-full flex items-center justify-center gradient-mystic shadow-2xl">
+            <p className="text-white font-semibold text-center text-xs md:text-sm lg:text-base font-body leading-relaxed px-2">
               {fact.backText}
             </p>
           </div>
@@ -183,7 +232,6 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
 };
 
 const About: React.FC = () => {
- 
 
   const beliefs = [
     { text: 'Keeping things functional', rotation: -3, scale: 1.1 },
