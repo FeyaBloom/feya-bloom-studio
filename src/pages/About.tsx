@@ -65,30 +65,51 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
   const [isFlipped, setIsFlipped] = useState(false);
   const Icon = fact.icon;
 
-  // Адаптивное позиционирование - меньше разброс на мобильных
+  // Адаптивное позиционирование - умное расположение без сильных перекрытий
   const getResponsivePosition = () => {
     if (typeof window === 'undefined') return { x: 0, y: 0 };
-    
-    const isMobile = window.innerWidth < 768;
+
+    const isMobile = window.innerWidth < 640;
+    const isSmall = window.innerWidth >= 640 && window.innerWidth < 768;
     const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
-    
+
+    // Базовые позиции для разных карточек (более равномерное распределение)
+    const positions = [
+      { x: -120, y: -80 },   // Верхний левый
+      { x: 100, y: -100 },   // Верхний правый
+      { x: -140, y: 20 },    // Средний левый
+      { x: 120, y: 30 },     // Средний правый
+      { x: -100, y: 100 },   // Нижний левый
+      { x: 110, y: 110 },    // Нижний правый
+      { x: 0, y: -120 },     // Верхний центр
+      { x: -160, y: -30 },   // Дополнительный левый
+    ];
+
+    const basePosition = positions[index % positions.length];
+
     if (isMobile) {
-      // На мобильных - минимальный горизонтальный разброс, больше вертикального
+      // На мобильных - вертикальное расположение с минимальными горизонтальными смещениями
       return {
-        x: isRevealed ? fact.initialPos.x * 0.2 : 0,
-        y: isRevealed ? fact.initialPos.y * 0.7 : 0,
+        x: isRevealed ? basePosition.x * 0.15 : 0,
+        y: isRevealed ? basePosition.y * 0.5 + (index * 35) : 0, // Вертикальный стек с небольшими смещениями
+      };
+    } else if (isSmall) {
+      // Small screens - чуть больше разброса
+      return {
+        x: isRevealed ? basePosition.x * 0.3 : 0,
+        y: isRevealed ? basePosition.y * 0.6 + (index * 25) : 0,
       };
     } else if (isTablet) {
       // На планшетах - средний разброс
       return {
-        x: isRevealed ? fact.initialPos.x * 0.5 : 0,
-        y: isRevealed ? fact.initialPos.y * 0.8 : 0,
+        x: isRevealed ? basePosition.x * 0.6 : 0,
+        y: isRevealed ? basePosition.y * 0.7 : 0,
       };
     } else {
       // На десктопе - полный разброс
       return {
-        x: isRevealed ? fact.initialPos.x : 0,
-        y: isRevealed ? fact.initialPos.y : 0,
+        x: isRevealed ? basePosition.x : 0,
+        y: isRevealed ? basePosition.y : 0,
       };
     }
   };
@@ -98,44 +119,62 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
   return (
     <motion.div
       className="absolute cursor-pointer"
-      style={{ perspective: 1000 }}
+      style={{ 
+        perspective: 1000,
+        zIndex: isFlipped ? 50 : 10 + index, // Перевернутая карточка всегда сверху
+      }}
       initial={{ opacity: 0, scale: 0.9, x: 0, y: 0 }}
       animate={
         inView
           ? {
-              opacity: 0.9,
-              scale: 1,
+              opacity: isFlipped ? 1 : 0.95, // Перевернутая карточка более непрозрачна
+              scale: isFlipped ? 1.05 : 1, // Перевернутая карточка чуть больше
               x: position.x,
               y: position.y,
             }
           : {}
       }
-      transition={{ type: "spring", stiffness: 90, damping: 12, delay: index * 0.06 }}
+      transition={{ 
+        type: "spring", 
+        stiffness: 90, 
+        damping: 12, 
+        delay: index * 0.06,
+        scale: { duration: 0.2 }, // Быстрое изменение масштаба при переворачивании
+      }}
       onClick={(e) => {
         e.stopPropagation();
         setIsFlipped((s) => !s);
       }}
+      whileHover={{ 
+        scale: 1.03,
+        zIndex: 40, // При hover тоже поднимаем
+        transition: { duration: 0.2 }
+      }}
     >
       <motion.div
-        className="relative w-56 h-32 sm:w-60 sm:h-34 md:w-64 md:h-36"
+        className="relative w-52 h-28 sm:w-56 sm:h-30 md:w-64 md:h-36 lg:w-72 lg:h-40"
         style={{ transformStyle: "preserve-3d" as const }}
         animate={{ rotateY: isFlipped ? 180 : 0 }}
         transition={{ duration: 0.6 }}
       >
         {/* Front */}
         <div className="absolute w-full h-full" style={{ backfaceVisibility: "hidden" as const }}>
-          <div className="glass-card rounded-2xl p-3 md:p-4 h-full flex items-center gap-3 md:gap-4 shadow-sm">
+          <div className="glass-card rounded-2xl p-3 md:p-4 h-full flex items-center gap-3 md:gap-4 shadow-lg hover:shadow-xl transition-shadow">
             <div className="w-10 h-10 md:w-12 md:h-12 gradient-mystic rounded-xl flex items-center justify-center flex-shrink-0">
               <Icon className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
-            <p className="text-gray-700 text-xs sm:text-sm font-body">{fact.text}</p>
+            <p className="text-gray-700 text-xs sm:text-sm md:text-base font-body leading-snug">
+              {fact.text}
+            </p>
           </div>
         </div>
 
         {/* Back */}
         <div className="absolute w-full h-full" style={{ backfaceVisibility: "hidden" as const, transform: "rotateY(180deg)" }}>
-          <div className="rounded-2xl p-3 md:p-4 h-full flex items-center justify-center gradient-mystic">
-            <p className="text-white font-semibold text-center text-sm md:text-md font-body">{fact.backText}</p>
+          <div className="rounded-2xl p-3 md:p-4 h-full flex items-center justify-center gradient-mystic shadow-2xl">
+            <p className="text-white font-semibold text-center text-sm md:text-base lg:text-lg font-body leading-relaxed px-2">
+              {fact.backText}
+            </p>
           </div>
         </div>
       </motion.div>
@@ -216,7 +255,7 @@ const About: React.FC = () => {
 
 
      {/* Hero Section */}
-<section className="relative min-h-[80vh] md:h-[70vh] flex items-center justify-center overflow-hidden py-12 md:py-0">
+<section className="relative flex items-center justify-center overflow-hidden py-16 md:py-20 lg:py-24">
   <div className="absolute inset-0 bg-cover bg-center bg-no-repeat"
     style={{ backgroundImage: `url(${forestHero})` }}
   />
@@ -257,17 +296,17 @@ const About: React.FC = () => {
 
   {/* Контент */}
   <div className="container mx-auto max-w-6xl relative z-10 px-4">
-    <div className="flex flex-col items-center space-y-8 md:space-y-12">
+    <div className="flex flex-col items-center space-y-8 md:space-y-12 lg:space-y-16">
       
       {/* Заголовок и плавающие изображения */}
-      <div className="w-full flex flex-col md:grid md:grid-cols-2 gap-6 md:gap-16 items-center">
+      <div className="w-full flex flex-col md:grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
         
         {/* Заголовок - на мобилке сверху */}
         <motion.div
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="w-full text-center md:text-left order-1 md:order-1"
+          className="w-full text-center md:text-left order-1"
         >
           <div className="inline-block">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-script text-violeta mb-3 md:mb-4">
@@ -278,16 +317,16 @@ const About: React.FC = () => {
         </motion.div>
 
         {/* Плавающие изображения - на мобилке после заголовка */}
-        <div className="relative w-full h-[280px] sm:h-[320px] md:h-[350px] lg:h-[500px] flex items-center justify-center order-2 md:order-2">
+        <div className="relative w-full aspect-square max-w-[280px] sm:max-w-[320px] md:max-w-none md:aspect-square flex items-center justify-center order-2">
           
           {/* Центральное изображение (портрет) */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="relative z-20"
+            className="relative z-20 w-full max-w-[200px] sm:max-w-[240px] md:max-w-[280px] lg:max-w-[320px]"
           >
-            <div className="relative w-40 h-40 sm:w-48 sm:h-48 md:w-64 md:h-64 lg:w-72 lg:h-72 rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl border-2 md:border-4 border-white/50">
+            <div className="relative w-full aspect-square rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl border-2 md:border-4 border-white/50">
               <img 
                 src={heroPortrait} 
                 alt="Feya Bloom Portrait" 
@@ -301,7 +340,7 @@ const About: React.FC = () => {
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.5 }}
-            className="absolute -top-2 -right-2 sm:top-0 sm:right-0 md:top-4 md:-right-4 lg:-top-2 lg:-right-8 z-30"
+            className="absolute -top-2 -right-2 sm:top-0 sm:right-2 md:top-4 md:right-0 lg:-top-2 lg:-right-4 z-30"
           >
             <motion.div
               animate={{ 
@@ -309,7 +348,7 @@ const About: React.FC = () => {
                 rotate: [0, 2, 0]
               }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="w-16 h-16 sm:w-20 sm:h-20 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-lg md:rounded-xl lg:rounded-2xl overflow-hidden shadow-xl border-2 border-white/50 bg-white/80 backdrop-blur-sm"
+              className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32 rounded-lg md:rounded-xl lg:rounded-2xl overflow-hidden shadow-xl border-2 border-white/50 bg-white/80 backdrop-blur-sm"
             >
               <img 
                 src={heroMacrame} 
@@ -324,7 +363,7 @@ const About: React.FC = () => {
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.7 }}
-            className="absolute -bottom-2 -left-2 sm:bottom-0 sm:left-0 md:bottom-4 md:-left-4 lg:-bottom-2 lg:-left-8 z-30"
+            className="absolute -bottom-2 -left-2 sm:bottom-0 sm:left-2 md:bottom-4 md:left-0 lg:-bottom-2 lg:-left-4 z-30"
           >
             <motion.div
               animate={{ 
@@ -332,7 +371,7 @@ const About: React.FC = () => {
                 rotate: [0, -2, 0]
               }}
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-              className="w-16 h-16 sm:w-20 sm:h-20 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-lg md:rounded-xl lg:rounded-2xl overflow-hidden shadow-xl border-2 border-white/50 bg-white/80 backdrop-blur-sm"
+              className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32 rounded-lg md:rounded-xl lg:rounded-2xl overflow-hidden shadow-xl border-2 border-white/50 bg-white/80 backdrop-blur-sm"
             >
               <img 
                 src={heroMandala} 
@@ -359,7 +398,7 @@ const About: React.FC = () => {
         <p className="text-sm sm:text-base md:text-lg leading-relaxed max-w-xl mx-auto" style={{ color: '#8B8680' }}>
           Working from Spain, where I blend art, function, 
           and timeless wisdom into things that actually matter.
-        </p>        
+        </p>   
       </motion.div>
 
     </div>
