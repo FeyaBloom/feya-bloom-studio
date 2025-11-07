@@ -67,7 +67,7 @@ const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
       </motion.div>
 
       {/* Увеличена высота контейнера */}
-      <div className="relative w-full min-h-[500px] sm:min-h-[600px] md:min-h-[700px] lg:min-h-[700px] px-4">
+      <div className="relative w-full min-h-[500px] sm:min-h-[700px] md:min-h-[600px] lg:min-h-[700px] px-4">
         {facts.map((fact, i) => (
           <FactCard 
             key={i} 
@@ -368,10 +368,10 @@ const About: React.FC = () => {
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="w-full text-center md:text-left order-1"
+          className="w-full text-center md:text-left order-1 pt-8"
         >
           <div className="inline-block">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-script text-violeta mb-3 md:mb-4">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-script text-violeta mb-3 md:mb-4 shadow-xl font-bold">
               Hi there! I'm Feya
             </h1>
             <div className="h-1 w-24 md:w-32 gradient-feya rounded-full mx-auto md:mx-0" />
@@ -556,7 +556,7 @@ const About: React.FC = () => {
       transition={{ duration: 0.8, delay: 1.4 }}
     >
       <foreignObject x="150" y="150" width="100" height="100">
-        <div className="w-full h-full flex items-center justify-center bg-white/95 backdrop-blur-sm rounded-full shadow-lg p-3">
+        <div className="w-full h-full flex items-center justify-center gradient-feya-bg backdrop-blur-sm rounded-full shadow-lg p-3">
           <img src={logo} alt="Feya Bloom Studio" className="w-full h-full object-contain" />
         </div>
       </foreignObject>
