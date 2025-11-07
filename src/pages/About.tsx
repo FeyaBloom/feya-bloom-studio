@@ -216,37 +216,37 @@ const About: React.FC = () => {
 
 
      {/* Hero Section */}
-
-      <section className="relative h-[60vh] md:h-[70vh] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${forestHero})` }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background" />
-  {/* Декоративные плавающие элементы в фоне - адаптивные размеры */}
+<section className="relative min-h-[80vh] md:h-[70vh] flex items-center justify-center overflow-hidden py-12 md:py-0">
+  <div className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+    style={{ backgroundImage: `url(${forestHero})` }}
+  />
+  <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background" />
+  
+  {/* Декоративные плавающие элементы в фоне */}
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
     {/* Violeta круг */}
     <motion.div
-      className="absolute top-10 md:top-20 left-5 md:left-10 w-32 h-32 md:w-48 md:h-48 bg-violeta/20 rounded-full blur-3xl"
+      className="absolute top-10 left-5 w-24 h-24 md:top-20 md:left-10 md:w-48 md:h-48 bg-violeta/20 rounded-full blur-3xl"
       animate={{
         scale: [1, 1.2, 1],
         opacity: [0.2, 0.3, 0.2],
       }}
       transition={{ duration: 8, repeat: Infinity }}
     />
-    
+
     {/* Azul круг */}
     <motion.div
-      className="absolute bottom-10 md:bottom-20 right-5 md:right-10 w-64 h-64 md:w-96 md:h-96 bg-azul/20 rounded-full blur-3xl"
+      className="absolute bottom-10 right-5 w-48 h-48 md:bottom-20 md:right-10 md:w-96 md:h-96 bg-azul/20 rounded-full blur-3xl"
       animate={{
         scale: [1, 1.2, 1],
         opacity: [0.2, 0.3, 0.2],
       }}
       transition={{ duration: 10, repeat: Infinity }}
     />
-    
+
     {/* Sage круг */}
     <motion.div
-      className="absolute top-1/2 right-1/4 w-32 h-32 md:w-48 md:h-48 bg-sage/15 rounded-full blur-3xl"
+      className="absolute top-1/2 right-1/4 w-24 h-24 md:w-48 md:h-48 bg-sage/15 rounded-full blur-3xl"
       animate={{
         scale: [1, 1.1, 1],
         opacity: [0.15, 0.25, 0.15],
@@ -256,100 +256,112 @@ const About: React.FC = () => {
   </div>
 
   {/* Контент */}
-  <div className="container mx-auto max-w-6xl relative z-10">
-    <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
-      {/* Левая колонка - текст */}
-      <motion.div
-        initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8 }}
-        className="space-y-4 md:space-y-6"
-      >
-        <div className="inline-block">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-script text-violeta mb-3 md:mb-4">
-            Hi there! I'm Feya
-          </h1>
-          <div className="h-1 w-24 md:w-32 gradient-feya rounded-full" />
-        </div>
+  <div className="container mx-auto max-w-6xl relative z-10 px-4">
+    <div className="flex flex-col items-center space-y-8 md:space-y-12">
+      
+      {/* Заголовок и плавающие изображения */}
+      <div className="w-full flex flex-col md:grid md:grid-cols-2 gap-6 md:gap-16 items-center">
         
-        <p className="text-lg sm:text-xl md:text-2xl font-cormorant leading-relaxed" style={{ color: '#3D3935' }}>
+        {/* Заголовок - на мобилке сверху */}
+        <motion.div
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="w-full text-center md:text-left order-1 md:order-1"
+        >
+          <div className="inline-block">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-script text-violeta mb-3 md:mb-4">
+              Hi there! I'm Feya
+            </h1>
+            <div className="h-1 w-24 md:w-32 gradient-feya rounded-full mx-auto md:mx-0" />
+          </div>
+        </motion.div>
+
+        {/* Плавающие изображения - на мобилке после заголовка */}
+        <div className="relative w-full h-[280px] sm:h-[320px] md:h-[350px] lg:h-[500px] flex items-center justify-center order-2 md:order-2">
+          
+          {/* Центральное изображение (портрет) */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="relative z-20"
+          >
+            <div className="relative w-40 h-40 sm:w-48 sm:h-48 md:w-64 md:h-64 lg:w-72 lg:h-72 rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl border-2 md:border-4 border-white/50">
+              <img 
+                src={heroPortrait} 
+                alt="Feya Bloom Portrait" 
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </motion.div>
+
+          {/* Плавающая карточка - Макраме (сверху справа) */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="absolute -top-2 -right-2 sm:top-0 sm:right-0 md:top-4 md:-right-4 lg:-top-2 lg:-right-8 z-30"
+          >
+            <motion.div
+              animate={{ 
+                y: [0, -15, 0],
+                rotate: [0, 2, 0]
+              }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              className="w-16 h-16 sm:w-20 sm:h-20 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-lg md:rounded-xl lg:rounded-2xl overflow-hidden shadow-xl border-2 border-white/50 bg-white/80 backdrop-blur-sm"
+            >
+              <img 
+                src={heroMacrame} 
+                alt="Handmade craft" 
+                className="w-full h-full object-cover"
+              />
+            </motion.div>
+          </motion.div>
+
+          {/* Плавающая карточка - Мандала (снизу слева) */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.7 }}
+            className="absolute -bottom-2 -left-2 sm:bottom-0 sm:left-0 md:bottom-4 md:-left-4 lg:-bottom-2 lg:-left-8 z-30"
+          >
+            <motion.div
+              animate={{ 
+                y: [0, 15, 0],
+                rotate: [0, -2, 0]
+              }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+              className="w-16 h-16 sm:w-20 sm:h-20 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-lg md:rounded-xl lg:rounded-2xl overflow-hidden shadow-xl border-2 border-white/50 bg-white/80 backdrop-blur-sm"
+            >
+              <img 
+                src={heroMandala} 
+                alt="Digital art" 
+                className="w-full h-full object-cover"
+              />
+            </motion.div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Тексты внизу по всей ширине с центрированием */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.9 }}
+        className="w-full max-w-2xl lg:max-w-3xl text-center space-y-4 md:space-y-5 lg:space-y-6 px-2"
+      >
+        <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-cormorant leading-relaxed" style={{ color: '#3D3935' }}>
           I create for minds that won't fit the mold —
           and hearts that refuse to settle.
         </p>
 
-        <p className="text-base md:text-lg leading-relaxed" style={{ color: '#8B8680' }}>
+        <p className="text-sm sm:text-base md:text-lg leading-relaxed max-w-xl mx-auto" style={{ color: '#8B8680' }}>
           Working from Spain, where I blend art, function, 
           and timeless wisdom into things that actually matter.
-        </p>
-        
-        {/*<div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-4">
-          <Button asChild size="lg" className="bg-violeta hover:bg-opacity-90 shadow-lg font-quicksand w-full sm:w-auto">
-            <Link to="/contact">Start a Project</Link>
-          </Button>
-          <Button asChild variant="outline" size="lg" className="border-2 border-violeta text-violeta hover:bg-violeta hover:text-white font-quicksand w-full sm:w-auto">
-            <Link to="/gallery">View Work</Link>
-          </Button>
-        </div>*/}
+        </p>        
       </motion.div>
 
-      {/* Правая колонка - плавающие изображения - адаптивные размеры */}
-      <div className="relative w-full h-[250px] md:h-[350px] lg:h-[500px] flex items-center justify-center">
-        {/* Центральное изображение (портрет) - адаптивное */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="relative z-20"
-        >
-          <div className="relative w-full max-w-sm aspect-square sm:w-64 sm:h-64 md:w-80 md:h-80 lg:w-100 lg:h-100 rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl border border-white/50">
-            <img 
-              src={heroPortrait} 
-              alt="Feya Bloom Portrait" 
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </motion.div>
-
-        {/* Плавающая карточка - Макраме (сверху справа, накладывается) - адаптивная */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="absolute top-4 md:top-8 right-0 z-30"
-        >
-          <motion.div
-            animate={{ y: [0, -15, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-xl md:rounded-2xl overflow-hidden shadow-xl border border-white/50 bg-white/80 backdrop-blur-sm"
-          >
-            <img 
-              src={heroMacrame} 
-              alt="Handmade craft" 
-              className="w-full h-full object-cover"
-            />
-          </motion.div>
-        </motion.div>
-
-        {/* Плавающая карточка - Мандала (снизу слева, накладывается) - адаптивная */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.7 }}
-          className="absolute bottom-4 md:bottom-8 left-0 z-30"
-        >
-          <motion.div
-            animate={{ y: [0, 15, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-xl md:rounded-2xl overflow-hidden shadow-xl border border-white/50 bg-white/80 backdrop-blur-sm"
-          >
-            <img 
-              src={heroMandala} 
-              alt="Digital art" 
-              className="w-full h-full object-cover"
-            />
-          </motion.div>
-        </motion.div>
-      </div>
     </div>
   </div>
 </section>
