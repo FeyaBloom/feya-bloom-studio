@@ -77,11 +77,11 @@ const Gallery = () => {
     : projects.filter(project => project.category === activeCategory);
 
   const creations = [
-    { icon: Waves, title: "FIBER ARTS", description: "Threads, textiles & wearables" },
-    { icon: Shapes, title: "TACTILE DREAMS", description: "Sculpture & mixed media" },
-    { icon: Palette, title: "VISUAL ART & IMAGERY", description: "Paintings, illustrations & photography" },
-    { icon: Wand, title: "DIGITAL EXPERIENCES", description: "Apps, tools, websites & code" },
-    { icon: Feather, title: "WRITTEN WORLDS", description: "Books, essays & poetry" },
+    { icon: Waves, title: "Fiber Arts", description: "Threads, textiles & wearables" },
+    { icon: Shapes, title: "Tactile Dreams", description: "Sculpture & mixed media" },
+    { icon: Palette, title: "Visual Works", description: "Paintings, illustrations & photography" },
+    { icon: Wand, title: "Digital Experiences", description: "Apps, tools, websites & code" },
+    { icon: Feather, title: "Written Worlds", description: "Books, essays & poetry" },
   ];
 
   return (
