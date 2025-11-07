@@ -8,6 +8,7 @@ import heroImage from "@/assets/mood-aurora.png";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import useEmblaCarousel from "embla-carousel-react";
+import forestHero from "@/assets/forest-hero.png";
 import heroPortrait from "@/assets/hero-portrait-new.jpg";
 import heroMacrame from "@/assets/hero-macrame.png";
 import heroMandala from "@/assets/hero-mandala.png";
@@ -210,35 +211,143 @@ const About: React.FC = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
  
+     
      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 px-4">
-        <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
-          backgroundImage: `url(${heroImage})`
-        }} />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-muted" />
-        
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
-          <div className="max-w-4xl mx-auto text-center space-y-6 md:space-y-8">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-script text-primary mb-4 animate-in fade-in slide-in-from-bottom-4 duration-1000 px-4">
-              Hi there! I'm Feya
-            </h1>
-            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-serif text-foreground animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-200 px-4">
-              I create for minds that won't fit the mold — and hearts that refuse to settle.
-            </p>
-            <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300 px-4">
-              Working from Spain, where I blend art, function, and timeless wisdom into things that actually matter.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500 px-4">
-              <Button asChild size="lg" className="gap-2 shadow-soft hover:shadow-elevated transition-smooth w-full sm:w-auto">
-                <Link to="/contact">Start a Project</Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
-                <Link to="/gallery">View Work</Link>
-              </Button>
-            </div>
-          </div>
+<section className="relative min-h-screen flex items-center justify-center px-4 md:px-6 py-16 md:py-20 overflow-hidden">
+  <div className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${forestHero})` }}
+        />
+  {/* Декоративные плавающие элементы в фоне - адаптивные размеры */}
+  <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    {/* Violeta круг */}
+    <motion.div
+      className="absolute top-10 md:top-20 left-5 md:left-10 w-48 h-48 md:w-72 md:h-72 bg-violeta/20 rounded-full blur-3xl"
+      animate={{
+        scale: [1, 1.2, 1],
+        opacity: [0.2, 0.3, 0.2],
+      }}
+      transition={{ duration: 8, repeat: Infinity }}
+    />
+    
+    {/* Azul круг */}
+    <motion.div
+      className="absolute bottom-10 md:bottom-20 right-5 md:right-10 w-64 h-64 md:w-96 md:h-96 bg-azul/20 rounded-full blur-3xl"
+      animate={{
+        scale: [1, 1.2, 1],
+        opacity: [0.2, 0.3, 0.2],
+      }}
+      transition={{ duration: 10, repeat: Infinity }}
+    />
+    
+    {/* Sage круг */}
+    <motion.div
+      className="absolute top-1/2 right-1/4 w-48 h-48 md:w-64 md:h-64 bg-sage/15 rounded-full blur-3xl"
+      animate={{
+        scale: [1, 1.1, 1],
+        opacity: [0.15, 0.25, 0.15],
+      }}
+      transition={{ duration: 12, repeat: Infinity }}
+    />
+  </div>
+
+  {/* Контент */}
+  <div className="container mx-auto max-w-6xl relative z-10">
+    <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
+      {/* Левая колонка - текст */}
+      <motion.div
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8 }}
+        className="space-y-4 md:space-y-6"
+      >
+        <div className="inline-block">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-script text-violeta mb-3 md:mb-4">
+            Hi there! I'm Feya
+          </h1>
+          <div className="h-1 w-24 md:w-32 gradient-feya rounded-full" />
         </div>
-      </section>
+        
+        <p className="text-lg sm:text-xl md:text-2xl font-cormorant leading-relaxed" style={{ color: '#3D3935' }}>
+          I create for minds that won't fit the mold —
+          and hearts that refuse to settle.
+        </p>
+
+        <p className="text-base md:text-lg leading-relaxed" style={{ color: '#8B8680' }}>
+          Working from Spain, where I blend art, function, 
+          and timeless wisdom into things that actually matter.
+        </p>
+        
+        {/*<div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-4">
+          <Button asChild size="lg" className="bg-violeta hover:bg-opacity-90 shadow-lg font-quicksand w-full sm:w-auto">
+            <Link to="/contact">Start a Project</Link>
+          </Button>
+          <Button asChild variant="outline" size="lg" className="border-2 border-violeta text-violeta hover:bg-violeta hover:text-white font-quicksand w-full sm:w-auto">
+            <Link to="/gallery">View Work</Link>
+          </Button>
+        </div>*/}
+      </motion.div>
+
+      {/* Правая колонка - плавающие изображения - адаптивные размеры */}
+      <div className="relative w-full h-[400px] md:h-[500px] lg:h-[600px] flex items-center justify-center">
+        {/* Центральное изображение (портрет) - адаптивное */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="relative z-20"
+        >
+          <div className="relative w-full max-w-sm aspect-square sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-80 lg:h-80 rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl border border-white/50">
+            <img 
+              src={heroPortrait} 
+              alt="Feya" 
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </motion.div>
+
+        {/* Плавающая карточка - Макраме (сверху справа, накладывается) - адаптивная */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="absolute top-4 md:top-8 right-0 z-30"
+        >
+          <motion.div
+            animate={{ y: [0, -15, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-xl md:rounded-2xl overflow-hidden shadow-xl border border-white/50 bg-white/80 backdrop-blur-sm"
+          >
+            <img 
+              src={heroMacrame} 
+              alt="Handmade craft" 
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
+        </motion.div>
+
+        {/* Плавающая карточка - Мандала (снизу слева, накладывается) - адаптивная */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.7 }}
+          className="absolute bottom-4 md:bottom-8 left-0 z-30"
+        >
+          <motion.div
+            animate={{ y: [0, 15, 0] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+            className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-xl md:rounded-2xl overflow-hidden shadow-xl border border-white/50 bg-white/80 backdrop-blur-sm"
+          >
+            <img 
+              src={heroMandala} 
+              alt="Digital art" 
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
+        </motion.div>
+      </div>
+    </div>
+  </div>
+</section>
 
 
       {/* My Journey Section */}
