@@ -94,90 +94,101 @@ const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
   );
 };
 
-const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isRevealed: boolean }> = ({ fact, index, inView, isRevealed }) => {
+const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isRevealed: boolean }> = ({
+  fact,
+  index,
+  inView,
+  isRevealed
+}) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const Icon = fact.icon;
 
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [position, setPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
-  // ✅ При клике "Take a look" пересчитать нормальный рандом внутри контейнера
+  // ✅ вычисляем нормальный рандом после клика
   useEffect(() => {
-    if (!isRevealed) return setPosition({ x: 0, y: 0 });
-
     const container = document.getElementById("fun-facts-container");
     if (!container) return;
+
+    if (!isRevealed) {
+      // стопка ровно сверху по центру
+      setPosition({ x: 0, y: 0 });
+      return;
+    }
 
     const width = container.clientWidth;
     const height = container.clientHeight;
 
-    // реальные размеры карточки
-    const cardW = 250;
-    const cardH = 150;
+    const cardW = 260;
+    const cardH = 160;
 
-    // ✅ рандом по всей площади контейнера с отступами
-    const x = (Math.random() * (width - cardW)) - (width / 2 - cardW / 2);
-    const y = Math.random() * (height - cardH - 60);
+    // ✅ ровный рандом внутри контейнера без вылезаний
+    const x = Math.random() * (width - cardW) - (width / 2 - cardW / 2);
+    const y = 40 + Math.random() * (height - cardH - 80);
 
     setPosition({ x, y });
   }, [isRevealed]);
 
   return (
     <motion.div
-      className="absolute left-1/2"
+      className="absolute"
       style={{
-        top: "20px",           // ✅ стопка сверху
+        left: "50%",
+        top: "20px",
         transform: "translateX(-50%)",
         perspective: 1000,
-        zIndex: isFlipped ? 50 : 10 + index,
+        zIndex: isFlipped ? 50 : 10 + index
       }}
-      initial={{ opacity: 0, scale: 0.8, x: 0, y: 0 }}
+      initial={{ opacity: 0, scale: 0.85, x: 0, y: 0 }}
       animate={
         inView
           ? {
-              opacity: isFlipped ? 1 : 0.96,
+              opacity: 1,
               scale: isFlipped ? 1.05 : 1,
               x: position.x,
-              y: position.y,
+              y: position.y
             }
-          : { opacity: 0, scale: 0.8, x: 0, y: 0 }
+          : { opacity: 0, scale: 0.85, x: 0, y: 0 }
       }
       transition={{
         type: "spring",
-        stiffness: 80,
-        damping: 15,
-        delay: index * 0.08,
+        stiffness: 90,
+        damping: 12,
+        delay: index * 0.08
       }}
       onClick={(e) => {
         e.stopPropagation();
         setIsFlipped((s) => !s);
       }}
       whileHover={{
-        scale: 1.03,
-        zIndex: 40,
-        transition: { duration: 0.2 },
+        scale: 1.04,
+        zIndex: 100,
+        transition: { duration: 0.2 }
       }}
     >
-      {/* карточка */}
       <motion.div
-        className="relative w-48 h-28 sm:w-52 sm:h-30 md:w-60 md:h-34 lg:w-64 lg:h-36"
-        style={{ transformStyle: "preserve-3d" as const }}
+        className="relative w-48 h-28 sm:w-52 sm:h-32 md:w-60 md:h-36 lg:w-64 lg:h-40"
+        style={{ transformStyle: "preserve-3d" }}
         animate={{ rotateY: isFlipped ? 180 : 0 }}
         transition={{ duration: 0.6 }}
       >
         {/* front */}
         <div className="absolute w-full h-full" style={{ backfaceVisibility: "hidden" }}>
-          <div className="glass-card rounded-xl md:rounded-2xl p-2.5 md:p-3.5 h-full flex items-center gap-2.5 md:gap-3 shadow-lg hover:shadow-xl transition-shadow">
-            <div className="w-9 h-9 md:w-11 md:h-11 gradient-mystic rounded-lg md:rounded-xl flex items-center justify-center flex-shrink-0">
-              <Icon className="w-4.5 h-4.5 md:w-5.5 md:h-5.5 text-white" />
+          <div className="glass-card rounded-xl p-3 h-full flex items-center gap-3 shadow-lg hover:shadow-xl">
+            <div className="w-10 h-10 gradient-mystic rounded-lg flex items-center justify-center">
+              <Icon className="w-5 h-5 text-white" />
             </div>
-            <p className="text-gray-700 text-xs md:text-sm font-body leading-snug pr-1">{fact.text}</p>
+            <p className="text-gray-700 text-sm font-body leading-snug">{fact.text}</p>
           </div>
         </div>
 
         {/* back */}
-        <div className="absolute w-full h-full" style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
-          <div className="rounded-xl md:rounded-2xl p-3 md:p-4 h-full flex items-center justify-center gradient-mystic shadow-2xl">
-            <p className="text-white font-semibold text-center text-xs md:text-sm lg:text-base font-body leading-relaxed px-2">
+        <div
+          className="absolute w-full h-full"
+          style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+        >
+          <div className="rounded-xl p-4 h-full flex items-center justify-center gradient-mystic shadow-2xl">
+            <p className="text-white font-semibold text-center text-sm font-body leading-relaxed px-2">
               {fact.backText}
             </p>
           </div>
