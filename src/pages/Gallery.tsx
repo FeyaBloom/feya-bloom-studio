@@ -13,12 +13,11 @@ import useEmblaCarousel from "embla-carousel-react";
 import { 
   ArrowLeft, 
   ArrowRight,
-  Code,
+  Feather,
   Palette,
-  FileText,
-  Home,
-  Smartphone,
-  Globe,
+  Waves,
+  Shapes, 
+  Wand
 } from "lucide-react";
 
 const Gallery = () => {
@@ -78,12 +77,11 @@ const Gallery = () => {
     : projects.filter(project => project.category === activeCategory);
 
   const creations = [
-    { icon: Code, title: "Art & Sculpture", description: "Digital and physical art pieces that spark joy" },
-    { icon: Palette, title: "Wearable Art", description: "Fashion that tells a story" },
-    { icon: FileText, title: "Business Systems", description: "Streamlined workflows that actually work" },
-    { icon: Home, title: "Home Decor", description: "Spaces that feel like home" },
-    { icon: Smartphone, title: "Wellness & Wisdom", description: "Tools for mindful living" },
-    { icon: Globe, title: "Websites", description: "Digital experiences that delight" },
+    { icon: Waves, title: "FIBER ARTS", description: "Threads, textiles & wearables" },
+    { icon: Shapes, title: "TACTILE DREAMS", description: "Sculpture & mixed media" },
+    { icon: Palette, title: "VISUAL ART & IMAGERY", description: "Paintings, illustrations & photography" },
+    { icon: Wand, title: "DIGITAL EXPERIENCES", description: "Apps, tools, websites & code" },
+    { icon: Feather, title: "WRITTEN WORLDS", description: "Books, essays & poetry" },
   ];
 
   return (
