@@ -226,7 +226,7 @@ const About: React.FC = () => {
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
     {/* Violeta круг */}
     <motion.div
-      className="absolute top-10 md:top-20 left-5 md:left-10 w-48 h-48 md:w-72 md:h-72 bg-violeta/20 rounded-full blur-3xl"
+      className="absolute top-10 md:top-20 left-5 md:left-10 w-32 h-32 md:w-48 md:h-48 bg-violeta/20 rounded-full blur-3xl"
       animate={{
         scale: [1, 1.2, 1],
         opacity: [0.2, 0.3, 0.2],
@@ -246,7 +246,7 @@ const About: React.FC = () => {
     
     {/* Sage круг */}
     <motion.div
-      className="absolute top-1/2 right-1/4 w-48 h-48 md:w-64 md:h-64 bg-sage/15 rounded-full blur-3xl"
+      className="absolute top-1/2 right-1/4 w-32 h-32 md:w-48 md:h-48 bg-sage/15 rounded-full blur-3xl"
       animate={{
         scale: [1, 1.1, 1],
         opacity: [0.15, 0.25, 0.15],
