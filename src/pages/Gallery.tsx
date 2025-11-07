@@ -148,7 +148,7 @@ const Gallery = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.15 }}
-            className="relative py-6 md:py-12"
+            className="relative py-6 md:py-12 my-4"
           >
             <div className="overflow-hidden" ref={emblaRef}>
               <div className="flex">
@@ -250,7 +250,10 @@ const Gallery = () => {
               {filteredProjects.length === 0 && (
                 <div className="text-center py-12 md:py-16">
                   <p className="text-muted-foreground text-base md:text-lg px-4">
-                    No projects found in this category yet.
+                    🌺 COMING SOON 🌺 
+                  </p>
+                  <p className="text-muted-foreground text-base md:text-lg px-4">
+                    Watch this space bloom
                   </p>
                 </div>
               )}
