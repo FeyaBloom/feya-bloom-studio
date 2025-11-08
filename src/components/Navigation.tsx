@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import logo from "@/assets/logo.svg";
+import Logo from "./Logo";
 
 const Navigation = () => {
   const location = useLocation();
@@ -19,7 +19,7 @@ const Navigation = () => {
       <div className="container mx-auto px-4 md:px-6 py-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 md:gap-3 group">
-            <img src={logo} alt="Feya Bloom Studio" className="h-8 md:h-10 w-8 md:w-10 transition-smooth group-hover:scale-110" />
+            <Logo className="h-8 md:h-10 w-8 md:w-10 text-foreground transition-smooth group-hover:scale-110 group-hover:text-primary" />
             <div>
               <h1 className="text-base md:text-xl font-script text-foreground">Feya Bloom Studio</h1>
             </div>
