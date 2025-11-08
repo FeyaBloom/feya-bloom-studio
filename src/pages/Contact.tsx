@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { LeafyGreen, Brain, BookOpen, Moon, Brush, MessageSquare, Mail, Send } from "lucide-react";
+import { Mail, MessageSquare, Send, LeafyGreen, Brain, BookOpen, Moon, Brush } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
