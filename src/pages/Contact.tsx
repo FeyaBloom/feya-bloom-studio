@@ -87,7 +87,8 @@ const Contact = () => {
 
             <div className="grid md:grid-cols-2 gap-8 md:gap-12">
 
-                <div className="relative p-8 md:p-12 rounded-2xl overflow-hidden bg-card shadow-elevated">
+                <div className="relative p-8 md:p-12 rounded-2xl overflow-hidden bg-card drop-shadow-lg">
+
   {/* Soft glow background */}
     <div className="relative z-10">
     <p className="text-3xl sm:text-4xl md:text-5xl font-script text-accent mb-6 leading-relaxed">

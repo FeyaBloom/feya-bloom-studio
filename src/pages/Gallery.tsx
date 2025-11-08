@@ -11,7 +11,6 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import useEmblaCarousel from "embla-carousel-react";
 import { 
-LeafyGreen, Brain, BookOpen, Moon, Brush, MessageSquare,
   ArrowLeft, 
   ArrowRight,
   Feather,
@@ -149,7 +148,7 @@ const Gallery = () => {
             What I Create
           </motion.h2>
                      
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-primary text-center mb-6 md:mb-8 px-4">        
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground text-center mb-6 md:mb-8 px-4">        
             Each piece blends intuition with intentional design, beauty with usefulness
           </p>
 
@@ -286,7 +285,7 @@ const Gallery = () => {
         Behind the Scenes
       </h2>
       <p className="text-lg md:text-xl text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-        Every piece begins with intention. Here's what goes into creating work that truly serves.
+        Everything begins with intention. Here's what goes into creating work that truly serves.
       </p>
 
       <div className="grid md:grid-cols-2 gap-8 mb-12">
@@ -344,9 +343,9 @@ const Gallery = () => {
       </div>
 
       {/* Optional: Video or carousel of WIP shots */}
-      <div className="text-center mt-12 p-8 rounded-2xl bg-white/60 backdrop-blur-sm">
-        <p className="text-lg font-serif text-primary mb-4">
-          "No shortcuts. No templates. Just thoughtful work that takes the time it needs."
+      <div className="text-center mt-12 p-6 rounded-2xl bg-card drop-shadow">
+        <p className="text-lg md:text-2xl  font-serif text-accent">
+          Just thoughtful work that takes the time it needs
         </p>
       </div>
     </motion.div>
