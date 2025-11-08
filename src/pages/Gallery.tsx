@@ -273,6 +273,85 @@ const Gallery = () => {
         </div>
       </section>
 
+<section className="py-16 md:py-24 bg-neutral-50">
+  <div className="container mx-auto px-4 md:px-6">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="max-w-5xl mx-auto"
+    >
+      <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-center text-primary mb-6">
+        Behind the Scenes
+      </h2>
+      <p className="text-lg md:text-xl text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+        Every piece begins with intention. Here's what goes into creating work that truly serves.
+      </p>
+
+      <div className="grid md:grid-cols-2 gap-8 mb-12">
+        {/* Process Step 1 */}
+        <div className="glass-card rounded-2xl p-6 space-y-4">
+          <div className="aspect-video bg-gradient-ethereal rounded-lg mb-4">
+            {/* Image: Research, sketches, mood boards */}
+            <img src="/path-to-research-image.jpg" alt="Research phase" className="w-full h-full object-cover rounded-lg" />
+          </div>
+          <h3 className="text-xl font-serif font-semibold">1. Deep Dive & Discovery</h3>
+          <p className="text-muted-foreground">
+            Understanding the real need behind the ask. Research, conversations, 
+            sketches that don't make it to final—but shape everything.
+          </p>
+        </div>
+
+        {/* Process Step 2 */}
+        <div className="glass-card rounded-2xl p-6 space-y-4">
+          <div className="aspect-video bg-gradient-ethereal rounded-lg mb-4">
+            {/* Image: Iteration, prototypes */}
+            <img src="/path-to-iteration-image.jpg" alt="Iteration phase" className="w-full h-full object-cover rounded-lg" />
+          </div>
+          <h3 className="text-xl font-serif font-semibold">2. Iteration & Refinement</h3>
+          <p className="text-muted-foreground">
+            Testing, breaking, rebuilding. This is where function meets beauty—
+            through trial, error, and patience.
+          </p>
+        </div>
+
+        {/* Process Step 3 */}
+        <div className="glass-card rounded-2xl p-6 space-y-4">
+          <div className="aspect-video bg-gradient-ethereal rounded-lg mb-4">
+            {/* Image: Crafting details */}
+            <img src="/path-to-crafting-image.jpg" alt="Crafting phase" className="w-full h-full object-cover rounded-lg" />
+          </div>
+          <h3 className="text-xl font-serif font-semibold">3. Crafting with Care</h3>
+          <p className="text-muted-foreground">
+            Whether code or thread, every detail matters. This is where intention 
+            becomes tangible—pixel by pixel, stitch by stitch.
+          </p>
+        </div>
+
+        {/* Process Step 4 */}
+        <div className="glass-card rounded-2xl p-6 space-y-4">
+          <div className="aspect-video bg-gradient-ethereal rounded-lg mb-4">
+            {/* Image: Final polish, testing */}
+            <img src="/path-to-final-image.jpg" alt="Final polish" className="w-full h-full object-cover rounded-lg" />
+          </div>
+          <h3 className="text-xl font-serif font-semibold">4. Polish & Purpose</h3>
+          <p className="text-muted-foreground">
+            Final checks, user testing, making sure it actually works for real humans. 
+            Beauty is useless if it doesn't serve.
+          </p>
+        </div>
+      </div>
+
+      {/* Optional: Video or carousel of WIP shots */}
+      <div className="text-center mt-12 p-8 rounded-2xl bg-white/60 backdrop-blur-sm">
+        <p className="text-lg font-serif text-primary mb-4">
+          "No shortcuts. No templates. Just thoughtful work that takes the time it needs."
+        </p>
+      </div>
+    </motion.div>
+  </div>
+</section>
+
       <Footer />
     </div>
   );
