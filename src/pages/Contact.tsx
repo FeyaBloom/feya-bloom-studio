@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Mail, MessageSquare, Send, LeafyGreen, Brain, BookOpen, Moon, Brush } from "lucide-react";
+import { MessageSquare, Send, LeafyGreen, Brain, BookOpen, Moon, Brush } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
@@ -32,8 +32,8 @@ const Contact = () => {
       });
       if (error) throw error;
       toast({
-        title: "Message sent!",
-        description: "Thank you for reaching out. We'll get back to you soon."
+        title: "Done!",
+        description: "Thank you! I'll get back to you soon 💜"
       });
       setFormData({
         name: "",
@@ -44,8 +44,8 @@ const Contact = () => {
     } catch (error) {
       console.error("Error sending message:", error);
       toast({
-        title: "Error",
-        description: "Failed to send message. Please try again.",
+        title: "Oops :(",
+        description: "Something went wrong.. Could you try later?",
         variant: "destructive"
       });
     } finally {
@@ -75,7 +75,7 @@ const Contact = () => {
               Get in Touch
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
-              Let's create something beautiful together. Reach out to discuss your project ideas.
+              Let's create something good together. Reach out to discuss your project ideas.
             </p>
           </div>
         </div>
@@ -86,34 +86,21 @@ const Contact = () => {
           <div className="max-w-4xl mx-auto">
 
             <div className="grid md:grid-cols-2 gap-8 md:gap-12">
-              <div className="space-y-8">
-                <div className="p-6 rounded-xl bg-card shadow-soft space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 rounded-lg bg-primary/10">
-                      <Mail className="h-6 w-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-serif text-lg text-foreground">Email</h3>
-                      <p className="text-muted-foreground">feya.bloom.design@gmail.com</p>
-                    </div>
-                  </div>
-                </div>
 
-                <div className="relative p-8 md:p-12 rounded-2xl overflow-hidden">
+                <div className="relative p-8 md:p-12 rounded-2xl overflow-hidden bg-card shadow-elevated">
   {/* Soft glow background */}
-  <div className="absolute inset-0 bg-gradient-to-br from-violeta/20 via-azul/20 to-sage/20 blur-2xl" />
-  
-  <div className="relative z-10">
-    <p className="text-3xl sm:text-4xl md:text-5xl font-script text-primary mb-6 leading-relaxed">
+    <div className="relative z-10">
+    <p className="text-3xl sm:text-4xl md:text-5xl font-script text-accent mb-6 leading-relaxed">
       The magic happens when we trust the process
     </p>
-    <p className="text-lg text-muted-foreground leading-relaxed">
-      Not rushing. Not forcing. Just feeling.
+    <p className="text-lg text-muted-foreground leading-relaxed text-center" >
+      Not rushing. Not forcing.<br/>Just feeling.
     </p>
-<p className="text-lg text-muted-foreground leading-relaxed mb-4">
-    Between what you envision and what wants to emerge. 
-    Between tradition and innovation. Between your world and mine.
-  </p>
+    <p className="text-lg text-muted-foreground leading-relaxed text-center my-2">
+      Between what you envision and what wants to emerge. <br/>
+      Between tradition and innovation.<br/>
+      Your world & mine.
+    </p>
   </div>
 </div>
 
@@ -130,12 +117,12 @@ const Contact = () => {
 
                 <div className="space-y-2">
                   <Label htmlFor="subject">Subject</Label>
-                  <Input id="subject" name="subject" value={formData.subject} onChange={handleChange} required placeholder="What's this about?" />
+                  <Input id="subject" name="subject" value={formData.subject} onChange={handleChange} required placeholder="What's this?" />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="message">Message</Label>
-                  <Textarea id="message" name="message" value={formData.message} onChange={handleChange} required placeholder="Tell us about your project..." rows={6} />
+                  <Textarea id="message" name="message" value={formData.message} onChange={handleChange} required placeholder="Tell me something about..." rows={6} />
                 </div>
 
                 <Button type="submit" className="w-full shadow-soft hover:shadow-elevated transition-smooth gap-2" size="lg" disabled={isSubmitting}>
@@ -234,7 +221,7 @@ const Contact = () => {
           </div>
           <h3 className="text-xl font-serif font-semibold">Handmade with Care</h3>
           <p className="text-muted-foreground">
-            No AI shortcuts. No mass production. Every piece carries the mark 
+            No mass production. Every piece carries the mark 
             of human hands and thoughtful intention.
           </p>
         </motion.div>
@@ -256,7 +243,7 @@ const Contact = () => {
       </div>
 
       {/* Call-out box */}
-      <div className="bg-gradient-feya rounded-2xl p-8 md:p-12 text-center text-white">
+      <div className="bg-secondary rounded-2xl p-8 md:p-12 text-center text-white">
         <p className="text-2xl md:text-3xl font-script mb-4">
           Does this feel like home?
         </p>
