@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import ThemeToggle from "@/components/ThemeToggle";
 import forestHero from "@/assets/forest-hero.png";
 const Home = () => {
   const {
@@ -40,6 +41,11 @@ const Home = () => {
         backgroundImage: `url(${forestHero})`
       }} />
         <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-muted" />
+        
+        {/* Theme Toggle - positioned in top right */}
+        <div className="absolute top-24 right-4 md:right-8 z-20 animate-in fade-in slide-in-from-right-4 duration-1000 delay-700">
+          <ThemeToggle />
+        </div>
         
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           <div className="max-w-4xl mx-auto text-center space-y-6 md:space-y-8">
