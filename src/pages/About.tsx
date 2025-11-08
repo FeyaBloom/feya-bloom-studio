@@ -22,6 +22,7 @@ import {
   Music,
   BookOpen,
   Brush,
+  MessageSquare,
   Globe,
 } from "lucide-react";
 
