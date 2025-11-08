@@ -161,9 +161,7 @@ const Contact = () => {
       <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-center text-primary mb-6">
         What Inspires My Work
       </h2>
-      <p className="text-lg md:text-xl text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-        If these resonate with you, we'll probably create something beautiful together.
-      </p>
+      
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
         {/* Inspiration 1: Nature */}
@@ -262,15 +260,10 @@ const Contact = () => {
         <p className="text-2xl md:text-3xl font-script mb-4">
           Does this feel like home?
         </p>
-        <p className="text-lg mb-6 max-w-2xl mx-auto opacity-90">
+        <p className="text-lg max-w-2xl mx-auto opacity-90">
           If you nodded along reading this, we're probably a good match. 
-          Let's talk about what we can create together.
         </p>
-        <Button asChild size="lg" variant="secondary">
-          <a href="#contact-form" className="scroll-smooth">
-            Start the Conversation
-          </a>
-        </Button>
+        
       </div>
     </motion.div>
   </div>
