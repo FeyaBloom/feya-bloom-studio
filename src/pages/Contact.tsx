@@ -87,17 +87,17 @@ const Contact = () => {
 
             <div className="grid md:grid-cols-2 gap-8 md:gap-12">
 
-                <div className="relative p-8 md:p-12 rounded-2xl overflow-hidden bg-card drop-shadow-lg">
+                <div className="relative p-6 md:p-8 rounded-2xl overflow-hidden bg-card/50 drop-shadow-lg">
 
   {/* Soft glow background */}
     <div className="relative z-10">
-    <p className="text-3xl sm:text-4xl md:text-5xl font-script text-accent mb-6 leading-relaxed">
+    <p className="text-3xl sm:text-4xl md:text-5xl font-script text-accent text-right mb-12 leading-relaxed">
       The magic happens when we trust the process
     </p>
     <p className="text-lg text-muted-foreground leading-relaxed text-center" >
       Not rushing. Not forcing.<br/>Just feeling.
     </p>
-    <p className="text-lg text-muted-foreground leading-relaxed text-center my-2">
+    <p className="text-lg text-muted-foreground leading-relaxed text-center py-4">
       Between what you envision and what wants to emerge. <br/>
       Between tradition and innovation.<br/>
       Your world & mine.

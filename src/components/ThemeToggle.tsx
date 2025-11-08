@@ -40,7 +40,7 @@ const ThemeToggle = () => {
       
       {/* Moon icon */}
       <span
-        className={`relative z-10 ml-2 flex h-8 w-8 items-center justify-center transition-all duration-300 ${
+        className={`relative z-10 pl-4 ml-2 flex h-8 w-8 items-center justify-center transition-all duration-300 ${
           theme === "dark" 
             ? "text-white scale-110" 
             : "text-muted-foreground scale-90"

@@ -1,18 +1,15 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import heroImage from "@/assets/mood-aurora.png";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import useEmblaCarousel from "embla-carousel-react";
 import forestHero from "@/assets/forest-hero.png";
 import heroPortrait from "@/assets/hero-portrait-new.jpg";
 import heroMacrame from "@/assets/hero-macrame.png";
 import heroMandala from "@/assets/hero-mandala.png";
-import logo from "@/assets/logo.svg";
+import Logo from "@/components/Logo";
 import {
   Brain,
   Home,
@@ -22,7 +19,6 @@ import {
   Music,
   BookOpen,
   Brush,
-  MessageSquare,
   Globe,
 } from "lucide-react";
 
@@ -557,7 +553,7 @@ const About: React.FC = () => {
     >
       <foreignObject x="150" y="150" width="100" height="100">
         <div className="w-full h-full flex items-center justify-center gradient-feya-bg backdrop-blur-sm rounded-full drop-shadow-lg p-3">
-          <img src={logo} alt="Feya Bloom Studio" className="w-full h-full object-contain text-sage" />
+          <Logo className="text-background pr-2 pt-2" />
         </div>
       </foreignObject>
     </motion.g>
@@ -574,7 +570,7 @@ const About: React.FC = () => {
 
     <motion.g initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.0 }}>
       <foreignObject x="220" y="70" width="130" height="100">
-        <div className="flex flex-col items-center text-right pl-12">
+        <div className="flex flex-col items-center text-right pl-6">
           <Brain className="w-6 h-6 md:w-8 md:h-8 text-azul mb-1" />
           <p className="text-md md:text-lg font-serif text-foreground">Functional <br /> Design</p>
         </div>
