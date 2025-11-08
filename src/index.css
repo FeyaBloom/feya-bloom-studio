@@ -188,19 +188,54 @@ All colors MUST be HSL.
   .handwritten-underline:hover::after { transform: scaleX(1); }
 
   /* cards, icons, glass surfaces */
-  .card-surface { background: rgba(255,255,255,0.8); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
-  .glass-card { background: rgba(255,255,255,0.76); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+  .card-surface { 
+    background: hsl(var(--card) / 0.8); 
+    backdrop-filter: blur(6px); 
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid hsl(var(--border) / 0.5);
+  }
+  .glass-card { 
+    background: hsl(var(--card) / 0.76); 
+    backdrop-filter: blur(6px); 
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid hsl(var(--border) / 0.3);
+  }
   .icon-bg { background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%); }
   .back-face-bg { background: linear-gradient(135deg, #a78bfa 0%, #fb7185 100%); }
 
-  .carousel-nav { width: 48px; height: 48px; border-radius: 9999px; background: rgba(255,255,255,0.8); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; color: #6B4FA3; }
+  .carousel-nav { 
+    width: 48px; 
+    height: 48px; 
+    border-radius: 9999px; 
+    background: hsl(var(--card) / 0.8); 
+    backdrop-filter: blur(6px); 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    color: hsl(var(--primary));
+    border: 1px solid hsl(var(--border) / 0.5);
+  }
 
-  .btn-primary { background: linear-gradient(90deg,#7c3aed,#ec4899); color: #fff; font-weight: 700; padding: .6rem 1rem; border-radius: 9999px; box-shadow: 0 10px 30px rgba(124,58,237,0.12); transition: transform .15s ease; }
+  .btn-primary { 
+    background: linear-gradient(90deg, #7c3aed, #ec4899); 
+    color: #fff; 
+    font-weight: 700; 
+    padding: .6rem 1rem; 
+    border-radius: 9999px; 
+    box-shadow: 0 10px 30px rgba(124,58,237,0.12); 
+    transition: transform .15s ease; 
+  }
   .btn-primary:hover { transform: scale(1.03); }
 
-  .btn-outline { border: 2px solid #6B4FA3; color: #6B4FA3; background: transparent; padding: .5rem .75rem; border-radius: 9999px; }
+  .btn-outline { 
+    border: 2px solid hsl(var(--primary)); 
+    color: hsl(var(--primary)); 
+    background: transparent; 
+    padding: .5rem .75rem; 
+    border-radius: 9999px; 
+  }
 
-  .hero-soft { background-color: #F5F0E8; }
-  .text-subtle { color: #8B8680; }
-  .text-lead { color: #3D3935; }
+  .hero-soft { background-color: hsl(var(--muted)); }
+  .text-subtle { color: hsl(var(--muted-foreground)); }
+  .text-lead { color: hsl(var(--foreground)); }
 }
