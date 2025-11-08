@@ -56,7 +56,7 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
             <div className="w-12 h-12 icon-bg rounded-xl flex items-center justify-center flex-shrink-0">
               <Icon className="w-6 h-6 text-white" />
             </div>
-            <p className="text-gray-700 text-sm font-quicksand">{fact.text}</p>
+            <p className="text-foreground text-sm font-quicksand">{fact.text}</p>
           </div>
         </div>
 

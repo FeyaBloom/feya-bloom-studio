@@ -157,7 +157,7 @@ const Contact = () => {
       </div>
 <section className="py-16 md:py-24 relative overflow-hidden">
   {/* Soft background */}
-  <div className="absolute inset-0 bg-gradient-to-b from-background via-neutral-50 to-background" />
+  <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/30 to-background" />
   
   <div className="container mx-auto px-4 md:px-6 relative z-10">
     <motion.div

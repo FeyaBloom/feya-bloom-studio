@@ -219,7 +219,7 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
             <div className="w-9 h-9 md:w-11 md:h-11 gradient-mystic rounded-lg md:rounded-xl flex items-center justify-center flex-shrink-0">
               <Icon className="w-4.5 h-4.5 md:w-5.5 md:h-5.5 text-white" />
             </div>
-            <p className="text-gray-700 text-xs md:text-sm font-body leading-snug pr-1">
+            <p className="text-foreground text-xs md:text-sm font-body leading-snug pr-1">
               {fact.text}
             </p>
           </div>
@@ -451,15 +451,15 @@ const About: React.FC = () => {
         transition={{ duration: 0.8, delay: 0.9 }}
         className="w-full max-w-2xl lg:max-w-3xl text-center space-y-4 md:space-y-5 lg:space-y-6 px-2"
       >
-        <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-cormorant leading-relaxed" style={{ color: '#3D3935' }}>
+        <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-cormorant leading-relaxed text-foreground">
           I create for minds that won't fit the mold —
           and hearts that refuse to settle.
         </p>
 
-        <p className="text-sm sm:text-base md:text-lg leading-relaxed max-w-xl mx-auto" style={{ color: '#8B8680' }}>
+        <p className="text-sm sm:text-base md:text-lg leading-relaxed max-w-xl mx-auto text-muted-foreground">
           Working from Spain, where I blend art, function, 
           and timeless wisdom into things that actually matter.
-        </p>   
+        </p>
       </motion.div>
 
     </div>
@@ -468,7 +468,7 @@ const About: React.FC = () => {
 
 
       {/* My Journey Section */}
-      <section className="relative py-16 md:py-24 lg:py-32 px-4 md:px-6 overflow-hidden bg-neutral-100">
+      <section className="relative py-16 md:py-24 lg:py-32 px-4 md:px-6 overflow-hidden bg-muted/30">
         <div className="container mx-auto max-w-4xl relative z-10">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-cormorant font-bold text-center mb-12 md:mb-16 text-secondary">
             How I Got Here
@@ -487,7 +487,7 @@ const About: React.FC = () => {
               nature-related traditions.
             </p>
 
-            <p className="text-center font-semibold" style={{ color: '#8B8680' }}>
+            <p className="text-center font-semibold text-muted-foreground">
               My work lives at the intersection of:
             </p>
           </div>
@@ -629,7 +629,7 @@ const About: React.FC = () => {
                 whileHover={{ scale: value.scale * 1.1, rotate: value.rotation + 2, zIndex: 10 }}
                 className="glass-card rounded-2xl p-4 md:p-6 shadow-xl cursor-default"
               >
-                <p className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-gray-800 text-center">
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-foreground text-center">
                   {value.text}
                 </p>
               </motion.div>
@@ -639,7 +639,7 @@ const About: React.FC = () => {
       </section>
 
       {/* Fun Facts Section */}
-      <section className="pt-12 md:pt-20 px-4 md:px-6 relative overflow-hidden bg-neutral-100">
+      <section className="pt-12 md:pt-20 px-4 md:px-6 relative overflow-hidden bg-muted/30">
         <div className="container mx-auto max-w-6xl">
           <FunFactsSection facts={funFactsArr} />
         </div>
@@ -652,7 +652,7 @@ const About: React.FC = () => {
         </div>
 
         <div className="container mx-auto max-w-5xl relative z-10">
-          <div className="bg-white/90 backdrop-blur-xl rounded-2xl md:rounded-3xl p-8 md:p-12 lg:p-16 shadow-2xl">
+          <div className="bg-background/90 backdrop-blur-xl rounded-2xl md:rounded-3xl p-8 md:p-12 lg:p-16 shadow-2xl border border-border">
             <div className="text-center space-y-6 md:space-y-8">
               <Home className="w-12 h-12 md:w-16 md:h-16 mx-auto text-secondary" />
 

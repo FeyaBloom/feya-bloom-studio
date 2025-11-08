@@ -205,7 +205,7 @@ const Gallery = () => {
       </section>
 
       {/* Projects Grid Section */}
-      <section id="projects-section" className="py-6 md:py-12 px-4 md:px-6 bg-white">
+      <section id="projects-section" className="py-6 md:py-12 px-4 md:px-6 bg-background">
         <div className="container mx-auto max-w-6xl mb-6">
           {activeMainCategory && (
             <div className="text-center mb-4">
@@ -274,7 +274,7 @@ const Gallery = () => {
         </div>
       </section>
 
-<section className="py-16 md:py-24 bg-neutral-50">
+<section className="py-16 md:py-24 bg-muted/30">
   <div className="container mx-auto px-4 md:px-6">
     <motion.div
       initial={{ opacity: 0, y: 30 }}
