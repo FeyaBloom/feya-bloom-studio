@@ -39,9 +39,9 @@ const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
         <motion.h2 
           initial={{ opacity: 0, y: 20 }} 
           animate={inView ? { opacity: 1, y: 0 } : {}} 
-          className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-center text-primary mb-4"
+          className="text-3xl sm:text-4xl md:text-5xl font-serif text-center text-primary mb-4"
         >
-          Random Things About Me
+          Random Facts About Me
         </motion.h2>
         <p className="text-lg md:text-2xl font-body text-muted-foreground">
           because we're all 27% weird
@@ -467,7 +467,7 @@ const About: React.FC = () => {
       {/* My Journey Section */}
       <section className="relative py-16 md:py-24 lg:py-32 px-4 md:px-6 overflow-hidden bg-muted/30">
         <div className="container mx-auto max-w-4xl relative z-10">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-cormorant font-bold text-center mb-12 md:mb-16 text-secondary">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-center mb-12 md:mb-16 text-secondary">
             How I Got Here
           </h2>
 
@@ -598,7 +598,7 @@ const About: React.FC = () => {
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
             animate={inViewBeliefs ? { opacity: 1, y: 0 } : {}}
-            className="text-3xl sm:text-4xl md:text-5xl font-cormorant font-bold text-center text-accent mb-12 md:mb-20"
+            className="text-3xl sm:text-4xl md:text-5xl font-serif text-center text-accent-foreground mb-12 md:mb-20"
           >
             What I Stand For
           </motion.h2>
@@ -653,10 +653,10 @@ const About: React.FC = () => {
             <div className="text-center space-y-6 md:space-y-8">
               <Home className="w-12 h-12 md:w-16 md:h-16 mx-auto text-secondary" />
 
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-cormorant text-secondary font-bold leading-tight text-center">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-cormorant text-secondary leading-tight text-center">
                 Ready to bring something
                 <br />
-                <span className="text-gradient-feya font-script"> meaningful </span>
+                <span className="text-gradient-feya font-script font-bold"> meaningful </span>
                 <br />
                 into your world?
               </h2>

@@ -66,7 +66,7 @@ const Home = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
-                <Link to="/contact">About Me</Link>
+                <Link to="/about">About Me</Link>
               </Button>
             </div>
           </div>
@@ -77,8 +77,8 @@ const Home = () => {
       <section className="py-16 md:py-24 lg:pb-32 bg-gradient-to-b from-muted to-background">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-3xl mx-auto text-center space-y-4 md:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif text-gradient-feya mb-6 md:mb-8 px-4 font-bold">
-              What do I actually do?
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif text-gradient-feya mb-6 md:mb-8 px-4">
+              What I actually do
             </h2>
             <p className="text-base md:text-lg lg:text-xl text-foreground leading-relaxed px-4">
               I make things that help people live more intentionally— whether it's a planner 
@@ -117,7 +117,7 @@ const Home = () => {
           y: 0
         } : {}} transition={{
           duration: 0.8
-        }} className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif text-center text-gradient-feya mb-12 md:mb-20 px-4 font-bold">
+        }} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif text-center text-gradient-feya mb-12 md:mb-20 px-4">
       What Makes My Work Different
     </motion.h2>
 
@@ -210,8 +210,8 @@ const Home = () => {
       </p>
       
       <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
-        <div className="text-center space-y-3 md:space-y-4 p-6 md:p-8 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-elevated hover:shadow-[0_20px_50px_rgba(168,85,247,0.4)] transition-smooth hover:scale-105 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
-          <div className="text-3xl sm:text-4xl md:text-5xl font-script bg-gradient-to-br from-primary via-background to-primary bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(168,85,247,0.8)]">
+        <div className="text-center space-y-3 md:space-y-4 p-6 md:p-8 rounded-2xl bg-background/10 backdrop-blur-sm border border-white/20 shadow-elevated hover:shadow-[0_20px_50px_rgba(168,85,247,0.4)] transition-smooth hover:scale-105 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+          <div className="text-3xl sm:text-4xl md:text-5xl font-script bg-gradient-to-br from-primary via-white to-primary bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(168,85,247,0.8)]">
             Utility
           </div>
           <p className="text-sm md:text-base text-white/90">
@@ -219,8 +219,8 @@ const Home = () => {
           </p>
         </div>
         
-        <div className="text-center space-y-3 md:space-y-4 p-6 md:p-8 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-elevated hover:shadow-[0_20px_50px_rgba(59,130,246,0.8)] transition-smooth hover:scale-105 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
-          <div className="text-3xl sm:text-4xl md:text-5xl font-script bg-gradient-to-br from-secondary via-background to-secondary bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(59,130,246,0.8)]">
+        <div className="text-center space-y-3 md:space-y-4 p-6 md:p-8 rounded-2xl bg-background/10 backdrop-blur-sm border border-white/20 shadow-elevated hover:shadow-[0_20px_50px_rgba(59,130,246,0.8)] transition-smooth hover:scale-105 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
+          <div className="text-3xl sm:text-4xl md:text-5xl font-script bg-gradient-to-br from-secondary via-white to-secondary bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(59,130,246,0.8)]">
             Ergonomics
           </div>
           <p className="text-sm md:text-base text-white/90">
@@ -228,8 +228,8 @@ const Home = () => {
           </p>
         </div>
         
-        <div className="text-center space-y-3 md:space-y-4 p-6 md:p-8 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-elevated hover:shadow-[0_20px_50px_rgba(34,197,94,0.4)] transition-smooth hover:scale-105 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 sm:col-span-2 md:col-span-1">
-          <div className="text-3xl sm:text-4xl md:text-5xl font-script bg-gradient-to-br from-accent via-background to-accent bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(34,197,94,0.8)]">
+        <div className="text-center space-y-3 md:space-y-4 p-6 md:p-8 rounded-2xl bg-background/10 backdrop-blur-sm border border-white/20 shadow-elevated hover:shadow-[0_20px_50px_rgba(34,197,94,0.4)] transition-smooth hover:scale-105 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 sm:col-span-2 md:col-span-1">
+          <div className="text-3xl sm:text-4xl md:text-5xl font-script bg-gradient-to-br from-accent via-white to-accent bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(34,197,94,0.8)]">
             Aesthetics
           </div>
           <p className="text-sm md:text-base text-white/90">
@@ -246,10 +246,10 @@ const Home = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-accent/40 via-transparent to-primary/20" />
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           <div className="max-w-3xl mx-auto text-center space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif text-secondary drop-shadow-lg px-4 font-bold">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif px-4 text-accent-foreground ">
               Have an idea in mind?
             </h2>
-            <p className="text-base md:text-lg lg:text-xl text-secondary px-4">
+            <p className="text-base md:text-lg lg:text-xl text-foreground px-4">
               Let's create something extraordinary together. Reach out today to start our journey! 
             </p>
             <Button asChild size="lg" className="shadow-elevated hover:shadow-[0_20px_50px_rgba(59,130,246,0.5)] transition-smooth bg-accent text-white hover:bg-secondary text-base md:text-lg px-6 md:px-8 py-5 md:py-6 w-full sm:w-auto">

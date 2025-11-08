@@ -91,7 +91,7 @@ const Contact = () => {
 
   {/* Soft glow background */}
     <div className="relative z-10">
-    <p className="text-3xl sm:text-4xl md:text-5xl font-script text-accent text-right mb-12 leading-relaxed">
+    <p className="text-3xl sm:text-4xl md:text-5xl font-script text-accent-foreground text-right mb-12 leading-relaxed">
       The magic happens when we trust the process
     </p>
     <p className="text-lg text-muted-foreground leading-relaxed text-center" >
@@ -146,7 +146,7 @@ const Contact = () => {
       viewport={{ once: true }}
       className="max-w-5xl mx-auto"
     >
-      <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-center text-primary mb-6">
+      <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-center text-secondary mb-6">
         What Inspires My Work
       </h2>
       

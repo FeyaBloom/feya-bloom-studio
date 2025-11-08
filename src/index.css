@@ -29,7 +29,7 @@ All colors MUST be HSL.
     --muted-foreground: 25 10% 50%;
 
     --accent: 123 12% 57%;
-    --accent-foreground: 25 20% 15%;
+    --accent-foreground: 123 12% 35%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 29 26% 96%;
@@ -41,8 +41,8 @@ All colors MUST be HSL.
     --radius: 0.75rem;
     
     --gradient-mystic: linear-gradient(135deg, hsl(261 35% 47%), hsl(209 28% 41%), hsl(123 12% 57%));
-    --gradient-aurora: linear-gradient(180deg, hsl(261 35% 47% / 0.1), hsl(209 28% 41% / 0.1));
-    --gradient-ethereal: linear-gradient(135deg, hsl(261 35% 47% / 0.05), hsl(123 12% 57% / 0.05));
+    --gradient-aurora: linear-gradient(180deg, hsl(261 35% 47% / 0.3), hsl(209 28% 41% / 0.3));
+    --gradient-ethereal: linear-gradient(135deg, hsl(261 35% 47% / 0.2), hsl(123 12% 57% / 0.2));
     
     --shadow-soft: 0 4px 24px hsl(261 35% 47% / 0.08);
     --shadow-elevated: 0 8px 40px hsl(261 35% 47% / 0.12);
@@ -86,7 +86,7 @@ All colors MUST be HSL.
     --muted-foreground: 28 20% 65%;
 
     --accent: 123 12% 67%;
-    --accent-foreground: 25 20% 8%;
+    --accent-foreground: 123 12% 70%;
 
     --destructive: 0 62.8% 50.6%;
     --destructive-foreground: 29 26% 96%;
