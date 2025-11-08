@@ -99,23 +99,31 @@ const Contact = () => {
                   </div>
                 </div>
 
-                <div className="relative p-8 md:p-12 rounded-2xl overflow-hidden">
-  {/* Soft glow background */}
-  <div className="absolute inset-0 bg-gradient-to-br from-violeta/20 via-azul/20 to-sage/20 blur-2xl" />
-  
-  <div className="relative z-10">
-    <p className="text-3xl sm:text-4xl md:text-5xl font-script text-primary mb-6 leading-relaxed">
-      The magic happens when we trust the process
-    </p>
-    <p className="text-lg text-muted-foreground leading-relaxed">
-      Not rushing. Not forcing. Just feeling.
-    </p>
-<p className="text-lg text-muted-foreground leading-relaxed mb-4">
-    Between what you envision and what wants to emerge. 
-    Between tradition and innovation. Between your world and mine.
-  </p>
-  </div>
-</div>
+                <div className="p-6 rounded-xl bg-card shadow-soft space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 rounded-lg bg-secondary/10">
+                      <MessageSquare className="h-6 w-6 text-secondary" />
+                    </div>
+                    <div>
+                      <h3 className="font-serif text-lg text-foreground">Collaboration</h3>
+                      <p className="text-muted-foreground">
+                        Open to both digital and physical projects
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-8 rounded-xl gradient-ethereal border border-border">
+                  <p className="text-4xl font-script text-primary mb-4">
+                    Let's create
+                  </p>
+                  <p className="text-muted-foreground">
+                    Whether you have a clear vision or just the seed of an idea, 
+                    I'm here to help bring your project to life
+                    with functionality, meaning and beauty.
+                  </p>
+                </div>
+              </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
