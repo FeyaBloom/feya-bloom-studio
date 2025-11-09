@@ -156,7 +156,14 @@ const Admin = () => {
           </div>
           <div className="flex gap-2">
             {!isEditing && (
-              <Button onClick={() => {
+              <>
+                <Button
+                  variant="outline"
+                  onClick={() => navigate('/admin/media')}
+                >
+                  Управление медиа
+                </Button>
+                <Button onClick={() => {
                 setCurrentProject({ 
                   title: '', 
                   main_category: 'Digital Experiences',
@@ -175,6 +182,7 @@ const Admin = () => {
                 <Plus className="mr-2 h-4 w-4" />
                 New Project
               </Button>
+              </>
             )}
             <Button variant="outline" onClick={handleLogout}>
               <LogOut className="mr-2 h-4 w-4" />
