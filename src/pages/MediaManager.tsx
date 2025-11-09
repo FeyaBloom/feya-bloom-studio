@@ -32,6 +32,7 @@ export default function MediaManager() {
   const [currentFolder, setCurrentFolder] = useState("");
   const [newFolderName, setNewFolderName] = useState("");
   const [deleteFile, setDeleteFile] = useState<string | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     checkAuth();
@@ -156,7 +157,7 @@ export default function MediaManager() {
 
       const { error } = await supabase.storage
         .from("project-images")
-        .upload(folderPath, new Blob([""]), {
+        .upload(folderPath, new Blob([""], { type: "text/plain" }), {
           cacheControl: "3600",
         });
 
@@ -202,6 +203,45 @@ export default function MediaManager() {
     const parts = currentFolder.split("/");
     parts.pop();
     setCurrentFolder(parts.join("/"));
+  };
+
+  const toggleFileSelection = (fileName: string) => {
+    const newSelected = new Set(selectedFiles);
+    if (newSelected.has(fileName)) {
+      newSelected.delete(fileName);
+    } else {
+      newSelected.add(fileName);
+    }
+    setSelectedFiles(newSelected);
+  };
+
+  const deleteSelectedFiles = async () => {
+    if (selectedFiles.size === 0) return;
+
+    try {
+      const filePaths = Array.from(selectedFiles).map(fileName => 
+        currentFolder ? `${currentFolder}/${fileName}` : fileName
+      );
+      
+      const { error } = await supabase.storage
+        .from("project-images")
+        .remove(filePaths);
+
+      if (error) throw error;
+
+      toast({
+        title: "Успешно",
+        description: `Удалено файлов: ${selectedFiles.size}`,
+      });
+      setSelectedFiles(new Set());
+      loadFiles();
+    } catch (error: any) {
+      toast({
+        title: "Ошибка",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -262,6 +302,29 @@ export default function MediaManager() {
               <span>Текущая папка: {currentFolder}</span>
             </div>
           )}
+
+          {selectedFiles.size > 0 && (
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">
+                Выбрано: {selectedFiles.size}
+              </span>
+              <Button 
+                variant="destructive" 
+                size="sm"
+                onClick={deleteSelectedFiles}
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Удалить выбранные
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setSelectedFiles(new Set())}
+              >
+                Снять выбор
+              </Button>
+            </div>
+          )}
         </div>
 
         {loading ? (
@@ -289,12 +352,20 @@ export default function MediaManager() {
                     </div>
                   ) : (
                     <>
-                      <div className="aspect-square bg-muted rounded-lg mb-3 overflow-hidden">
-                        <img
-                          src={supabase.storage.from("project-images").getPublicUrl(filePath).data.publicUrl}
-                          alt={file.name}
-                          className="w-full h-full object-cover"
+                      <div className="relative">
+                        <input
+                          type="checkbox"
+                          checked={selectedFiles.has(file.name)}
+                          onChange={() => toggleFileSelection(file.name)}
+                          className="absolute top-2 left-2 z-10 w-5 h-5 cursor-pointer"
                         />
+                        <div className="aspect-square bg-muted rounded-lg mb-3 overflow-hidden">
+                          <img
+                            src={supabase.storage.from("project-images").getPublicUrl(filePath).data.publicUrl}
+                            alt={file.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
                       </div>
                       <p className="font-medium truncate mb-2">{file.name}</p>
                       <div className="flex gap-2">
