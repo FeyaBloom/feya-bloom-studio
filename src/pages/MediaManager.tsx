@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Upload, Trash2, Copy, FolderPlus, Folder } from "lucide-react";
+import { ArrowLeft, Upload, Trash2, Copy, FolderPlus, Folder, Edit, FolderInput } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,6 +33,10 @@ export default function MediaManager() {
   const [newFolderName, setNewFolderName] = useState("");
   const [deleteFile, setDeleteFile] = useState<string | null>(null);
   const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
+  const [renamingFile, setRenamingFile] = useState<string | null>(null);
+  const [newFileName, setNewFileName] = useState("");
+  const [moveToFolder, setMoveToFolder] = useState<string | null>(null);
+  const [folders, setFolders] = useState<FileItem[]>([]);
 
   useEffect(() => {
     checkAuth();
@@ -68,7 +72,13 @@ export default function MediaManager() {
         });
 
       if (error) throw error;
-      setFiles(data || []);
+      
+      const allFiles = data || [];
+      const folderItems = allFiles.filter(item => item.id === null);
+      const fileItems = allFiles.filter(item => item.id !== null && item.name !== '.placeholder.png');
+      
+      setFiles(fileItems);
+      setFolders(folderItems);
     } catch (error: any) {
       toast({
         title: "Ошибка",
@@ -86,9 +96,26 @@ export default function MediaManager() {
 
     setUploading(true);
     let successCount = 0;
+    let errorCount = 0;
+    const errors: string[] = [];
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
+      
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        errors.push(`${file.name}: не является изображением`);
+        errorCount++;
+        continue;
+      }
+      
+      // Validate file size (max 50MB)
+      if (file.size > 50 * 1024 * 1024) {
+        errors.push(`${file.name}: размер превышает 50MB`);
+        errorCount++;
+        continue;
+      }
+      
       const filePath = currentFolder ? `${currentFolder}/${file.name}` : file.name;
 
       try {
@@ -99,25 +126,37 @@ export default function MediaManager() {
             upsert: true,
           });
 
-        if (error) throw error;
-        successCount++;
+        if (error) {
+          errors.push(`${file.name}: ${error.message}`);
+          errorCount++;
+        } else {
+          successCount++;
+        }
       } catch (error: any) {
-        toast({
-          title: "Ошибка загрузки",
-          description: `${file.name}: ${error.message}`,
-          variant: "destructive",
-        });
+        errors.push(`${file.name}: ${error.message}`);
+        errorCount++;
       }
     }
 
     if (successCount > 0) {
       toast({
         title: "Успешно",
-        description: `Загружено файлов: ${successCount}`,
+        description: `Загружено файлов: ${successCount}${errorCount > 0 ? `, ошибок: ${errorCount}` : ''}`,
       });
       loadFiles();
     }
+    
+    if (errors.length > 0) {
+      toast({
+        title: "Ошибки загрузки",
+        description: errors.join('\n'),
+        variant: "destructive",
+      });
+    }
+    
     setUploading(false);
+    // Reset input
+    e.target.value = '';
   };
 
   const handleDelete = async () => {
@@ -257,6 +296,122 @@ export default function MediaManager() {
     }
   };
 
+  const handleRename = async () => {
+    if (!renamingFile || !newFileName.trim()) return;
+
+    try {
+      const oldPath = currentFolder ? `${currentFolder}/${renamingFile}` : renamingFile;
+      const newPath = currentFolder ? `${currentFolder}/${newFileName}` : newFileName;
+
+      // Download file
+      const { data: fileData, error: downloadError } = await supabase.storage
+        .from("project-images")
+        .download(oldPath);
+
+      if (downloadError) throw downloadError;
+
+      // Upload with new name
+      const { error: uploadError } = await supabase.storage
+        .from("project-images")
+        .upload(newPath, fileData, {
+          cacheControl: "3600",
+          upsert: true,
+        });
+
+      if (uploadError) throw uploadError;
+
+      // Delete old file
+      const { error: deleteError } = await supabase.storage
+        .from("project-images")
+        .remove([oldPath]);
+
+      if (deleteError) throw deleteError;
+
+      toast({
+        title: "Успешно",
+        description: "Файл переименован",
+      });
+      setRenamingFile(null);
+      setNewFileName("");
+      loadFiles();
+    } catch (error: any) {
+      toast({
+        title: "Ошибка",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const moveSelectedFiles = async (targetFolder: string) => {
+    if (selectedFiles.size === 0) return;
+
+    try {
+      let successCount = 0;
+      const errors: string[] = [];
+
+      for (const fileName of Array.from(selectedFiles)) {
+        const oldPath = currentFolder ? `${currentFolder}/${fileName}` : fileName;
+        const newPath = targetFolder ? `${targetFolder}/${fileName}` : fileName;
+
+        try {
+          // Download file
+          const { data: fileData, error: downloadError } = await supabase.storage
+            .from("project-images")
+            .download(oldPath);
+
+          if (downloadError) throw downloadError;
+
+          // Upload to new location
+          const { error: uploadError } = await supabase.storage
+            .from("project-images")
+            .upload(newPath, fileData, {
+              cacheControl: "3600",
+              upsert: true,
+            });
+
+          if (uploadError) throw uploadError;
+
+          // Delete from old location
+          const { error: deleteError } = await supabase.storage
+            .from("project-images")
+            .remove([oldPath]);
+
+          if (deleteError) throw deleteError;
+
+          successCount++;
+        } catch (error: any) {
+          errors.push(`${fileName}: ${error.message}`);
+        }
+      }
+
+      if (successCount > 0) {
+        toast({
+          title: "Успешно",
+          description: `Перемещено файлов: ${successCount}`,
+        });
+        setSelectedFiles(new Set());
+        loadFiles();
+      }
+
+      if (errors.length > 0) {
+        toast({
+          title: "Ошибки перемещения",
+          description: errors.join('\n'),
+          variant: "destructive",
+        });
+      }
+
+      setMoveToFolder(null);
+    } catch (error: any) {
+      toast({
+        title: "Ошибка",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
@@ -317,7 +472,7 @@ export default function MediaManager() {
           )}
 
           {selectedFiles.size > 0 && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="text-sm text-muted-foreground">
                 Выбрано: {selectedFiles.size}
               </span>
@@ -329,6 +484,16 @@ export default function MediaManager() {
                 <Trash2 className="h-4 w-4 mr-2" />
                 Удалить выбранные
               </Button>
+              {folders.length > 0 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setMoveToFolder("select")}
+                >
+                  <FolderInput className="h-4 w-4 mr-2" />
+                  Переместить в папку
+                </Button>
+              )}
               <Button
                 variant="outline"
                 size="sm"
@@ -344,8 +509,19 @@ export default function MediaManager() {
           <p className="text-muted-foreground">Загрузка...</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {folders.map((folder) => (
+              <div
+                key={folder.name}
+                className="border rounded-lg p-4 bg-card hover:shadow-lg transition-shadow cursor-pointer"
+                onClick={() => openFolder(folder.name)}
+              >
+                <div className="aspect-square bg-muted rounded-lg flex items-center justify-center mb-3">
+                  <Folder className="h-16 w-16 text-muted-foreground" />
+                </div>
+                <p className="font-medium truncate">{folder.name}</p>
+              </div>
+            ))}
             {files.map((file) => {
-              const isDir = isFolder(file);
               const filePath = currentFolder ? `${currentFolder}/${file.name}` : file.name;
 
               return (
@@ -353,53 +529,77 @@ export default function MediaManager() {
                   key={file.name}
                   className="border rounded-lg p-4 bg-card hover:shadow-lg transition-shadow"
                 >
-                  {isDir ? (
-                    <div
-                      className="cursor-pointer"
-                      onClick={() => openFolder(file.name)}
-                    >
-                      <div className="aspect-square bg-muted rounded-lg flex items-center justify-center mb-3">
-                        <Folder className="h-16 w-16 text-muted-foreground" />
+                  <div className="relative">
+                    <input
+                      type="checkbox"
+                      checked={selectedFiles.has(file.name)}
+                      onChange={() => toggleFileSelection(file.name)}
+                      className="absolute top-2 left-2 z-10 w-5 h-5 cursor-pointer"
+                    />
+                    <div className="aspect-square bg-muted rounded-lg mb-3 overflow-hidden">
+                      <img
+                        src={supabase.storage.from("project-images").getPublicUrl(filePath).data.publicUrl}
+                        alt={file.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </div>
+                  {renamingFile === file.name ? (
+                    <div className="space-y-2 mb-2">
+                      <Input
+                        value={newFileName}
+                        onChange={(e) => setNewFileName(e.target.value)}
+                        placeholder="Новое имя"
+                        className="text-sm"
+                      />
+                      <div className="flex gap-2">
+                        <Button size="sm" onClick={handleRename} className="flex-1">
+                          Сохранить
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          onClick={() => {
+                            setRenamingFile(null);
+                            setNewFileName("");
+                          }}
+                        >
+                          Отмена
+                        </Button>
                       </div>
-                      <p className="font-medium truncate">{file.name}</p>
                     </div>
                   ) : (
-                    <>
-                      <div className="relative">
-                        <input
-                          type="checkbox"
-                          checked={selectedFiles.has(file.name)}
-                          onChange={() => toggleFileSelection(file.name)}
-                          className="absolute top-2 left-2 z-10 w-5 h-5 cursor-pointer"
-                        />
-                        <div className="aspect-square bg-muted rounded-lg mb-3 overflow-hidden">
-                          <img
-                            src={supabase.storage.from("project-images").getPublicUrl(filePath).data.publicUrl}
-                            alt={file.name}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      </div>
-                      <p className="font-medium truncate mb-2">{file.name}</p>
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => copyUrl(file.name)}
-                          className="flex-1"
-                        >
-                          <Copy className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => setDeleteFile(file.name)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </>
+                    <p className="font-medium truncate mb-2">{file.name}</p>
                   )}
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => copyUrl(file.name)}
+                      title="Копировать URL"
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => {
+                        setRenamingFile(file.name);
+                        setNewFileName(file.name);
+                      }}
+                      title="Переименовать"
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={() => setDeleteFile(file.name)}
+                      title="Удалить"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               );
             })}
@@ -418,6 +618,43 @@ export default function MediaManager() {
           <AlertDialogFooter>
             <AlertDialogCancel>Отмена</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete}>Удалить</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={moveToFolder === "select"} onOpenChange={() => setMoveToFolder(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Переместить файлы</AlertDialogTitle>
+            <AlertDialogDescription>
+              Выберите папку назначения для {selectedFiles.size} файлов
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="space-y-2 my-4">
+            {currentFolder && (
+              <Button
+                variant="outline"
+                className="w-full justify-start"
+                onClick={() => moveSelectedFiles("")}
+              >
+                <Folder className="h-4 w-4 mr-2" />
+                Корневая папка
+              </Button>
+            )}
+            {folders.map((folder) => (
+              <Button
+                key={folder.name}
+                variant="outline"
+                className="w-full justify-start"
+                onClick={() => moveSelectedFiles(currentFolder ? `${currentFolder}/${folder.name}` : folder.name)}
+              >
+                <Folder className="h-4 w-4 mr-2" />
+                {folder.name}
+              </Button>
+            ))}
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Отмена</AlertDialogCancel>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
