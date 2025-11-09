@@ -3,62 +3,68 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Upload, Trash2, Copy, FolderPlus, Folder, Edit, FolderInput } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { Card } from "@/components/ui/card";
+import { 
+  ArrowLeft, 
+  Upload, 
+  Trash2, 
+  Copy, 
+  Check, 
+  Search,
+  X,
+  Image,
+  Video,
+  File,
+  Folder,
+  FolderPlus,
+  Home
+} from "lucide-react";
+import { toast } from "sonner";
 
-interface FileItem {
+interface MediaFile {
   name: string;
-  id: string;
+  url: string;
+  type: string;
+  size: number;
   created_at: string;
-  updated_at: string;
+  isFolder?: boolean;
 }
 
-export default function MediaManager() {
+const MediaManager = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const [files, setFiles] = useState<FileItem[]>([]);
+  const [files, setFiles] = useState<MediaFile[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
-  const [currentFolder, setCurrentFolder] = useState("");
-  const [newFolderName, setNewFolderName] = useState("");
-  const [deleteFile, setDeleteFile] = useState<string | null>(null);
-  const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
-  const [renamingFile, setRenamingFile] = useState<string | null>(null);
-  const [newFileName, setNewFileName] = useState("");
-  const [moveToFolder, setMoveToFolder] = useState<string | null>(null);
-  const [folders, setFolders] = useState<FileItem[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [currentPath, setCurrentPath] = useState<string>('');
+  const [newFolderName, setNewFolderName] = useState('');
+  const [showNewFolder, setShowNewFolder] = useState(false);
 
   useEffect(() => {
     checkAuth();
     loadFiles();
-  }, [currentFolder]);
+  }, [currentPath]);
 
   const checkAuth = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      navigate("/login");
+      navigate('/login');
       return;
     }
 
-    const { data: roleData } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", user.id)
-      .eq("role", "admin")
-      .single();
+    const { data: roles } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', user.id)
+      .eq('role', 'admin')
+      .maybeSingle();
 
-    if (!roleData) {
-      navigate("/");
+    if (!roles) {
+      toast.error('Access denied. Admin privileges required.');
+      navigate('/');
     }
   };
 
@@ -66,598 +72,488 @@ export default function MediaManager() {
     try {
       setLoading(true);
       const { data, error } = await supabase.storage
-        .from("project-images")
-        .list(currentFolder, {
-          sortBy: { column: "name", order: "asc" },
+        .from('media')
+        .list(currentPath, {
+          limit: 100,
+          offset: 0,
+          sortBy: { column: 'name', order: 'asc' }
         });
 
       if (error) throw error;
-      
-      const allFiles = data || [];
-      const folderItems = allFiles.filter(item => item.id === null);
-      const fileItems = allFiles.filter(item => item.id !== null && item.name !== '.placeholder.png');
-      
-      setFiles(fileItems);
-      setFolders(folderItems);
+
+      const filesWithUrls = await Promise.all(
+        (data || []).map(async (file) => {
+          // Если это папка (id === null в Supabase Storage)
+          if (file.id === null) {
+            return {
+              name: file.name,
+              url: '',
+              type: 'folder',
+              size: 0,
+              created_at: '',
+              isFolder: true
+            };
+          }
+
+          const filePath = currentPath ? `${currentPath}/${file.name}` : file.name;
+          const { data: { publicUrl } } = supabase.storage
+            .from('media')
+            .getPublicUrl(filePath);
+
+          return {
+            name: file.name,
+            url: publicUrl,
+            type: file.metadata?.mimetype || 'unknown',
+            size: file.metadata?.size || 0,
+            created_at: file.created_at,
+            isFolder: false
+          };
+        })
+      );
+
+      setFiles(filesWithUrls);
     } catch (error: any) {
-      toast({
-        title: "Ошибка",
-        description: error.message,
-        variant: "destructive",
-      });
+      toast.error(error.message || 'Failed to load files');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
-
-    setUploading(true);
-    let successCount = 0;
-    let errorCount = 0;
-    const errors: string[] = [];
-
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        errors.push(`${file.name}: не является изображением`);
-        errorCount++;
-        continue;
-      }
-      
-      // Validate file size (max 50MB)
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
       if (file.size > 50 * 1024 * 1024) {
-        errors.push(`${file.name}: размер превышает 50MB`);
-        errorCount++;
-        continue;
+        toast.error('File too large. Maximum size is 50MB.');
+        return;
       }
-      
-      const filePath = currentFolder ? `${currentFolder}/${file.name}` : file.name;
-
-      try {
-        const { error } = await supabase.storage
-          .from("project-images")
-          .upload(filePath, file, {
-            cacheControl: "3600",
-            upsert: true,
-          });
-
-        if (error) {
-          errors.push(`${file.name}: ${error.message}`);
-          errorCount++;
-        } else {
-          successCount++;
-        }
-      } catch (error: any) {
-        errors.push(`${file.name}: ${error.message}`);
-        errorCount++;
-      }
+      setSelectedFile(file);
     }
-
-    if (successCount > 0) {
-      toast({
-        title: "Успешно",
-        description: `Загружено файлов: ${successCount}${errorCount > 0 ? `, ошибок: ${errorCount}` : ''}`,
-      });
-      loadFiles();
-    }
-    
-    if (errors.length > 0) {
-      toast({
-        title: "Ошибки загрузки",
-        description: errors.join('\n'),
-        variant: "destructive",
-      });
-    }
-    
-    setUploading(false);
-    // Reset input
-    e.target.value = '';
   };
 
-  const handleDelete = async () => {
-    if (!deleteFile) return;
+  const handleUpload = async () => {
+    if (!selectedFile) return;
 
     try {
-      const filePath = currentFolder ? `${currentFolder}/${deleteFile}` : deleteFile;
+      setUploading(true);
+
+      const fileExt = selectedFile.name.split('.').pop();
+      const cleanName = selectedFile.name.replace(/\.[^/.]+$/, "").replace(/[^a-z0-9]/gi, '-').toLowerCase();
+      const fileName = `${cleanName}-${Date.now()}.${fileExt}`;
+      const filePath = currentPath ? `${currentPath}/${fileName}` : fileName;
+
       const { error } = await supabase.storage
-        .from("project-images")
-        .remove([filePath]);
+        .from('media')
+        .upload(filePath, selectedFile, {
+          cacheControl: '3600',
+          upsert: false
+        });
 
       if (error) throw error;
 
-      toast({
-        title: "Успешно",
-        description: "Файл удалён",
-      });
+      toast.success('File uploaded successfully!');
+      setSelectedFile(null);
+      const fileInput = document.getElementById('file-input') as HTMLInputElement;
+      if (fileInput) fileInput.value = '';
+      
       loadFiles();
     } catch (error: any) {
-      toast({
-        title: "Ошибка",
-        description: error.message,
-        variant: "destructive",
-      });
+      toast.error(error.message || 'Failed to upload file');
     } finally {
-      setDeleteFile(null);
+      setUploading(false);
     }
   };
 
   const createFolder = async () => {
-    if (!newFolderName.trim()) return;
+    if (!newFolderName.trim()) {
+      toast.error('Please enter a folder name');
+      return;
+    }
 
     try {
-      const folderPath = currentFolder 
-        ? `${currentFolder}/${newFolderName}/.placeholder.png`
-        : `${newFolderName}/.placeholder.png`;
-
-      // Create a minimal 1x1 transparent PNG
-      const canvas = document.createElement('canvas');
-      canvas.width = 1;
-      canvas.height = 1;
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        ctx.clearRect(0, 0, 1, 1);
-      }
-      
-      const blob = await new Promise<Blob>((resolve) => {
-        canvas.toBlob((blob) => resolve(blob!), 'image/png');
-      });
+      // В Supabase Storage папка создается при загрузке файла в нее
+      // Создаем пустой placeholder файл .keep
+      const folderPath = currentPath 
+        ? `${currentPath}/${newFolderName}/.keep` 
+        : `${newFolderName}/.keep`;
 
       const { error } = await supabase.storage
-        .from("project-images")
-        .upload(folderPath, blob, {
-          cacheControl: "3600",
+        .from('media')
+        .upload(folderPath, new Blob([''], { type: 'text/plain' }), {
+          cacheControl: '3600',
+          upsert: false
         });
 
       if (error) throw error;
 
-      toast({
-        title: "Успешно",
-        description: "Папка создана",
-      });
-      setNewFolderName("");
+      toast.success('Folder created successfully!');
+      setNewFolderName('');
+      setShowNewFolder(false);
       loadFiles();
     } catch (error: any) {
-      toast({
-        title: "Ошибка",
-        description: error.message,
-        variant: "destructive",
-      });
+      toast.error(error.message || 'Failed to create folder');
     }
   };
 
-  const copyUrl = (fileName: string) => {
-    const filePath = currentFolder ? `${currentFolder}/${fileName}` : fileName;
-    const { data } = supabase.storage
-      .from("project-images")
-      .getPublicUrl(filePath);
+  const handleDelete = async (fileName: string, isFolder: boolean) => {
+    try {
+      if (isFolder) {
+        // Удаляем все файлы в папке
+        const folderPath = currentPath ? `${currentPath}/${fileName}` : fileName;
+        const { data: folderFiles } = await supabase.storage
+          .from('media')
+          .list(folderPath);
 
-    navigator.clipboard.writeText(data.publicUrl);
-    toast({
-      title: "Скопировано",
-      description: "URL скопирован в буфер обмена",
-    });
-  };
+        if (folderFiles && folderFiles.length > 0) {
+          const filePaths = folderFiles.map(f => `${folderPath}/${f.name}`);
+          const { error } = await supabase.storage
+            .from('media')
+            .remove(filePaths);
+          
+          if (error) throw error;
+        }
+      } else {
+        const filePath = currentPath ? `${currentPath}/${fileName}` : fileName;
+        const { error } = await supabase.storage
+          .from('media')
+          .remove([filePath]);
+        
+        if (error) throw error;
+      }
 
-  const isFolder = (item: FileItem) => {
-    return item.id === null;
+      toast.success(isFolder ? 'Folder deleted successfully' : 'File deleted successfully');
+      loadFiles();
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to delete');
+    } finally {
+      setDeleteTarget(null);
+    }
   };
 
   const openFolder = (folderName: string) => {
-    setCurrentFolder(currentFolder ? `${currentFolder}/${folderName}` : folderName);
+    const newPath = currentPath ? `${currentPath}/${folderName}` : folderName;
+    setCurrentPath(newPath);
   };
 
   const goBack = () => {
-    const parts = currentFolder.split("/");
-    parts.pop();
-    setCurrentFolder(parts.join("/"));
+    const pathParts = currentPath.split('/');
+    pathParts.pop();
+    setCurrentPath(pathParts.join('/'));
   };
 
-  const toggleFileSelection = (fileName: string) => {
-    const newSelected = new Set(selectedFiles);
-    if (newSelected.has(fileName)) {
-      newSelected.delete(fileName);
-    } else {
-      newSelected.add(fileName);
-    }
-    setSelectedFiles(newSelected);
+  const goToRoot = () => {
+    setCurrentPath('');
   };
 
-  const deleteSelectedFiles = async () => {
-    if (selectedFiles.size === 0) return;
-
+  const copyToClipboard = async (url: string) => {
     try {
-      const filePaths = Array.from(selectedFiles).map(fileName => 
-        currentFolder ? `${currentFolder}/${fileName}` : fileName
-      );
-      
-      const { error } = await supabase.storage
-        .from("project-images")
-        .remove(filePaths);
-
-      if (error) throw error;
-
-      toast({
-        title: "Успешно",
-        description: `Удалено файлов: ${selectedFiles.size}`,
-      });
-      setSelectedFiles(new Set());
-      loadFiles();
-    } catch (error: any) {
-      toast({
-        title: "Ошибка",
-        description: error.message,
-        variant: "destructive",
-      });
+      await navigator.clipboard.writeText(url);
+      setCopiedUrl(url);
+      toast.success('URL copied to clipboard!');
+      setTimeout(() => setCopiedUrl(null), 2000);
+    } catch (error) {
+      toast.error('Failed to copy URL');
     }
   };
 
-  const handleRename = async () => {
-    if (!renamingFile || !newFileName.trim()) return;
-
-    try {
-      const oldPath = currentFolder ? `${currentFolder}/${renamingFile}` : renamingFile;
-      const newPath = currentFolder ? `${currentFolder}/${newFileName}` : newFileName;
-
-      // Download file
-      const { data: fileData, error: downloadError } = await supabase.storage
-        .from("project-images")
-        .download(oldPath);
-
-      if (downloadError) throw downloadError;
-
-      // Upload with new name
-      const { error: uploadError } = await supabase.storage
-        .from("project-images")
-        .upload(newPath, fileData, {
-          cacheControl: "3600",
-          upsert: true,
-        });
-
-      if (uploadError) throw uploadError;
-
-      // Delete old file
-      const { error: deleteError } = await supabase.storage
-        .from("project-images")
-        .remove([oldPath]);
-
-      if (deleteError) throw deleteError;
-
-      toast({
-        title: "Успешно",
-        description: "Файл переименован",
-      });
-      setRenamingFile(null);
-      setNewFileName("");
-      loadFiles();
-    } catch (error: any) {
-      toast({
-        title: "Ошибка",
-        description: error.message,
-        variant: "destructive",
-      });
-    }
+  const getFileIcon = (type: string) => {
+    if (type === 'folder') return <Folder className="w-5 h-5" />;
+    if (type.startsWith('image/')) return <Image className="w-5 h-5" />;
+    if (type.startsWith('video/')) return <Video className="w-5 h-5" />;
+    return <File className="w-5 h-5" />;
   };
 
-  const moveSelectedFiles = async (targetFolder: string) => {
-    if (selectedFiles.size === 0) return;
-
-    try {
-      let successCount = 0;
-      const errors: string[] = [];
-
-      for (const fileName of Array.from(selectedFiles)) {
-        const oldPath = currentFolder ? `${currentFolder}/${fileName}` : fileName;
-        const newPath = targetFolder ? `${targetFolder}/${fileName}` : fileName;
-
-        try {
-          // Download file
-          const { data: fileData, error: downloadError } = await supabase.storage
-            .from("project-images")
-            .download(oldPath);
-
-          if (downloadError) throw downloadError;
-
-          // Upload to new location
-          const { error: uploadError } = await supabase.storage
-            .from("project-images")
-            .upload(newPath, fileData, {
-              cacheControl: "3600",
-              upsert: true,
-            });
-
-          if (uploadError) throw uploadError;
-
-          // Delete from old location
-          const { error: deleteError } = await supabase.storage
-            .from("project-images")
-            .remove([oldPath]);
-
-          if (deleteError) throw deleteError;
-
-          successCount++;
-        } catch (error: any) {
-          errors.push(`${fileName}: ${error.message}`);
-        }
-      }
-
-      if (successCount > 0) {
-        toast({
-          title: "Успешно",
-          description: `Перемещено файлов: ${successCount}`,
-        });
-        setSelectedFiles(new Set());
-        loadFiles();
-      }
-
-      if (errors.length > 0) {
-        toast({
-          title: "Ошибки перемещения",
-          description: errors.join('\n'),
-          variant: "destructive",
-        });
-      }
-
-      setMoveToFolder(null);
-    } catch (error: any) {
-      toast({
-        title: "Ошибка",
-        description: error.message,
-        variant: "destructive",
-      });
-    }
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
   };
+
+  const filteredFiles = files.filter(file =>
+    file.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-mystic">
+        <p className="text-xl text-white">Loading media...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-8">
+    <div className="min-h-screen bg-gradient-mystic">
+      <div className="container mx-auto px-6 py-12">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
           <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
+            <Button 
+              variant="ghost" 
               size="icon"
-              onClick={() => navigate("/admin")}
+              onClick={() => navigate('/admin')}
+              className="text-white hover:bg-white/10"
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <h1 className="text-3xl font-bold">Управление медиа</h1>
+            <h1 className="text-4xl font-serif text-white">Media Manager</h1>
           </div>
         </div>
 
-        <div className="mb-6 space-y-4">
-          <div className="flex gap-2">
-            <Input
-              type="text"
-              placeholder="Название новой папки"
-              value={newFolderName}
-              onChange={(e) => setNewFolderName(e.target.value)}
-              className="max-w-xs"
-            />
-            <Button onClick={createFolder} variant="outline">
-              <FolderPlus className="h-4 w-4 mr-2" />
-              Создать папку
-            </Button>
-          </div>
-
-          <div className="flex gap-2">
-            <Input
-              type="file"
-              multiple
-              accept="image/*"
-              onChange={handleUpload}
-              disabled={uploading}
-              className="max-w-xs"
-              id="file-upload"
-            />
-            <Button
-              onClick={() => document.getElementById("file-upload")?.click()}
-              disabled={uploading}
-            >
-              <Upload className="h-4 w-4 mr-2" />
-              {uploading ? "Загрузка..." : "Загрузить файлы"}
-            </Button>
-          </div>
-
-          {currentFolder && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Button variant="ghost" size="sm" onClick={goBack}>
-                ← Назад
-              </Button>
-              <span>Текущая папка: {currentFolder}</span>
-            </div>
-          )}
-
-          {selectedFiles.size > 0 && (
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-sm text-muted-foreground">
-                Выбрано: {selectedFiles.size}
+        {/* Breadcrumb / Path */}
+        <div className="flex items-center gap-2 mb-6 text-white/80 text-sm">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={goToRoot}
+            className="gap-1 text-white/80 hover:text-white"
+          >
+            <Home className="h-4 w-4" />
+            Root
+          </Button>
+          {currentPath.split('/').filter(Boolean).map((part, index, arr) => (
+            <span key={index} className="flex items-center gap-2">
+              <span>/</span>
+              <span className={index === arr.length - 1 ? 'text-white font-medium' : ''}>
+                {part}
               </span>
-              <Button 
-                variant="destructive" 
-                size="sm"
-                onClick={deleteSelectedFiles}
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Удалить выбранные
-              </Button>
-              {folders.length > 0 && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setMoveToFolder("select")}
-                >
-                  <FolderInput className="h-4 w-4 mr-2" />
-                  Переместить в папку
-                </Button>
-              )}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setSelectedFiles(new Set())}
-              >
-                Снять выбор
-              </Button>
-            </div>
+            </span>
+          ))}
+        </div>
+
+        {/* Actions Bar */}
+        <div className="flex gap-4 mb-6">
+          <Button
+            onClick={() => setShowNewFolder(!showNewFolder)}
+            variant="outline"
+            className="gap-2"
+          >
+            <FolderPlus className="h-4 w-4" />
+            New Folder
+          </Button>
+          {currentPath && (
+            <Button
+              onClick={goBack}
+              variant="outline"
+              className="gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Go Back
+            </Button>
           )}
         </div>
 
-        {loading ? (
-          <p className="text-muted-foreground">Загрузка...</p>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {folders.map((folder) => (
-              <div
-                key={folder.name}
-                className="border rounded-lg p-4 bg-card hover:shadow-lg transition-shadow cursor-pointer"
-                onClick={() => openFolder(folder.name)}
-              >
-                <div className="aspect-square bg-muted rounded-lg flex items-center justify-center mb-3">
-                  <Folder className="h-16 w-16 text-muted-foreground" />
-                </div>
-                <p className="font-medium truncate">{folder.name}</p>
-              </div>
-            ))}
-            {files.map((file) => {
-              const filePath = currentFolder ? `${currentFolder}/${file.name}` : file.name;
+        {/* New Folder Input */}
+        {showNewFolder && (
+          <Card className="p-4 mb-6 bg-white/10 backdrop-blur-sm border-white/20">
+            <div className="flex gap-4">
+              <Input
+                placeholder="Folder name..."
+                value={newFolderName}
+                onChange={(e) => setNewFolderName(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && createFolder()}
+                className="flex-1"
+              />
+              <Button onClick={createFolder}>Create</Button>
+              <Button variant="outline" onClick={() => {
+                setShowNewFolder(false);
+                setNewFolderName('');
+              }}>
+                Cancel
+              </Button>
+            </div>
+          </Card>
+        )}
 
-              return (
-                <div
-                  key={file.name}
-                  className="border rounded-lg p-4 bg-card hover:shadow-lg transition-shadow"
+        {/* Upload Section */}
+        <Card className="p-6 mb-8 bg-white/10 backdrop-blur-sm border-white/20">
+          <div className="space-y-4">
+            <div className="flex items-center gap-4">
+              <Input
+                id="file-input"
+                type="file"
+                onChange={handleFileSelect}
+                accept="image/*,video/*"
+                className="flex-1"
+              />
+              <Button
+                onClick={handleUpload}
+                disabled={!selectedFile || uploading}
+                className="gap-2"
+              >
+                <Upload className="h-4 w-4" />
+                {uploading ? 'Uploading...' : 'Upload'}
+              </Button>
+            </div>
+            {selectedFile && (
+              <div className="flex items-center gap-2 text-sm text-white/80">
+                <span>{selectedFile.name}</span>
+                <span>({formatFileSize(selectedFile.size)})</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedFile(null)}
+                  className="h-6 w-6 p-0"
                 >
-                  <div className="relative">
-                    <input
-                      type="checkbox"
-                      checked={selectedFiles.has(file.name)}
-                      onChange={() => toggleFileSelection(file.name)}
-                      className="absolute top-2 left-2 z-10 w-5 h-5 cursor-pointer"
-                    />
-                    <div className="aspect-square bg-muted rounded-lg mb-3 overflow-hidden">
-                      <img
-                        src={supabase.storage.from("project-images").getPublicUrl(filePath).data.publicUrl}
-                        alt={file.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
+          </div>
+        </Card>
+
+        {/* Search */}
+        <div className="mb-6">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search files..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+        </div>
+
+        {/* Files Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredFiles.map((file) => (
+            <Card 
+              key={file.name} 
+              className={`p-4 bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all ${
+                file.isFolder ? 'cursor-pointer' : ''
+              }`}
+              onClick={() => file.isFolder && openFolder(file.name)}
+            >
+              {/* Preview */}
+              <div className="aspect-video bg-black/20 rounded-lg mb-3 overflow-hidden flex items-center justify-center">
+                {file.isFolder ? (
+                  <Folder className="w-16 h-16 text-white/50" />
+                ) : file.type.startsWith('image/') ? (
+                  <img 
+                    src={file.url} 
+                    alt={file.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="text-white/50">
+                    {getFileIcon(file.type)}
                   </div>
-                  {renamingFile === file.name ? (
-                    <div className="space-y-2 mb-2">
-                      <Input
-                        value={newFileName}
-                        onChange={(e) => setNewFileName(e.target.value)}
-                        placeholder="Новое имя"
-                        className="text-sm"
-                      />
-                      <div className="flex gap-2">
-                        <Button size="sm" onClick={handleRename} className="flex-1">
-                          Сохранить
-                        </Button>
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
-                          onClick={() => {
-                            setRenamingFile(null);
-                            setNewFileName("");
-                          }}
-                        >
-                          Отмена
-                        </Button>
-                      </div>
-                    </div>
-                  ) : (
-                    <p className="font-medium truncate mb-2">{file.name}</p>
-                  )}
+                )}
+              </div>
+
+              {/* Info */}
+              <div className="space-y-2">
+                <div className="flex items-start gap-2">
+                  {getFileIcon(file.isFolder ? 'folder' : file.type)}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-white truncate">
+                      {file.name}
+                    </p>
+                    {!file.isFolder && (
+                      <p className="text-xs text-white/60">
+                        {formatFileSize(file.size)}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Actions */}
+                {!file.isFolder && (
                   <div className="flex gap-2">
                     <Button
-                      size="sm"
                       variant="outline"
-                      onClick={() => copyUrl(file.name)}
-                      title="Копировать URL"
-                    >
-                      <Copy className="h-4 w-4" />
-                    </Button>
-                    <Button
                       size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        setRenamingFile(file.name);
-                        setNewFileName(file.name);
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        copyToClipboard(file.url);
                       }}
-                      title="Переименовать"
+                      className="flex-1 gap-2"
                     >
-                      <Edit className="h-4 w-4" />
+                      {copiedUrl === file.url ? (
+                        <>
+                          <Check className="h-4 w-4" />
+                          Copied
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="h-4 w-4" />
+                          Copy URL
+                        </>
+                      )}
                     </Button>
                     <Button
-                      size="sm"
                       variant="destructive"
-                      onClick={() => setDeleteFile(file.name)}
-                      title="Удалить"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDeleteTarget(file.name);
+                      }}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
-                </div>
-              );
-            })}
+                )}
+                {file.isFolder && (
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDeleteTarget(file.name);
+                    }}
+                    className="w-full"
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete Folder
+                  </Button>
+                )}
+              </div>
+            </Card>
+          ))}
+        </div>
+
+        {filteredFiles.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-white/60 text-lg">
+              {searchQuery ? 'No files found' : 'This folder is empty'}
+            </p>
           </div>
         )}
       </div>
 
-      <AlertDialog open={!!deleteFile} onOpenChange={() => setDeleteFile(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Удалить файл?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Это действие нельзя отменить. Файл будет удалён навсегда.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Отмена</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>Удалить</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      <AlertDialog open={moveToFolder === "select"} onOpenChange={() => setMoveToFolder(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Переместить файлы</AlertDialogTitle>
-            <AlertDialogDescription>
-              Выберите папку назначения для {selectedFiles.size} файлов
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <div className="space-y-2 my-4">
-            {currentFolder && (
-              <Button
-                variant="outline"
-                className="w-full justify-start"
-                onClick={() => moveSelectedFiles("")}
-              >
-                <Folder className="h-4 w-4 mr-2" />
-                Корневая папка
+      {/* Delete Confirmation Modal */}
+      {deleteTarget && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setDeleteTarget(null)}>
+          <Card className="p-6 max-w-md" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-lg font-semibold mb-2">
+              Delete {files.find(f => f.name === deleteTarget)?.isFolder ? 'Folder' : 'File'}?
+            </h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              This action cannot be undone. This will permanently delete the {
+                files.find(f => f.name === deleteTarget)?.isFolder ? 'folder and all its contents' : 'file'
+              } from storage.
+            </p>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setDeleteTarget(null)} className="flex-1">
+                Cancel
               </Button>
-            )}
-            {folders.map((folder) => (
-              <Button
-                key={folder.name}
-                variant="outline"
-                className="w-full justify-start"
-                onClick={() => moveSelectedFiles(currentFolder ? `${currentFolder}/${folder.name}` : folder.name)}
+              <Button 
+                variant="destructive" 
+                onClick={() => {
+                  const file = files.find(f => f.name === deleteTarget);
+                  if (file) handleDelete(deleteTarget, file.isFolder || false);
+                }} 
+                className="flex-1"
               >
-                <Folder className="h-4 w-4 mr-2" />
-                {folder.name}
+                Delete
               </Button>
-            ))}
-          </div>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Отмена</AlertDialogCancel>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+            </div>
+          </Card>
+        </div>
+      )}
     </div>
   );
-}
+};
+
+export default MediaManager;
