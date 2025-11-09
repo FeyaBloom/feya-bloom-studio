@@ -152,12 +152,25 @@ export default function MediaManager() {
 
     try {
       const folderPath = currentFolder 
-        ? `${currentFolder}/${newFolderName}/.keep`
-        : `${newFolderName}/.keep`;
+        ? `${currentFolder}/${newFolderName}/.placeholder.png`
+        : `${newFolderName}/.placeholder.png`;
+
+      // Create a minimal 1x1 transparent PNG
+      const canvas = document.createElement('canvas');
+      canvas.width = 1;
+      canvas.height = 1;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.clearRect(0, 0, 1, 1);
+      }
+      
+      const blob = await new Promise<Blob>((resolve) => {
+        canvas.toBlob((blob) => resolve(blob!), 'image/png');
+      });
 
       const { error } = await supabase.storage
         .from("project-images")
-        .upload(folderPath, new Blob([""], { type: "text/plain" }), {
+        .upload(folderPath, blob, {
           cacheControl: "3600",
         });
 
