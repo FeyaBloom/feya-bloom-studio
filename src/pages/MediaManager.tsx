@@ -5,21 +5,26 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { 
-  ArrowLeft, 
   Upload, 
-  Trash2, 
-  Copy, 
-  Check, 
+  Folder, 
+  FolderPlus,
+  ArrowLeft, 
+  Home,
   Search,
+  Trash2,
+  Copy,
+  Check,
   X,
   Image,
   Video,
   File,
-  Folder,
-  FolderPlus,
-  Home
+  Edit2,
+  FolderInput
 } from "lucide-react";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface MediaFile {
   name: string;
@@ -27,29 +32,44 @@ interface MediaFile {
   type: string;
   size: number;
   created_at: string;
-  isFolder?: boolean;
+  isFolder: boolean;
 }
 
-const MediaManager = () => {
+export default function MediaManager() {
   const navigate = useNavigate();
+  const { toast } = useToast();
+  
   const [files, setFiles] = useState<MediaFile[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [currentPath, setCurrentPath] = useState<string>('');
-  const [newFolderName, setNewFolderName] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPath, setCurrentPath] = useState('');
   const [showNewFolder, setShowNewFolder] = useState(false);
+  const [newFolderName, setNewFolderName] = useState('');
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+  const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
+  
+  // Rename/Move modal states
+  const [renameTarget, setRenameTarget] = useState<MediaFile | null>(null);
+  const [newFileName, setNewFileName] = useState('');
+  const [moveTarget, setMoveTarget] = useState<MediaFile | null>(null);
+  const [moveDestination, setMoveDestination] = useState('');
+  const [availableFolders, setAvailableFolders] = useState<string[]>([]);
 
   useEffect(() => {
     checkAuth();
-    loadFiles();
+  }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      loadFiles();
+    }
   }, [currentPath]);
 
   const checkAuth = async () => {
     const { data: { user } } = await supabase.auth.getUser();
+    
     if (!user) {
       navigate('/login');
       return;
@@ -59,63 +79,106 @@ const MediaManager = () => {
       .from('user_roles')
       .select('role')
       .eq('user_id', user.id)
-      .eq('role', 'admin')
       .maybeSingle();
 
-    if (!roles) {
-      toast.error('Access denied. Admin privileges required.');
+    if (!roles || roles.role !== 'admin') {
+      toast({
+        title: "Доступ запрещен",
+        description: "У вас нет прав администратора",
+        variant: "destructive"
+      });
       navigate('/');
+      return;
     }
+
+    setLoading(false);
   };
 
   const loadFiles = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase.storage
+      const { data: fileList, error } = await supabase.storage
         .from('media')
         .list(currentPath, {
-          limit: 100,
+          limit: 1000,
           offset: 0,
-          sortBy: { column: 'name', order: 'asc' }
         });
 
       if (error) throw error;
 
-      const filesWithUrls = await Promise.all(
-        (data || []).map(async (file) => {
-          // Если это папка (id === null в Supabase Storage)
-          if (file.id === null) {
+      if (!fileList) {
+        setFiles([]);
+        return;
+      }
+
+      // Separate folders and files
+      const folders = fileList
+        .filter(file => file.id === null)
+        .map(folder => ({
+          name: folder.name,
+          url: '',
+          type: 'folder',
+          size: 0,
+          created_at: folder.created_at || '',
+          isFolder: true
+        }));
+
+      const regularFiles = await Promise.all(
+        fileList
+          .filter(file => file.id !== null && file.name !== '.keep')
+          .map(async (file) => {
+            const filePath = currentPath ? `${currentPath}/${file.name}` : file.name;
+            const { data: { publicUrl } } = supabase.storage
+              .from('media')
+              .getPublicUrl(filePath);
+
             return {
               name: file.name,
-              url: '',
-              type: 'folder',
-              size: 0,
-              created_at: '',
-              isFolder: true
+              url: publicUrl,
+              type: file.metadata?.mimetype || 'unknown',
+              size: file.metadata?.size || 0,
+              created_at: file.created_at,
+              isFolder: false
             };
-          }
-
-          const filePath = currentPath ? `${currentPath}/${file.name}` : file.name;
-          const { data: { publicUrl } } = supabase.storage
-            .from('media')
-            .getPublicUrl(filePath);
-
-          return {
-            name: file.name,
-            url: publicUrl,
-            type: file.metadata?.mimetype || 'unknown',
-            size: file.metadata?.size || 0,
-            created_at: file.created_at,
-            isFolder: false
-          };
-        })
+          })
       );
 
-      setFiles(filesWithUrls);
+      setFiles([...folders, ...regularFiles]);
     } catch (error: any) {
-      toast.error(error.message || 'Failed to load files');
+      toast({
+        title: "Ошибка",
+        description: error.message || 'Не удалось загрузить файлы',
+        variant: "destructive"
+      });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadAvailableFolders = async () => {
+    try {
+      const folders: string[] = ['/ (корень)'];
+      
+      const loadFoldersRecursive = async (path: string) => {
+        const { data: fileList } = await supabase.storage
+          .from('media')
+          .list(path);
+
+        if (fileList) {
+          for (const file of fileList) {
+            if (file.id === null) { // It's a folder
+              const folderPath = path ? `${path}/${file.name}` : file.name;
+              folders.push(folderPath);
+              await loadFoldersRecursive(folderPath);
+            }
+          }
+        }
+      };
+
+      await loadFoldersRecursive('');
+      setAvailableFolders(folders);
+    } catch (error) {
+      console.error('Error loading folders:', error);
     }
   };
 
@@ -123,7 +186,11 @@ const MediaManager = () => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 50 * 1024 * 1024) {
-        toast.error('File too large. Maximum size is 50MB.');
+        toast({
+          title: "Ошибка",
+          description: 'Файл слишком большой. Максимум 50MB.',
+          variant: "destructive"
+        });
         return;
       }
       setSelectedFile(file);
@@ -150,14 +217,21 @@ const MediaManager = () => {
 
       if (error) throw error;
 
-      toast.success('File uploaded successfully!');
+      toast({
+        title: "Успешно",
+        description: 'Файл загружен успешно!'
+      });
       setSelectedFile(null);
       const fileInput = document.getElementById('file-input') as HTMLInputElement;
       if (fileInput) fileInput.value = '';
       
       loadFiles();
     } catch (error: any) {
-      toast.error(error.message || 'Failed to upload file');
+      toast({
+        title: "Ошибка",
+        description: error.message || 'Не удалось загрузить файл',
+        variant: "destructive"
+      });
     } finally {
       setUploading(false);
     }
@@ -165,13 +239,15 @@ const MediaManager = () => {
 
   const createFolder = async () => {
     if (!newFolderName.trim()) {
-      toast.error('Please enter a folder name');
+      toast({
+        title: "Ошибка",
+        description: 'Введите имя папки',
+        variant: "destructive"
+      });
       return;
     }
 
     try {
-      // В Supabase Storage папка создается при загрузке файла в нее
-      // Создаем пустой placeholder файл .keep
       const folderPath = currentPath 
         ? `${currentPath}/${newFolderName}/.keep` 
         : `${newFolderName}/.keep`;
@@ -185,19 +261,110 @@ const MediaManager = () => {
 
       if (error) throw error;
 
-      toast.success('Folder created successfully!');
+      toast({
+        title: "Успешно",
+        description: 'Папка создана успешно!'
+      });
       setNewFolderName('');
       setShowNewFolder(false);
       loadFiles();
     } catch (error: any) {
-      toast.error(error.message || 'Failed to create folder');
+      toast({
+        title: "Ошибка",
+        description: error.message || 'Не удалось создать папку',
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleRename = async () => {
+    if (!renameTarget || !newFileName.trim()) return;
+
+    try {
+      const oldPath = currentPath ? `${currentPath}/${renameTarget.name}` : renameTarget.name;
+      const fileExt = renameTarget.name.split('.').pop();
+      const newPath = currentPath ? `${currentPath}/${newFileName}.${fileExt}` : `${newFileName}.${fileExt}`;
+
+      // Copy file to new location
+      const { error: copyError } = await supabase.storage
+        .from('media')
+        .copy(oldPath, newPath);
+
+      if (copyError) throw copyError;
+
+      // Delete old file
+      const { error: deleteError } = await supabase.storage
+        .from('media')
+        .remove([oldPath]);
+
+      if (deleteError) throw deleteError;
+
+      toast({
+        title: "Успешно",
+        description: 'Файл переименован'
+      });
+      setRenameTarget(null);
+      setNewFileName('');
+      loadFiles();
+    } catch (error: any) {
+      toast({
+        title: "Ошибка",
+        description: error.message || 'Не удалось переименовать файл',
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleMove = async () => {
+    if (!moveTarget || moveDestination === undefined) return;
+
+    try {
+      const oldPath = currentPath ? `${currentPath}/${moveTarget.name}` : moveTarget.name;
+      const destPath = moveDestination === '/ (корень)' ? '' : moveDestination;
+      const newPath = destPath ? `${destPath}/${moveTarget.name}` : moveTarget.name;
+
+      if (oldPath === newPath) {
+        toast({
+          title: "Ошибка",
+          description: 'Файл уже находится в этой папке',
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Copy file to new location
+      const { error: copyError } = await supabase.storage
+        .from('media')
+        .copy(oldPath, newPath);
+
+      if (copyError) throw copyError;
+
+      // Delete old file
+      const { error: deleteError } = await supabase.storage
+        .from('media')
+        .remove([oldPath]);
+
+      if (deleteError) throw deleteError;
+
+      toast({
+        title: "Успешно",
+        description: 'Файл перемещен'
+      });
+      setMoveTarget(null);
+      setMoveDestination('');
+      loadFiles();
+    } catch (error: any) {
+      toast({
+        title: "Ошибка",
+        description: error.message || 'Не удалось переместить файл',
+        variant: "destructive"
+      });
     }
   };
 
   const handleDelete = async (fileName: string, isFolder: boolean) => {
     try {
       if (isFolder) {
-        // Удаляем все файлы в папке
         const folderPath = currentPath ? `${currentPath}/${fileName}` : fileName;
         const { data: folderFiles } = await supabase.storage
           .from('media')
@@ -220,10 +387,17 @@ const MediaManager = () => {
         if (error) throw error;
       }
 
-      toast.success(isFolder ? 'Folder deleted successfully' : 'File deleted successfully');
+      toast({
+        title: "Успешно",
+        description: isFolder ? 'Папка удалена' : 'Файл удален'
+      });
       loadFiles();
     } catch (error: any) {
-      toast.error(error.message || 'Failed to delete');
+      toast({
+        title: "Ошибка",
+        description: error.message || 'Не удалось удалить',
+        variant: "destructive"
+      });
     } finally {
       setDeleteTarget(null);
     }
@@ -248,10 +422,17 @@ const MediaManager = () => {
     try {
       await navigator.clipboard.writeText(url);
       setCopiedUrl(url);
-      toast.success('URL copied to clipboard!');
+      toast({
+        title: "Успешно",
+        description: 'URL скопирован в буфер обмена!'
+      });
       setTimeout(() => setCopiedUrl(null), 2000);
     } catch (error) {
-      toast.error('Failed to copy URL');
+      toast({
+        title: "Ошибка",
+        description: 'Не удалось скопировать URL',
+        variant: "destructive"
+      });
     }
   };
 
@@ -277,7 +458,7 @@ const MediaManager = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-mystic">
-        <p className="text-xl text-white">Loading media...</p>
+        <p className="text-xl text-foreground">Загрузка медиа...</p>
       </div>
     );
   }
@@ -292,29 +473,29 @@ const MediaManager = () => {
               variant="ghost" 
               size="icon"
               onClick={() => navigate('/admin')}
-              className="text-white hover:bg-white/10"
+              className="text-foreground hover:bg-accent"
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <h1 className="text-4xl font-serif text-white">Media Manager</h1>
+            <h1 className="text-4xl font-serif text-foreground">Медиа Менеджер</h1>
           </div>
         </div>
 
-        {/* Breadcrumb / Path */}
-        <div className="flex items-center gap-2 mb-6 text-white/80 text-sm">
+        {/* Breadcrumb */}
+        <div className="flex items-center gap-2 mb-6 text-muted-foreground text-sm">
           <Button
             variant="ghost"
             size="sm"
             onClick={goToRoot}
-            className="gap-1 text-white/80 hover:text-white"
+            className="gap-1"
           >
             <Home className="h-4 w-4" />
-            Root
+            Корень
           </Button>
           {currentPath.split('/').filter(Boolean).map((part, index, arr) => (
             <span key={index} className="flex items-center gap-2">
               <span>/</span>
-              <span className={index === arr.length - 1 ? 'text-white font-medium' : ''}>
+              <span className={index === arr.length - 1 ? 'text-foreground font-medium' : ''}>
                 {part}
               </span>
             </span>
@@ -329,7 +510,7 @@ const MediaManager = () => {
             className="gap-2"
           >
             <FolderPlus className="h-4 w-4" />
-            New Folder
+            Новая папка
           </Button>
           {currentPath && (
             <Button
@@ -338,35 +519,35 @@ const MediaManager = () => {
               className="gap-2"
             >
               <ArrowLeft className="h-4 w-4" />
-              Go Back
+              Назад
             </Button>
           )}
         </div>
 
         {/* New Folder Input */}
         {showNewFolder && (
-          <Card className="p-4 mb-6 bg-white/10 backdrop-blur-sm border-white/20">
+          <Card className="p-4 mb-6">
             <div className="flex gap-4">
               <Input
-                placeholder="Folder name..."
+                placeholder="Имя папки..."
                 value={newFolderName}
                 onChange={(e) => setNewFolderName(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && createFolder()}
                 className="flex-1"
               />
-              <Button onClick={createFolder}>Create</Button>
+              <Button onClick={createFolder}>Создать</Button>
               <Button variant="outline" onClick={() => {
                 setShowNewFolder(false);
                 setNewFolderName('');
               }}>
-                Cancel
+                Отмена
               </Button>
             </div>
           </Card>
         )}
 
         {/* Upload Section */}
-        <Card className="p-6 mb-8 bg-white/10 backdrop-blur-sm border-white/20">
+        <Card className="p-6 mb-8">
           <div className="space-y-4">
             <div className="flex items-center gap-4">
               <Input
@@ -382,11 +563,11 @@ const MediaManager = () => {
                 className="gap-2"
               >
                 <Upload className="h-4 w-4" />
-                {uploading ? 'Uploading...' : 'Upload'}
+                {uploading ? 'Загрузка...' : 'Загрузить'}
               </Button>
             </div>
             {selectedFile && (
-              <div className="flex items-center gap-2 text-sm text-white/80">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <span>{selectedFile.name}</span>
                 <span>({formatFileSize(selectedFile.size)})</span>
                 <Button
@@ -407,7 +588,7 @@ const MediaManager = () => {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search files..."
+              placeholder="Поиск файлов..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
@@ -420,15 +601,15 @@ const MediaManager = () => {
           {filteredFiles.map((file) => (
             <Card 
               key={file.name} 
-              className={`p-4 bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all ${
+              className={`p-4 hover:shadow-lg transition-all ${
                 file.isFolder ? 'cursor-pointer' : ''
               }`}
               onClick={() => file.isFolder && openFolder(file.name)}
             >
               {/* Preview */}
-              <div className="aspect-video bg-black/20 rounded-lg mb-3 overflow-hidden flex items-center justify-center">
+              <div className="aspect-video bg-muted rounded-lg mb-3 overflow-hidden flex items-center justify-center">
                 {file.isFolder ? (
-                  <Folder className="w-16 h-16 text-white/50" />
+                  <Folder className="w-16 h-16 text-muted-foreground" />
                 ) : file.type.startsWith('image/') ? (
                   <img 
                     src={file.url} 
@@ -436,7 +617,7 @@ const MediaManager = () => {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="text-white/50">
+                  <div className="text-muted-foreground">
                     {getFileIcon(file.type)}
                   </div>
                 )}
@@ -447,11 +628,11 @@ const MediaManager = () => {
                 <div className="flex items-start gap-2">
                   {getFileIcon(file.isFolder ? 'folder' : file.type)}
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-white truncate">
+                    <p className="text-sm font-medium truncate">
                       {file.name}
                     </p>
                     {!file.isFolder && (
-                      <p className="text-xs text-white/60">
+                      <p className="text-xs text-muted-foreground">
                         {formatFileSize(file.size)}
                       </p>
                     )}
@@ -460,7 +641,7 @@ const MediaManager = () => {
 
                 {/* Actions */}
                 {!file.isFolder && (
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     <Button
                       variant="outline"
                       size="sm"
@@ -468,19 +649,35 @@ const MediaManager = () => {
                         e.stopPropagation();
                         copyToClipboard(file.url);
                       }}
-                      className="flex-1 gap-2"
+                      className="flex-1"
                     >
                       {copiedUrl === file.url ? (
-                        <>
-                          <Check className="h-4 w-4" />
-                          Copied
-                        </>
+                        <><Check className="h-4 w-4 mr-1" />Скопировано</>
                       ) : (
-                        <>
-                          <Copy className="h-4 w-4" />
-                          Copy URL
-                        </>
+                        <><Copy className="h-4 w-4 mr-1" />Копировать</>
                       )}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setRenameTarget(file);
+                        setNewFileName(file.name.replace(/\.[^/.]+$/, ""));
+                      }}
+                    >
+                      <Edit2 className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setMoveTarget(file);
+                        loadAvailableFolders();
+                      }}
+                    >
+                      <FolderInput className="h-4 w-4" />
                     </Button>
                     <Button
                       variant="destructive"
@@ -505,7 +702,7 @@ const MediaManager = () => {
                     className="w-full"
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
-                    Delete Folder
+                    Удалить папку
                   </Button>
                 )}
               </div>
@@ -515,28 +712,85 @@ const MediaManager = () => {
 
         {filteredFiles.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-white/60 text-lg">
-              {searchQuery ? 'No files found' : 'This folder is empty'}
+            <p className="text-muted-foreground text-lg">
+              {searchQuery ? 'Файлы не найдены' : 'Эта папка пуста'}
             </p>
           </div>
         )}
       </div>
+
+      {/* Rename Modal */}
+      <Dialog open={!!renameTarget} onOpenChange={() => setRenameTarget(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Переименовать файл</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label>Новое имя (без расширения)</Label>
+              <Input
+                value={newFileName}
+                onChange={(e) => setNewFileName(e.target.value)}
+                placeholder="Имя файла"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRenameTarget(null)}>
+              Отмена
+            </Button>
+            <Button onClick={handleRename}>Переименовать</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Move Modal */}
+      <Dialog open={!!moveTarget} onOpenChange={() => setMoveTarget(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Переместить файл</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label>Выберите папку назначения</Label>
+              <Select value={moveDestination} onValueChange={setMoveDestination}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Выберите папку" />
+                </SelectTrigger>
+                <SelectContent>
+                  {availableFolders.map((folder) => (
+                    <SelectItem key={folder} value={folder}>
+                      {folder}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setMoveTarget(null)}>
+              Отмена
+            </Button>
+            <Button onClick={handleMove}>Переместить</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Delete Confirmation Modal */}
       {deleteTarget && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setDeleteTarget(null)}>
           <Card className="p-6 max-w-md" onClick={(e) => e.stopPropagation()}>
             <h3 className="text-lg font-semibold mb-2">
-              Delete {files.find(f => f.name === deleteTarget)?.isFolder ? 'Folder' : 'File'}?
+              Удалить {files.find(f => f.name === deleteTarget)?.isFolder ? 'папку' : 'файл'}?
             </h3>
             <p className="text-sm text-muted-foreground mb-4">
-              This action cannot be undone. This will permanently delete the {
-                files.find(f => f.name === deleteTarget)?.isFolder ? 'folder and all its contents' : 'file'
-              } from storage.
+              Это действие нельзя отменить. {
+                files.find(f => f.name === deleteTarget)?.isFolder ? 'Папка и всё её содержимое будет удалено' : 'Файл будет удален'
+              }.
             </p>
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => setDeleteTarget(null)} className="flex-1">
-                Cancel
+                Отмена
               </Button>
               <Button 
                 variant="destructive" 
@@ -546,7 +800,7 @@ const MediaManager = () => {
                 }} 
                 className="flex-1"
               >
-                Delete
+                Удалить
               </Button>
             </div>
           </Card>
@@ -555,5 +809,3 @@ const MediaManager = () => {
     </div>
   );
 };
-
-export default MediaManager;

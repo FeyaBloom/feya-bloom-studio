@@ -5,9 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { Trash, GripVertical, Plus } from "lucide-react";
+import { Trash, GripVertical, Plus, FolderOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { ImageUploader } from "@/components/ImageUploader";
+import { MediaPicker } from "@/components/MediaPicker";
 
 interface ContentBlockEditorProps {
   blocks: ContentBlock[];
@@ -16,6 +17,7 @@ interface ContentBlockEditorProps {
 
 const ContentBlockEditor = ({ blocks, onChange }: ContentBlockEditorProps) => {
   const [showAddMenu, setShowAddMenu] = useState(false);
+  const [showVideoPicker, setShowVideoPicker] = useState<number | null>(null);
 
   const addBlock = (type: ContentBlock["type"]) => {
     const newBlock: ContentBlock = {
@@ -207,11 +209,22 @@ const ContentBlockEditor = ({ blocks, onChange }: ContentBlockEditorProps) => {
 
             {block.type === "video" && (
               <>
-                <Input
-                  placeholder="Video embed URL (YouTube, Vimeo, etc.)"
-                  value={block.content as string}
-                  onChange={(e) => updateBlock(index, { content: e.target.value })}
-                />
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Video embed URL (YouTube, Vimeo, или прямая ссылка)"
+                    value={block.content as string}
+                    onChange={(e) => updateBlock(index, { content: e.target.value })}
+                    className="flex-1"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowVideoPicker(index)}
+                  >
+                    <FolderOpen className="h-4 w-4 mr-2" />
+                    Из базы
+                  </Button>
+                </div>
                 {block.content && (
                   <div className="aspect-video rounded overflow-hidden">
                     <iframe
@@ -256,6 +269,18 @@ const ContentBlockEditor = ({ blocks, onChange }: ContentBlockEditorProps) => {
         <div className="text-center py-8 text-muted-foreground">
           No content blocks yet. Click "Add Block" to get started.
         </div>
+      )}
+
+      {showVideoPicker !== null && (
+        <MediaPicker
+          open={true}
+          onClose={() => setShowVideoPicker(null)}
+          onSelect={(url) => {
+            updateBlock(showVideoPicker, { content: url });
+            setShowVideoPicker(null);
+          }}
+          acceptTypes={['video']}
+        />
       )}
     </div>
   );

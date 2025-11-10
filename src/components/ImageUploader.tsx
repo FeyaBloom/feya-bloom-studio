@@ -3,8 +3,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Upload, X, Loader2 } from "lucide-react";
+import { Upload, X, Loader2, FolderOpen } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { MediaPicker } from "./MediaPicker";
 
 interface ImageUploaderProps {
   value?: string;
@@ -17,6 +18,7 @@ interface ImageUploaderProps {
 
 export const ImageUploader = ({ value, onChange, label, preview = true, multiple = false, onMultipleChange }: ImageUploaderProps) => {
   const [uploading, setUploading] = useState(false);
+  const [showMediaPicker, setShowMediaPicker] = useState(false);
   const { toast } = useToast();
   const uniqueId = useId();
 
@@ -156,7 +158,7 @@ export const ImageUploader = ({ value, onChange, label, preview = true, multiple
           variant="outline"
           onClick={() => document.getElementById(uniqueId)?.click()}
           disabled={uploading}
-          className="w-full"
+          className="flex-1"
         >
           {uploading ? (
             <>
@@ -166,9 +168,19 @@ export const ImageUploader = ({ value, onChange, label, preview = true, multiple
           ) : (
             <>
               <Upload className="mr-2 h-4 w-4" />
-              Выбрать изображение
+              Загрузить
             </>
           )}
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setShowMediaPicker(true)}
+          disabled={uploading}
+          className="flex-1"
+        >
+          <FolderOpen className="mr-2 h-4 w-4" />
+          Из базы
         </Button>
         {value && (
           <Button
@@ -192,6 +204,13 @@ export const ImageUploader = ({ value, onChange, label, preview = true, multiple
           />
         </div>
       )}
+
+      <MediaPicker
+        open={showMediaPicker}
+        onClose={() => setShowMediaPicker(false)}
+        onSelect={(url) => onChange(url)}
+        acceptTypes={['image']}
+      />
     </div>
   );
 };
