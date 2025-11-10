@@ -10,6 +10,14 @@ import { MessageSquare, Send, LeafyGreen, Brain, BookOpen, Moon, Brush } from "l
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
+import { z } from "zod";
+
+const contactSchema = z.object({
+  name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
+  email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
+  subject: z.string().trim().min(1, "Subject is required").max(200, "Subject must be less than 200 characters"),
+  message: z.string().trim().min(1, "Message is required").max(5000, "Message must be less than 5000 characters")
+});
 const Contact = () => {
   const {
     toast
@@ -25,10 +33,13 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
+      // Validate form data
+      const validatedData = contactSchema.parse(formData);
+      
       const {
         error
       } = await supabase.functions.invoke('send-contact-email', {
-        body: formData
+        body: validatedData
       });
       if (error) throw error;
       toast({
@@ -43,11 +54,19 @@ const Contact = () => {
       });
     } catch (error) {
       console.error("Error sending message:", error);
-      toast({
-        title: "Oops :(",
-        description: "Something went wrong.. Could you try later?",
-        variant: "destructive"
-      });
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Validation Error",
+          description: error.errors[0].message,
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Oops :(",
+          description: "Something went wrong.. Could you try later?",
+          variant: "destructive"
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }
