@@ -4,22 +4,37 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, Trash2, Copy, Check, Search } from "lucide-react";
+import { 
+  ArrowLeft, 
+  Upload, 
+  Trash2, 
+  Copy, 
+  Check, 
+  Search,
+  X,
+  Image,
+  Video,
+  File
+} from "lucide-react";
 import { toast } from "sonner";
-import { ImageUploader } from "@/components/ImageUploader";
 
 interface MediaFile {
   name: string;
   url: string;
+  type: string;
+  size: number;
+  created_at: string;
 }
 
 const MediaManager = () => {
   const navigate = useNavigate();
   const [files, setFiles] = useState<MediaFile[]>([]);
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   useEffect(() => {
     checkAuth();
@@ -51,26 +66,80 @@ const MediaManager = () => {
       setLoading(true);
       const { data, error } = await supabase.storage
         .from('media')
-        .list();
+        .list('', {
+          limit: 100,
+          offset: 0,
+          sortBy: { column: 'created_at', order: 'desc' }
+        });
 
       if (error) throw error;
 
-      const filesWithUrls = (data || []).map((file) => {
-        const { data: { publicUrl } } = supabase.storage
-          .from('media')
-          .getPublicUrl(file.name);
+      const filesWithUrls = await Promise.all(
+        (data || []).map(async (file) => {
+          const { data: { publicUrl } } = supabase.storage
+            .from('media')
+            .getPublicUrl(file.name);
 
-        return {
-          name: file.name,
-          url: publicUrl
-        };
-      });
+          return {
+            name: file.name,
+            url: publicUrl,
+            type: file.metadata?.mimetype || 'unknown',
+            size: file.metadata?.size || 0,
+            created_at: file.created_at
+          };
+        })
+      );
 
       setFiles(filesWithUrls);
     } catch (error: any) {
       toast.error(error.message || 'Failed to load files');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Check file size (max 50MB)
+      if (file.size > 50 * 1024 * 1024) {
+        toast.error('File too large. Maximum size is 50MB.');
+        return;
+      }
+      setSelectedFile(file);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) return;
+
+    try {
+      setUploading(true);
+
+      // Generate unique filename
+      const fileExt = selectedFile.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+
+      const { error } = await supabase.storage
+        .from('media')
+        .upload(fileName, selectedFile, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (error) throw error;
+
+      toast.success('File uploaded successfully!');
+      setSelectedFile(null);
+      // Reset file input
+      const fileInput = document.getElementById('file-input') as HTMLInputElement;
+      if (fileInput) fileInput.value = '';
+      
+      loadFiles();
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to upload file');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -102,6 +171,20 @@ const MediaManager = () => {
     }
   };
 
+  const getFileIcon = (type: string) => {
+    if (type.startsWith('image/')) return <Image className="w-5 h-5" />;
+    if (type.startsWith('video/')) return <Video className="w-5 h-5" />;
+    return <File className="w-5 h-5" />;
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+  };
+
   const filteredFiles = files.filter(file =>
     file.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -117,6 +200,7 @@ const MediaManager = () => {
   return (
     <div className="min-h-screen bg-gradient-mystic">
       <div className="container mx-auto px-6 py-12">
+        {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center gap-4">
             <Button 
@@ -133,15 +217,39 @@ const MediaManager = () => {
 
         {/* Upload Section */}
         <Card className="p-6 mb-8 bg-white/10 backdrop-blur-sm border-white/20">
-          <ImageUploader
-            label="Upload Media"
-            value=""
-            onChange={(url) => {
-              toast.success('File uploaded!');
-              loadFiles();
-            }}
-            preview={false}
-          />
+          <div className="space-y-4">
+            <div className="flex items-center gap-4">
+              <Input
+                id="file-input"
+                type="file"
+                onChange={handleFileSelect}
+                accept="image/*,video/*"
+                className="flex-1"
+              />
+              <Button
+                onClick={handleUpload}
+                disabled={!selectedFile || uploading}
+                className="gap-2"
+              >
+                <Upload className="h-4 w-4" />
+                {uploading ? 'Uploading...' : 'Upload'}
+              </Button>
+            </div>
+            {selectedFile && (
+              <div className="flex items-center gap-2 text-sm text-white/80">
+                <span>{selectedFile.name}</span>
+                <span>({formatFileSize(selectedFile.size)})</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedFile(null)}
+                  className="h-6 w-6 p-0"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
+          </div>
         </Card>
 
         {/* Search */}
@@ -158,25 +266,42 @@ const MediaManager = () => {
         </div>
 
         {/* Files Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredFiles.map((file) => (
             <Card 
               key={file.name} 
               className="p-4 bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all"
             >
-              <div className="aspect-video bg-black/20 rounded-lg mb-3 overflow-hidden">
-                <img 
-                  src={file.url} 
-                  alt={file.name}
-                  className="w-full h-full object-cover"
-                />
+              {/* Preview */}
+              <div className="aspect-video bg-black/20 rounded-lg mb-3 overflow-hidden flex items-center justify-center">
+                {file.type.startsWith('image/') ? (
+                  <img 
+                    src={file.url} 
+                    alt={file.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="text-white/50">
+                    {getFileIcon(file.type)}
+                  </div>
+                )}
               </div>
 
+              {/* Info */}
               <div className="space-y-2">
-                <p className="text-sm font-medium text-white truncate">
-                  {file.name}
-                </p>
+                <div className="flex items-start gap-2">
+                  {getFileIcon(file.type)}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-white truncate">
+                      {file.name}
+                    </p>
+                    <p className="text-xs text-white/60">
+                      {formatFileSize(file.size)}
+                    </p>
+                  </div>
+                </div>
 
+                {/* Actions */}
                 <div className="flex gap-2">
                   <Button
                     variant="outline"
@@ -192,7 +317,7 @@ const MediaManager = () => {
                     ) : (
                       <>
                         <Copy className="h-4 w-4" />
-                        Copy
+                        Copy URL
                       </>
                     )}
                   </Button>
@@ -218,13 +343,13 @@ const MediaManager = () => {
         )}
       </div>
 
-      {/* Delete Confirmation */}
+      {/* Delete Confirmation Modal */}
       {deleteTarget && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setDeleteTarget(null)}>
           <Card className="p-6 max-w-md" onClick={(e) => e.stopPropagation()}>
             <h3 className="text-lg font-semibold mb-2">Delete File?</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              This action cannot be undone.
+              This action cannot be undone. This will permanently delete the file from storage.
             </p>
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => setDeleteTarget(null)} className="flex-1">
