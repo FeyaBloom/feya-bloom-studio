@@ -14,7 +14,11 @@ import {
   X,
   Image,
   Video,
-  File
+  File,
+  Folder,
+  FolderPlus,
+  Edit2,
+  Home
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -24,6 +28,8 @@ interface MediaFile {
   type: string;
   size: number;
   created_at: string;
+  isFolder: boolean;
+  fullPath: string;
 }
 
 const MediaManager = () => {
@@ -34,12 +40,17 @@ const MediaManager = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
+  const [currentPath, setCurrentPath] = useState('');
+  const [editingItem, setEditingItem] = useState<string | null>(null);
+  const [newName, setNewName] = useState('');
+  const [creatingFolder, setCreatingFolder] = useState(false);
+  const [newFolderName, setNewFolderName] = useState('');
 
   useEffect(() => {
     checkAuth();
     loadFiles();
-  }, []);
+  }, [currentPath]);
 
   const checkAuth = async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -66,26 +77,43 @@ const MediaManager = () => {
       setLoading(true);
       const { data, error } = await supabase.storage
         .from('media')
-        .list('', {
-          limit: 100,
+        .list(currentPath, {
+          limit: 1000,
           offset: 0,
-          sortBy: { column: 'created_at', order: 'desc' }
+          sortBy: { column: 'name', order: 'asc' }
         });
 
       if (error) throw error;
 
       const filesWithUrls = await Promise.all(
-        (data || []).map(async (file) => {
+        (data || []).map(async (item) => {
+          const fullPath = currentPath ? `${currentPath}/${item.name}` : item.name;
+          const isFolder = item.id === null;
+
+          if (isFolder) {
+            return {
+              name: item.name,
+              fullPath,
+              url: '',
+              type: 'folder',
+              size: 0,
+              created_at: '',
+              isFolder: true
+            };
+          }
+
           const { data: { publicUrl } } = supabase.storage
             .from('media')
-            .getPublicUrl(file.name);
+            .getPublicUrl(fullPath);
 
           return {
-            name: file.name,
+            name: item.name,
+            fullPath,
             url: publicUrl,
-            type: file.metadata?.mimetype || 'unknown',
-            size: file.metadata?.size || 0,
-            created_at: file.created_at
+            type: item.metadata?.mimetype || 'unknown',
+            size: item.metadata?.size || 0,
+            created_at: item.created_at,
+            isFolder: false
           };
         })
       );
@@ -98,73 +126,187 @@ const MediaManager = () => {
     }
   };
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Check file size (max 50MB)
-      if (file.size > 50 * 1024 * 1024) {
-        toast.error('File too large. Maximum size is 50MB.');
+  const handleFilesSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      // Check total size
+      let totalSize = 0;
+      for (let i = 0; i < files.length; i++) {
+        totalSize += files[i].size;
+      }
+      if (totalSize > 200 * 1024 * 1024) {
+        toast.error('Total size too large. Maximum is 200MB.');
         return;
       }
-      setSelectedFile(file);
+      setSelectedFiles(files);
     }
   };
 
   const handleUpload = async () => {
-    if (!selectedFile) return;
+    if (!selectedFiles || selectedFiles.length === 0) return;
 
     try {
       setUploading(true);
 
-      // Generate unique filename
-      const fileExt = selectedFile.name.split('.').pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+      for (let i = 0; i < selectedFiles.length; i++) {
+        const file = selectedFiles[i];
+        const fileName = file.name; // Сохраняем оригинальное имя
+        const filePath = currentPath ? `${currentPath}/${fileName}` : fileName;
+
+        const { error } = await supabase.storage
+          .from('media')
+          .upload(filePath, file, {
+            cacheControl: '3600',
+            upsert: true // Разрешаем перезапись
+          });
+
+        if (error) throw error;
+      }
+
+      toast.success(`${selectedFiles.length} file(s) uploaded successfully!`);
+      setSelectedFiles(null);
+      const fileInput = document.getElementById('file-input') as HTMLInputElement;
+      if (fileInput) fileInput.value = '';
+
+      loadFiles();
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to upload files');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const createFolder = async () => {
+    if (!newFolderName.trim()) {
+      toast.error('Please enter folder name');
+      return;
+    }
+
+    try {
+      const folderPath = currentPath 
+        ? `${currentPath}/${newFolderName}/.keep`
+        : `${newFolderName}/.keep`;
 
       const { error } = await supabase.storage
         .from('media')
-        .upload(fileName, selectedFile, {
+        .upload(folderPath, new Blob([''], { type: 'text/plain' }), {
           cacheControl: '3600',
           upsert: false
         });
 
       if (error) throw error;
 
-      toast.success('File uploaded successfully!');
-      setSelectedFile(null);
-      // Reset file input
-      const fileInput = document.getElementById('file-input') as HTMLInputElement;
-      if (fileInput) fileInput.value = '';
-      
+      toast.success('Folder created!');
+      setCreatingFolder(false);
+      setNewFolderName('');
       loadFiles();
     } catch (error: any) {
-      toast.error(error.message || 'Failed to upload file');
-    } finally {
-      setUploading(false);
+      toast.error(error.message || 'Failed to create folder');
     }
   };
 
-  const handleDelete = async (fileName: string) => {
+  const handleRename = async (oldPath: string, isFolder: boolean) => {
+    if (!newName.trim() || newName === oldPath.split('/').pop()) {
+      setEditingItem(null);
+      return;
+    }
+
     try {
-      const { error } = await supabase.storage
-        .from('media')
-        .remove([fileName]);
+      const pathParts = oldPath.split('/');
+      pathParts[pathParts.length - 1] = newName;
+      const newPath = pathParts.join('/');
 
-      if (error) throw error;
+      if (isFolder) {
+        // Для папок нужно переместить все файлы внутри
+        const { data: folderContents } = await supabase.storage
+          .from('media')
+          .list(oldPath);
 
-      toast.success('File deleted successfully');
+        if (folderContents && folderContents.length > 0) {
+          for (const item of folderContents) {
+            const oldFilePath = `${oldPath}/${item.name}`;
+            const newFilePath = `${newPath}/${item.name}`;
+
+            await supabase.storage
+              .from('media')
+              .move(oldFilePath, newFilePath);
+          }
+        }
+      } else {
+        // Для файлов просто move
+        const { error } = await supabase.storage
+          .from('media')
+          .move(oldPath, newPath);
+
+        if (error) throw error;
+      }
+
+      toast.success('Renamed successfully!');
+      setEditingItem(null);
+      setNewName('');
       loadFiles();
     } catch (error: any) {
-      toast.error(error.message || 'Failed to delete file');
+      toast.error(error.message || 'Failed to rename');
+    }
+  };
+
+  const handleDelete = async (fullPath: string, isFolder: boolean) => {
+    try {
+      if (isFolder) {
+        // Удаляем все файлы в папке рекурсивно
+        const deleteRecursive = async (path: string) => {
+          const { data } = await supabase.storage
+            .from('media')
+            .list(path);
+
+          if (data && data.length > 0) {
+            for (const item of data) {
+              const itemPath = `${path}/${item.name}`;
+              if (item.id === null) {
+                await deleteRecursive(itemPath);
+              } else {
+                await supabase.storage.from('media').remove([itemPath]);
+              }
+            }
+          }
+        };
+
+        await deleteRecursive(fullPath);
+      } else {
+        const { error } = await supabase.storage
+          .from('media')
+          .remove([fullPath]);
+
+        if (error) throw error;
+      }
+
+      toast.success('Deleted successfully!');
+      loadFiles();
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to delete');
     } finally {
       setDeleteTarget(null);
     }
   };
 
+  const openFolder = (folderName: string) => {
+    const newPath = currentPath ? `${currentPath}/${folderName}` : folderName;
+    setCurrentPath(newPath);
+  };
+
+  const navigateToPath = (index: number) => {
+    const pathParts = currentPath.split('/').filter(Boolean);
+    const newPath = pathParts.slice(0, index + 1).join('/');
+    setCurrentPath(newPath);
+  };
+
+  const goToRoot = () => setCurrentPath('');
+
   const copyToClipboard = async (url: string) => {
     try {
       await navigator.clipboard.writeText(url);
       setCopiedUrl(url);
-      toast.success('URL copied to clipboard!');
+      toast.success('URL copied!');
       setTimeout(() => setCopiedUrl(null), 2000);
     } catch (error) {
       toast.error('Failed to copy URL');
@@ -172,13 +314,14 @@ const MediaManager = () => {
   };
 
   const getFileIcon = (type: string) => {
+    if (type === 'folder') return <Folder className="w-5 h-5" />;
     if (type.startsWith('image/')) return <Image className="w-5 h-5" />;
     if (type.startsWith('video/')) return <Video className="w-5 h-5" />;
     return <File className="w-5 h-5" />;
   };
 
   const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) return '';
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
@@ -215,6 +358,63 @@ const MediaManager = () => {
           </div>
         </div>
 
+        {/* Breadcrumb */}
+        <div className="flex items-center gap-2 mb-6 flex-wrap">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={goToRoot}
+            className="text-white/80 hover:text-white gap-1"
+          >
+            <Home className="h-4 w-4" />
+            Root
+          </Button>
+          {currentPath.split('/').filter(Boolean).map((part, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <span className="text-white/60">/</span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigateToPath(index)}
+                className="text-white/80 hover:text-white"
+              >
+                {part}
+              </Button>
+            </div>
+          ))}
+        </div>
+
+        {/* Actions */}
+        <div className="flex gap-4 mb-6">
+          <Button
+            onClick={() => setCreatingFolder(!creatingFolder)}
+            variant="outline"
+            className="gap-2"
+          >
+            <FolderPlus className="h-4 w-4" />
+            New Folder
+          </Button>
+        </div>
+
+        {/* New Folder Input */}
+        {creatingFolder && (
+          <Card className="p-4 mb-6 bg-white/10 backdrop-blur-sm border-white/20">
+            <div className="flex gap-4">
+              <Input
+                placeholder="Folder name..."
+                value={newFolderName}
+                onChange={(e) => setNewFolderName(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && createFolder()}
+              />
+              <Button onClick={createFolder}>Create</Button>
+              <Button variant="outline" onClick={() => {
+                setCreatingFolder(false);
+                setNewFolderName('');
+              }}>Cancel</Button>
+            </div>
+          </Card>
+        )}
+
         {/* Upload Section */}
         <Card className="p-6 mb-8 bg-white/10 backdrop-blur-sm border-white/20">
           <div className="space-y-4">
@@ -222,31 +422,23 @@ const MediaManager = () => {
               <Input
                 id="file-input"
                 type="file"
-                onChange={handleFileSelect}
+                onChange={handleFilesSelect}
                 accept="image/*,video/*"
+                multiple
                 className="flex-1"
               />
               <Button
                 onClick={handleUpload}
-                disabled={!selectedFile || uploading}
+                disabled={!selectedFiles || uploading}
                 className="gap-2"
               >
                 <Upload className="h-4 w-4" />
                 {uploading ? 'Uploading...' : 'Upload'}
               </Button>
             </div>
-            {selectedFile && (
-              <div className="flex items-center gap-2 text-sm text-white/80">
-                <span>{selectedFile.name}</span>
-                <span>({formatFileSize(selectedFile.size)})</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setSelectedFile(null)}
-                  className="h-6 w-6 p-0"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
+            {selectedFiles && selectedFiles.length > 0 && (
+              <div className="text-sm text-white/80">
+                <p>{selectedFiles.length} file(s) selected</p>
               </div>
             )}
           </div>
@@ -266,15 +458,18 @@ const MediaManager = () => {
         </div>
 
         {/* Files Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {filteredFiles.map((file) => (
             <Card 
-              key={file.name} 
-              className="p-4 bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all"
+              key={file.fullPath} 
+              className="p-4 bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all cursor-pointer"
+              onClick={() => file.isFolder && openFolder(file.name)}
             >
               {/* Preview */}
               <div className="aspect-video bg-black/20 rounded-lg mb-3 overflow-hidden flex items-center justify-center">
-                {file.type.startsWith('image/') ? (
+                {file.isFolder ? (
+                  <Folder className="w-16 h-16 text-white/50" />
+                ) : file.type.startsWith('image/') ? (
                   <img 
                     src={file.url} 
                     alt={file.name}
@@ -290,41 +485,75 @@ const MediaManager = () => {
               {/* Info */}
               <div className="space-y-2">
                 <div className="flex items-start gap-2">
-                  {getFileIcon(file.type)}
+                  {getFileIcon(file.isFolder ? 'folder' : file.type)}
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-white truncate">
-                      {file.name}
-                    </p>
-                    <p className="text-xs text-white/60">
-                      {formatFileSize(file.size)}
-                    </p>
+                    {editingItem === file.fullPath ? (
+                      <Input
+                        value={newName}
+                        onChange={(e) => setNewName(e.target.value)}
+                        onKeyPress={(e) => e.key === 'Enter' && handleRename(file.fullPath, file.isFolder)}
+                        onBlur={() => handleRename(file.fullPath, file.isFolder)}
+                        autoFocus
+                        className="h-7 text-sm"
+                      />
+                    ) : (
+                      <>
+                        <p className="text-sm font-medium text-white truncate">
+                          {file.name}
+                        </p>
+                        {!file.isFolder && (
+                          <p className="text-xs text-white/60">
+                            {formatFileSize(file.size)}
+                          </p>
+                        )}
+                      </>
+                    )}
                   </div>
                 </div>
 
                 {/* Actions */}
                 <div className="flex gap-2">
+                  {!file.isFolder && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        copyToClipboard(file.url);
+                      }}
+                      className="flex-1 gap-2"
+                    >
+                      {copiedUrl === file.url ? (
+                        <>
+                          <Check className="h-4 w-4" />
+                          Copied
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="h-4 w-4" />
+                          Copy
+                        </>
+                      )}
+                    </Button>
+                  )}
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => copyToClipboard(file.url)}
-                    className="flex-1 gap-2"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditingItem(file.fullPath);
+                      setNewName(file.name);
+                    }}
                   >
-                    {copiedUrl === file.url ? (
-                      <>
-                        <Check className="h-4 w-4" />
-                        Copied
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="h-4 w-4" />
-                        Copy URL
-                      </>
-                    )}
+                    <Edit2 className="h-4 w-4" />
                   </Button>
                   <Button
                     variant="destructive"
                     size="sm"
-                    onClick={() => setDeleteTarget(file.name)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDeleteTarget(file.fullPath);
+                    }}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -337,25 +566,32 @@ const MediaManager = () => {
         {filteredFiles.length === 0 && (
           <div className="text-center py-12">
             <p className="text-white/60 text-lg">
-              {searchQuery ? 'No files found' : 'No files uploaded yet'}
+              {searchQuery ? 'No files found' : 'This folder is empty'}
             </p>
           </div>
         )}
       </div>
 
-      {/* Delete Confirmation Modal */}
+      {/* Delete Confirmation */}
       {deleteTarget && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setDeleteTarget(null)}>
           <Card className="p-6 max-w-md" onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-lg font-semibold mb-2">Delete File?</h3>
+            <h3 className="text-lg font-semibold mb-2">Delete?</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              This action cannot be undone. This will permanently delete the file from storage.
+              This action cannot be undone.
             </p>
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => setDeleteTarget(null)} className="flex-1">
                 Cancel
               </Button>
-              <Button variant="destructive" onClick={() => handleDelete(deleteTarget)} className="flex-1">
+              <Button 
+                variant="destructive" 
+                onClick={() => {
+                  const file = files.find(f => f.fullPath === deleteTarget);
+                  if (file) handleDelete(deleteTarget, file.isFolder);
+                }}
+                className="flex-1"
+              >
                 Delete
               </Button>
             </div>
