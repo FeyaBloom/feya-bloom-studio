@@ -46,11 +46,13 @@ const MediaManager = () => {
   const [newName, setNewName] = useState('');
   const [creatingFolder, setCreatingFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
+  const [buckets] = useState(['media', 'project-images']);
+  const [currentBucket, setCurrentBucket] = useState('media');
 
   useEffect(() => {
     checkAuth();
     loadFiles();
-  }, [currentPath]);
+  }, [currentPath, currentBucket]);
 
   const checkAuth = async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -76,7 +78,7 @@ const MediaManager = () => {
     try {
       setLoading(true);
       const { data, error } = await supabase.storage
-        .from('media')
+        .from(currentBucket)
         .list(currentPath, {
           limit: 1000,
           offset: 0,
@@ -103,7 +105,7 @@ const MediaManager = () => {
           }
 
           const { data: { publicUrl } } = supabase.storage
-            .from('media')
+            .from(currentBucket)
             .getPublicUrl(fullPath);
 
           return {
@@ -129,7 +131,6 @@ const MediaManager = () => {
   const handleFilesSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
-      // Check total size
       let totalSize = 0;
       for (let i = 0; i < files.length; i++) {
         totalSize += files[i].size;
@@ -150,14 +151,14 @@ const MediaManager = () => {
 
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i];
-        const fileName = file.name; // Сохраняем оригинальное имя
+        const fileName = file.name;
         const filePath = currentPath ? `${currentPath}/${fileName}` : fileName;
 
         const { error } = await supabase.storage
-          .from('media')
+          .from(currentBucket)
           .upload(filePath, file, {
             cacheControl: '3600',
-            upsert: true // Разрешаем перезапись
+            upsert: true
           });
 
         if (error) throw error;
@@ -188,8 +189,8 @@ const MediaManager = () => {
         : `${newFolderName}/.keep`;
 
       const { error } = await supabase.storage
-        .from('media')
-        .upload(folderPath, new Blob([''], { type: 'text/plain' }), {
+        .from(currentBucket)
+        .upload(folderPath, new Blob([''], { type: 'application/octet-stream' }), {
           cacheControl: '3600',
           upsert: false
         });
@@ -208,6 +209,7 @@ const MediaManager = () => {
   const handleRename = async (oldPath: string, isFolder: boolean) => {
     if (!newName.trim() || newName === oldPath.split('/').pop()) {
       setEditingItem(null);
+      setNewName('');
       return;
     }
 
@@ -217,9 +219,8 @@ const MediaManager = () => {
       const newPath = pathParts.join('/');
 
       if (isFolder) {
-        // Для папок нужно переместить все файлы внутри
         const { data: folderContents } = await supabase.storage
-          .from('media')
+          .from(currentBucket)
           .list(oldPath);
 
         if (folderContents && folderContents.length > 0) {
@@ -227,18 +228,35 @@ const MediaManager = () => {
             const oldFilePath = `${oldPath}/${item.name}`;
             const newFilePath = `${newPath}/${item.name}`;
 
+            const { data: fileData } = await supabase.storage
+              .from(currentBucket)
+              .download(oldFilePath);
+
+            if (!fileData) continue;
+
             await supabase.storage
-              .from('media')
-              .move(oldFilePath, newFilePath);
+              .from(currentBucket)
+              .upload(newFilePath, fileData, { upsert: true });
+
+            await supabase.storage
+              .from(currentBucket)
+              .remove([oldFilePath]);
           }
         }
       } else {
-        // Для файлов просто move
-        const { error } = await supabase.storage
-          .from('media')
-          .move(oldPath, newPath);
+        const { data: fileData } = await supabase.storage
+          .from(currentBucket)
+          .download(oldPath);
 
-        if (error) throw error;
+        if (!fileData) throw new Error('Failed to download file');
+
+        await supabase.storage
+          .from(currentBucket)
+          .upload(newPath, fileData, { upsert: true });
+
+        await supabase.storage
+          .from(currentBucket)
+          .remove([oldPath]);
       }
 
       toast.success('Renamed successfully!');
@@ -247,16 +265,17 @@ const MediaManager = () => {
       loadFiles();
     } catch (error: any) {
       toast.error(error.message || 'Failed to rename');
+      setEditingItem(null);
+      setNewName('');
     }
   };
 
   const handleDelete = async (fullPath: string, isFolder: boolean) => {
     try {
       if (isFolder) {
-        // Удаляем все файлы в папке рекурсивно
         const deleteRecursive = async (path: string) => {
           const { data } = await supabase.storage
-            .from('media')
+            .from(currentBucket)
             .list(path);
 
           if (data && data.length > 0) {
@@ -265,7 +284,7 @@ const MediaManager = () => {
               if (item.id === null) {
                 await deleteRecursive(itemPath);
               } else {
-                await supabase.storage.from('media').remove([itemPath]);
+                await supabase.storage.from(currentBucket).remove([itemPath]);
               }
             }
           }
@@ -274,7 +293,7 @@ const MediaManager = () => {
         await deleteRecursive(fullPath);
       } else {
         const { error } = await supabase.storage
-          .from('media')
+          .from(currentBucket)
           .remove([fullPath]);
 
         if (error) throw error;
@@ -356,6 +375,25 @@ const MediaManager = () => {
             </Button>
             <h1 className="text-4xl font-serif text-white">Media Manager</h1>
           </div>
+        </div>
+
+        {/* Bucket Selector */}
+        <div className="mb-6">
+          <label className="text-white/80 text-sm mb-2 block">Storage Bucket:</label>
+          <select
+            value={currentBucket}
+            onChange={(e) => {
+              setCurrentBucket(e.target.value);
+              setCurrentPath('');
+            }}
+            className="w-64 h-10 rounded-md border border-white/20 bg-white/10 backdrop-blur-sm text-white px-3 focus:outline-none focus:ring-2 focus:ring-primary"
+          >
+            {buckets.map(bucket => (
+              <option key={bucket} value={bucket} className="bg-gray-800">
+                {bucket}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Breadcrumb */}
@@ -491,10 +529,16 @@ const MediaManager = () => {
                       <Input
                         value={newName}
                         onChange={(e) => setNewName(e.target.value)}
-                        onKeyPress={(e) => e.key === 'Enter' && handleRename(file.fullPath, file.isFolder)}
-                        onBlur={() => handleRename(file.fullPath, file.isFolder)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') handleRename(file.fullPath, file.isFolder);
+                          if (e.key === 'Escape') {
+                            setEditingItem(null);
+                            setNewName('');
+                          }
+                        }}
                         autoFocus
                         className="h-7 text-sm"
+                        onClick={(e) => e.stopPropagation()}
                       />
                     ) : (
                       <>
