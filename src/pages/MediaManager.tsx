@@ -188,9 +188,12 @@ const MediaManager = () => {
       ? `${currentPath}/${newFolderName}/.keep`
       : `${newFolderName}/.keep`;
 
+    // Создаем File вместо Blob
+    const emptyFile = new File([''], '.keep', { type: 'text/plain' });
+
     const { error } = await supabase.storage
       .from(currentBucket)
-      .upload(folderPath, new File([''], '.keep'), {
+      .upload(folderPath, emptyFile, {
         cacheControl: '3600',
         upsert: false
       });
