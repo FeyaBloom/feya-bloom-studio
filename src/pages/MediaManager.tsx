@@ -178,33 +178,33 @@ const MediaManager = () => {
   };
 
   const createFolder = async () => {
-    if (!newFolderName.trim()) {
-      toast.error('Please enter folder name');
-      return;
-    }
+  if (!newFolderName.trim()) {
+    toast.error('Please enter folder name');
+    return;
+  }
 
-    try {
-      const folderPath = currentPath 
-        ? `${currentPath}/${newFolderName}/.keep`
-        : `${newFolderName}/.keep`;
+  try {
+    const folderPath = currentPath 
+      ? `${currentPath}/${newFolderName}/.keep`
+      : `${newFolderName}/.keep`;
 
-      const { error } = await supabase.storage
-        .from(currentBucket)
-        .upload(folderPath, new Blob([''], { type: 'application/octet-stream' }), {
-          cacheControl: '3600',
-          upsert: false
-        });
+    const { error } = await supabase.storage
+      .from(currentBucket)
+      .upload(folderPath, new File([''], '.keep'), {
+        cacheControl: '3600',
+        upsert: false
+      });
 
-      if (error) throw error;
+    if (error) throw error;
 
-      toast.success('Folder created!');
-      setCreatingFolder(false);
-      setNewFolderName('');
-      loadFiles();
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to create folder');
-    }
-  };
+    toast.success('Folder created!');
+    setCreatingFolder(false);
+    setNewFolderName('');
+    loadFiles();
+  } catch (error: any) {
+    toast.error(error.message || 'Failed to create folder');
+  }
+};
 
   const handleRename = async (oldPath: string, isFolder: boolean) => {
     if (!newName.trim() || newName === oldPath.split('/').pop()) {
