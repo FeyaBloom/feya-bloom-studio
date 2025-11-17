@@ -68,7 +68,7 @@ export const MediaPicker = ({ open, onClose, onSelect, acceptTypes = ['image', '
           .map(async (file) => {
             const filePath = currentPath ? `${currentPath}/${file.name}` : file.name;
             const { data: { publicUrl } } = supabase.storage
-              .from('media')
+              .from('project-images')
               .getPublicUrl(filePath);
 
             return {
