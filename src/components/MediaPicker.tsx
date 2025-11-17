@@ -39,7 +39,7 @@ export const MediaPicker = ({ open, onClose, onSelect, acceptTypes = ['image', '
     try {
       setLoading(true);
       const { data: fileList, error } = await supabase.storage
-        .from('media')
+        .from('project-images')
         .list(currentPath, {
           limit: 1000,
           offset: 0,
