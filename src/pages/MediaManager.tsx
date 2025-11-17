@@ -17,6 +17,8 @@ import {
   File,
   Folder,
   FolderPlus,
+  FolderInput,
+  Edit,
   Edit2,
   Home
 } from "lucide-react";
@@ -184,30 +186,45 @@ const MediaManager = () => {
   }
 
   try {
-    const folderPath = currentPath 
-      ? `${currentPath}/${newFolderName}/.keep`
-      : `${newFolderName}/.keep`;
+    
+        ? `${currentFolder}/${newFolderName}/.placeholder.png`
+        : `${newFolderName}/.placeholder.png`;
 
-    // Создаем File вместо Blob
-    const emptyFile = new File([''], '.keep', { type: 'text/plain' });
-
-    const { error } = await supabase.storage
-      .from(currentBucket)
-      .upload(folderPath, emptyFile, {
-        cacheControl: '3600',
-        upsert: false
+      // Create a minimal 1x1 transparent PNG
+      const canvas = document.createElement('canvas');
+      canvas.width = 1;
+      canvas.height = 1;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.clearRect(0, 0, 1, 1);
+      }
+      
+      const blob = await new Promise<Blob>((resolve) => {
+        canvas.toBlob((blob) => resolve(blob!), 'image/png');
       });
+
+const { error } = await supabase.storage
+        .from("project-images")
+        .upload(folderPath, blob, {
+          cacheControl: "3600",
+        });
 
     if (error) throw error;
 
-    toast.success('Folder created!');
-    setCreatingFolder(false);
-    setNewFolderName('');
-    loadFiles();
-  } catch (error: any) {
-    toast.error(error.message || 'Failed to create folder');
-  }
-};
+      toast({
+        title: "Успешно",
+        description: "Папка создана",
+      });
+      setNewFolderName("");
+      loadFiles();
+    } catch (error: any) {
+      toast({
+        title: "Ошибка",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
 
   const handleRename = async (oldPath: string, isFolder: boolean) => {
     if (!newName.trim() || newName === oldPath.split('/').pop()) {
