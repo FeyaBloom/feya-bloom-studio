@@ -449,12 +449,8 @@ const About: React.FC = () => {
         className="w-full max-w-2xl lg:max-w-3xl text-center space-y-4 md:space-y-5 lg:space-y-6 px-2"
       >
         <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-cormorant leading-relaxed text-foreground">
-          I create for minds that won't fit the mold —
-          and hearts that refuse to settle.
-        </p>
-
-        <p className="text-sm sm:text-base md:text-lg leading-relaxed max-w-xl mx-auto text-muted-foreground">
-          Working from Spain, where I blend art, function, 
+          
+          Based in Mediterranean where I blend art, function, 
           and timeless wisdom into things that actually matter.
         </p>
       </motion.div>
@@ -473,15 +469,25 @@ const About: React.FC = () => {
 
           <div className="space-y-6 md:space-y-8 font-body text-base md:text-lg leading-relaxed px-4">
             <p>
-              I didn't set out to become a multidisciplinary creator.
-              I just kept following what felt true.
+              I've been trying to figure out how to create sustainably for as long as I can remember. 
             </p>
 
             <p>
-              One project led to another: paintings turned into wearable art,
-              personal struggles with focus became ADHD-friendly tools,
-              curiosity about local herbs grew into a book about Catalan 
-              nature-related traditions.
+Art school → programming college → design degree → 3D modeling in an international company. Dream job. Good money. Got disappointed in months. 
+
+That pattern kept repeating: find the thing, get the thing, realize it's not the thing. 
+
+Left everything. Started hyperrealism course — couldn't look at canvas after personal shit. Wrote a book about plants instead. Started UX course, built an ADHD tracker to survive my own brain, never finished the course. 
+
+Ideas kept coming. Follow-through kept failing.
+Until I realized: I wasn't failing at finding "my thing."
+I was learning to create in a way that doesn't break me. 
+
+Now I make knitted art AND digital tools AND paintings AND whatever else my brain decides needs to exist. 
+
+Because this is how I stay alive creatively. 
+
+I'm done performing.
             </p>
 
             <p className="text-center font-semibold text-muted-foreground">
