@@ -111,15 +111,12 @@ const Contact = () => {
   {/* Soft glow background */}
     <div className="relative z-10">
     <p className="text-3xl sm:text-4xl md:text-5xl font-script text-accent-foreground text-right mb-12 leading-relaxed">
-      The magic happens when we trust the process
+      Let's make something that matters
     </p>
-    <p className="text-lg text-muted-foreground leading-relaxed text-center" >
-      Not rushing. Not forcing.<br/>Just feeling.
-    </p>
+    
     <p className="text-lg text-muted-foreground leading-relaxed text-center py-4">
-      Between what you envision and what wants to emerge. <br/>
-      Between tradition and innovation.<br/>
-      Your world & mine.
+      Tell me what you need.
+I'll tell you if I can help.
     </p>
   </div>
 </div>
@@ -183,6 +180,20 @@ const Contact = () => {
           <p className="text-muted-foreground">
             The patterns, cycles, and quiet intelligence of the natural world. 
             Everything I create carries a breath of the forest.
+
+
+
+
+
+I'm drawn to projects that carry weight—work that helps people grow, supports communities, or makes the world a little less harsh. 
+
+Nature informs everything: its patterns, cycles, and logic. The way things grow, rest, adapt. That rhythm shows up whether I'm coding, knitting, or researching plants. 
+
+I'm inspired by people who live intentionally—who create and build because they're genuinely engaged, not performing. Those are the people I make things for. 
+
+And I value coherence. If something doesn't feel sincere in its design, message, or purpose, I won't make it. 
+
+I make what I need—and hope it helps someone else too.
           </p>
         </motion.div>
 
@@ -268,7 +279,8 @@ const Contact = () => {
           Does this feel like home?
         </p>
         <p className="text-lg max-w-2xl mx-auto opacity-90">
-          If you nodded along reading this, we're probably a good match. 
+          If you read this far,<br/>
+we're probably a good match. 
         </p>
         
       </div>
