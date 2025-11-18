@@ -260,13 +260,13 @@ const About: React.FC = () => {
     },
     {
       icon: Music,
-      text: "Night owl pretending to be a morning person",
+      text: "Night owl pretending to have a normal schedule",
       backText: "My best ideas arrive after midnight.",
       initialPos: { y: 160, x: 200 },
     },
     {
       icon: BookOpen,
-      text: "Can't pass a craft store without buying at least one thing",
+      text: "Can't pass a craft store without just looking",
       backText: "My yarn collection is getting out of hand.",
       initialPos: { y: -80, x: 240 },
     },
@@ -368,7 +368,7 @@ const About: React.FC = () => {
         >
           <div className="inline-block">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-script text-mystic mb-3 md:mb-4 drop-shadow-lg ">
-              Hi there! I'm Feya
+              Hi there! <br/> I'm Feya Bloom
             </h1>
             
           </div>
@@ -450,7 +450,7 @@ const About: React.FC = () => {
       >
         <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-cormorant leading-relaxed text-foreground">
           
-          Based in Mediterranean where I blend art, function, 
+          Based in Mediterranean lands where I blend art, function, 
           and timeless wisdom into things that actually matter.
         </p>
       </motion.div>
@@ -461,7 +461,7 @@ const About: React.FC = () => {
 
 
       {/* My Journey Section */}
-      <section className="relative py-16 md:py-24 lg:py-32 px-4 md:px-6 overflow-hidden bg-muted/30">
+      <section className="relative pt-6 md:pt-12 lg:py-32 px-4 md:px-6 overflow-hidden bg-muted/30">
         <div className="container mx-auto max-w-4xl relative z-10">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-center mb-12 md:mb-16 text-secondary">
             How I Got Here
@@ -471,31 +471,37 @@ const About: React.FC = () => {
             <p>
               I've been trying to figure out how to create sustainably for as long as I can remember. 
             </p>
-
             <p>
 Art school → programming college → design degree → 3D modeling in an international company. Dream job. Good money. Got disappointed in months. 
+</p><p>
 
 That pattern kept repeating: find the thing, get the thing, realize it's not the thing. 
+</p><p>
 
-Left everything. Started hyperrealism course — couldn't look at canvas after personal shit. Wrote a book about plants instead. Started UX course, built an ADHD tracker to survive my own brain, never finished the course. 
-
+Left everything. Dove deep into hyperrealistic painting — couldn't look at canvas after personal shit.
+ Wrote a book about female plant-based nature instead. Started UX course, built an ADHD tracker to survive
+  my own brain with scheduling and all the staff, never finished the course. 
+            </p>
+<p>
 Ideas kept coming. Follow-through kept failing.
 Until I realized: I wasn't failing at finding "my thing."
 I was learning to create in a way that doesn't break me. 
-
-Now I make knitted art AND digital tools AND paintings AND whatever else my brain decides needs to exist. 
+</p>
+<p>
+Now I make knitted pieces AND digital tools AND handmade home decor AND whatever else my brain decides needs to exist. 
 
 Because this is how I stay alive creatively. 
-
-I'm done performing.
             </p>
-
-            <p className="text-center font-semibold text-muted-foreground">
-              My work lives at the intersection of:
+<p>
+I'm done performing.
             </p>
           </div>
 
+          
  <div className="relative w-full flex items-center justify-center mt-4 md:mt-6 mb-12 md:mb-20 px-4">
+            <p className="text-center font-semibold text-muted-foreground">
+              My work lives at the intersection of:
+            </p>
   <svg
     viewBox="0 0 400 400"   // меньшее окно = крупнее контент
     preserveAspectRatio="xMidYMid meet"

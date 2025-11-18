@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { MessageSquare, Send, LeafyGreen, Brain, BookOpen, Moon, Brush } from "lucide-react";
+import { Send, LeafyGreen, Brain, Facebook, Youtube,  Instagram, Github} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
@@ -98,30 +98,110 @@ const Contact = () => {
             </p>
           </div>
         </div>
-      </section>
+      </section>      
 
-      <div className="py-12 md:py-16">
+       <section className="py-6 md:py-12 relative overflow-hidden">
+  {/* Soft background */}
+  <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/30 to-background" />
+  
+  <div className="container mx-auto px-4 md:px-6 relative z-10">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="max-w-5xl mx-auto"
+    >
+      <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-center text-secondary mb-6">
+        What Inspires My Work
+      </h2>
+
+        {/* Inspiration */}
+        <div className="p-6 text-center space-y-8 text-lg md:text-xl"
+        >
+          <p className="text-muted-foreground">
+I'm drawn to projects that carry weight—work that helps people grow, supports communities, or makes the world a little less harsh. 
+</p>
+          <div className="w-8 h-8 mx-auto gradient-feya-bg rounded-full flex items-center justify-center mb-4">
+            <LeafyGreen className="w-4 h-4 text-white" />
+          </div>
+<p>
+Nature informs everything: its patterns, cycles, and logic. The way things grow, rest, adapt. That rhythm shows up whether I'm coding, knitting, or researching plants. 
+</p>
+          <p className="text-muted-foreground">
+I'm inspired by people who live intentionally—who create and build because they're genuinely engaged, not performing. Those are the people I make things for. 
+</p>
+          <div className="w-8 h-8 mx-auto gradient-feya-bg rounded-full flex items-center justify-center mb-4">
+            <Brain className="w-4 h-4 text-white" />
+          </div>
+<p>
+And I value coherence. If something doesn't feel sincere in its design, message, or purpose, I won't make it. 
+</p>
+          <p className="text-muted-foreground pb-16">
+I make what I need—and hope it helps someone else too.
+          </p>
+        </div>
+
+      
+
+      {/* Call-out box */}
+      <div className="bg-secondary rounded-2xl p-6 text-center text-white">
+        <p className="text-2xl md:text-4xl font-script">
+          Does this feel like home?
+        </p>
+        <p className="text-lg max-w-2xl mx-auto opacity-90">
+          If you read this far,
+we're probably a good match. 
+        </p>
+        
+      </div>
+          </motion.div>
+  </div>
+</section>
+
+
+
+      <section className=" py-16 mb-12 md:mb-16">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-4xl mx-auto">
 
             <div className="grid md:grid-cols-2 gap-8 md:gap-12">
 
-                <div className="relative p-6 md:p-8 rounded-2xl overflow-hidden bg-card/50 drop-shadow-lg">
+                <div className="relative p-6 md:p-8 overflow-hidden">
 
   {/* Soft glow background */}
-    <div className="relative z-10">
-    <p className="text-3xl sm:text-4xl md:text-5xl font-script text-accent-foreground text-right mb-12 leading-relaxed">
-      Let's make something that matters
-    </p>
-    
-    <p className="text-lg text-muted-foreground leading-relaxed text-center py-4">
-      Tell me what you need.
-I'll tell you if I can help.
-    </p>
-  </div>
+
+          <div className="space-y-3 md:space-y-4">
+            <h3 className="pb-6 text-accent text-center font-semibold text-2xl sm:text-3xl md:text-4xl sm:text-left">
+              Connect With Me</h3>
+            <div> {/*className="flex gap-3 md:gap-4 justify-center sm:justify-start">*/}
+              <p className="pb-6">
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 
+              rounded-full bg-accent hover:bg-secondary transition-colors flex items-center justify-center" aria-label="Instagram">
+                <Instagram className="h-4 w-4 md:h-5 md:w-5 text-white" />
+              </a>Brain journaling on Threads
+              </p>
+              <p className="pb-6">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 
+              rounded-full bg-accent hover:bg-secondary transition-colors flex items-center justify-center" aria-label="Facebook">
+                <Facebook className="h-4 w-4 md:h-5 md:w-5 text-white" />
+              </a>Full process backstage on Reddit
+              </p>
+              <p className="pb-6">
+              <a href="https://github.com" target="_blank" className="w-9 h-9 md:w-10 md:h-10
+               rounded-full bg-accent hover:bg-secondary transition-colors flex items-center justify-center" aria-label="Github">
+                <Github className="h-4 w-4 md:h-5 md:w-5 text-white" />
+              </a>Open-source projects on GitHub
+              </p>
+              <p className="pb-6">
+              <a href="https://youtube.com" target="_blank" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-accent
+               hover:bg-secondary transition-colors flex items-center justify-center" aria-label="YouTube">
+                <Youtube className="h-4 w-4 md:h-5 md:w-5 text-white" />
+              </a> Photo & videography experiments </p>
+            </div>
+          </div>
 </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6 p-6">
                 <div className="space-y-2">
                   <Label htmlFor="name">Name</Label>
                   <Input id="name" name="name" value={formData.name} onChange={handleChange} required placeholder="Your name" />
@@ -150,144 +230,14 @@ I'll tell you if I can help.
             </div>
           </div>
         </div>
-      </div>
-<section className="py-16 md:py-24 relative overflow-hidden">
-  {/* Soft background */}
-  <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/30 to-background" />
-  
-  <div className="container mx-auto px-4 md:px-6 relative z-10">
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="max-w-5xl mx-auto"
-    >
-      <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-center text-secondary mb-6">
-        What Inspires My Work
-      </h2>
-      
+      </section>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-        {/* Inspiration 1: Nature */}
-        <motion.div
-          whileHover={{ y: -8 }}
-          className="glass-card rounded-2xl p-6 text-center space-y-4"
-        >
-          <div className="w-16 h-16 mx-auto gradient-feya-bg rounded-full flex items-center justify-center mb-4">
-            <LeafyGreen className="w-8 h-8 text-white" />
-          </div>
-          <h3 className="text-xl font-serif font-semibold">Nature's Wisdom</h3>
-          <p className="text-muted-foreground">
-            The patterns, cycles, and quiet intelligence of the natural world. 
-            Everything I create carries a breath of the forest.
-
-
-
-
-
-I'm drawn to projects that carry weight—work that helps people grow, supports communities, or makes the world a little less harsh. 
-
-Nature informs everything: its patterns, cycles, and logic. The way things grow, rest, adapt. That rhythm shows up whether I'm coding, knitting, or researching plants. 
-
-I'm inspired by people who live intentionally—who create and build because they're genuinely engaged, not performing. Those are the people I make things for. 
-
-And I value coherence. If something doesn't feel sincere in its design, message, or purpose, I won't make it. 
-
-I make what I need—and hope it helps someone else too.
-          </p>
-        </motion.div>
-
-        {/* Inspiration 2: Neurodivergent Minds */}
-        <motion.div
-          whileHover={{ y: -8 }}
-          className="glass-card rounded-2xl p-6 text-center space-y-4"
-        >
-          <div className="w-16 h-16 mx-auto gradient-feya-bg rounded-full flex items-center justify-center mb-4">
-            <Brain className="w-8 h-8 text-white" />
-          </div>
-          <h3 className="text-xl font-serif font-semibold">Different Minds</h3>
-          <p className="text-muted-foreground">
-            ADHD, autism, HSP—minds that think sideways and see what others miss. 
-            My tools are for us, by one of us.
-          </p>
-        </motion.div>
-
-        {/* Inspiration 3: Ancestral Knowledge */}
-        <motion.div
-          whileHover={{ y: -8 }}
-          className="glass-card rounded-2xl p-6 text-center space-y-4"
-        >
-          <div className="w-16 h-16 mx-auto gradient-feya-bg rounded-full flex items-center justify-center mb-4">
-            <BookOpen className="w-8 h-8 text-white" />
-          </div>
-          <h3 className="text-xl font-serif font-semibold">Old Ways, New Forms</h3>
-          <p className="text-muted-foreground">
-            Traditional crafts, herbal wisdom, folklore. Ancient knowledge 
-            translated into contemporary language.
-          </p>
-        </motion.div>
-
-        {/* Inspiration 4: Slow Living */}
-        <motion.div
-          whileHover={{ y: -8 }}
-          className="glass-card rounded-2xl p-6 text-center space-y-4"
-        >
-          <div className="w-16 h-16 mx-auto gradient-feya-bg rounded-full flex items-center justify-center mb-4">
-            <Moon className="w-8 h-8 text-white" />
-          </div>
-          <h3 className="text-xl font-serif font-semibold">Intentional Living</h3>
-          <p className="text-muted-foreground">
-            Rejecting hustle culture. Embracing rest, cycles, and work that 
-            honors human rhythms over productivity myths.
-          </p>
-        </motion.div>
-
-        {/* Inspiration 5: Craftsmanship */}
-        <motion.div
-          whileHover={{ y: -8 }}
-          className="glass-card rounded-2xl p-6 text-center space-y-4"
-        >
-          <div className="w-16 h-16 mx-auto gradient-feya-bg rounded-full flex items-center justify-center mb-4">
-            <Brush className="w-8 h-8 text-white" />
-          </div>
-          <h3 className="text-xl font-serif font-semibold">Handmade with Care</h3>
-          <p className="text-muted-foreground">
-            No mass production. Every piece carries the mark 
-            of human hands and thoughtful intention.
-          </p>
-        </motion.div>
-
-        {/* Inspiration 6: Honest Communication */}
-        <motion.div
-          whileHover={{ y: -8 }}
-          className="glass-card rounded-2xl p-6 text-center space-y-4"
-        >
-          <div className="w-16 h-16 mx-auto gradient-feya-bg rounded-full flex items-center justify-center mb-4">
-            <MessageSquare className="w-8 h-8 text-white" />
-          </div>
-          <h3 className="text-xl font-serif font-semibold">No Bullshit</h3>
-          <p className="text-muted-foreground">
-            Clear communication. Real talk. If something won't work, I'll tell you. 
-            If it will—I'll make it happen.
-          </p>
-        </motion.div>
+        <div className="container mx-auto px-4 md:px-6 py-6 md:py-8 border-t bg-muted/50 backdrop-blur-sm">
+        <div className="text-center text-xs md:text-sm text-muted-foreground">
+          <p>&copy; {new Date().getFullYear()} Feya Bloom Studio. All rights reserved.</p>
+        </div>
       </div>
 
-      {/* Call-out box */}
-      <div className="bg-secondary rounded-2xl p-8 md:p-12 text-center text-white">
-        <p className="text-2xl md:text-3xl font-script mb-4">
-          Does this feel like home?
-        </p>
-        <p className="text-lg max-w-2xl mx-auto opacity-90">
-          If you read this far,<br/>
-we're probably a good match. 
-        </p>
-        
-      </div>
-    </motion.div>
-  </div>
-</section>
-      <Footer />
     </div>;
 };
 export default Contact;
