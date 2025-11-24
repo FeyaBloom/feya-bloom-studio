@@ -450,7 +450,7 @@ const About: React.FC = () => {
       >
         <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-cormorant leading-relaxed text-foreground">
           
-          Based in Mediterranean lands where I blend art, function, 
+          Based in Mediterranean land where I blend art, function, 
           and timeless wisdom into things that actually matter.
         </p>
       </motion.div>
@@ -461,7 +461,7 @@ const About: React.FC = () => {
 
 
       {/* My Journey Section */}
-      <section className="relative pt-6 md:pt-12 lg:py-32 px-4 md:px-6 overflow-hidden bg-muted/30">
+      <section className="relative py-6 md:py-12  px-4 md:px-6 overflow-hidden bg-background">
         <div className="container mx-auto max-w-4xl relative z-10">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-center mb-12 md:mb-16 text-secondary">
             How I Got Here
@@ -495,13 +495,17 @@ Because this is how I stay alive creatively.
 <p>
 I'm done performing.
             </p>
-          </div>
+          </div></div>
+</section>
 
-          
- <div className="relative w-full flex items-center justify-center mt-4 md:mt-6 mb-12 md:mb-20 px-4">
-            <p className="text-center font-semibold text-muted-foreground">
+      <section className="relative pt-6 md:pt-12 lg:py-32 px-4 md:px-6 overflow-hidden bg-muted/30">
+             <div>
+              <h3 className="text-center font-semibold text-muted-foreground text-2xl">
               My work lives at the intersection of:
-            </p>
+            </h3>
+             </div>
+          
+ <div className="relative w-full flex items-center justify-center mb-12 md:mb-20 px-4">
   <svg
     viewBox="0 0 400 400"   // меньшее окно = крупнее контент
     preserveAspectRatio="xMidYMid meet"
@@ -599,7 +603,7 @@ I'm done performing.
     </motion.g>
   </svg>
 </div>
-  </div>
+  
 </section>
 
     
@@ -665,10 +669,10 @@ I'm done performing.
             <div className="text-center space-y-6 md:space-y-8">
               <Home className="w-12 h-12 md:w-16 md:h-16 mx-auto text-secondary" />
 
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-cormorant text-secondary leading-tight text-center">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-cormorant text-secondary leading-tight text-center">
                 Ready to bring something
                 <br />
-                <span className="text-gradient-feya font-script font-bold"> meaningful </span>
+                <span className="text-gradient-feya font-script text-5xl sm:text-6xl md:text-7xl"> meaningful </span>
                 <br />
                 into your world?
               </h2>
