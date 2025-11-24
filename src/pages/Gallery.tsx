@@ -343,8 +343,8 @@ const Gallery = () => {
       </div>
 
       {/* Optional: Video or carousel of WIP shots */}
-      <div className="text-center mt-12 p-6 rounded-2xl bg-card drop-shadow">
-        <p className="text-lg md:text-2xl  font-serif text-accent-foreground ">
+          <div className="max-w-2xl mx-auto bg-accent/40 border-2 border-accent rounded-2xl p-8 md:p-12 text-center text-foreground">
+        <p className="text-lg md:text-2xl  font-serif text-foreground ">
           Just thoughtful work that takes the time it needs
         </p>
       </div>
