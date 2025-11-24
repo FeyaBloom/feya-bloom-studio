@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
 import forestHero from "@/assets/forest-hero.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -92,11 +91,11 @@ const Contact = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background" />
 
         <div className="container mx-auto px-4 md:px-6 relative z-10">
-          <div className="max-w-4xl mx-auto text-center space-y-3 md:space-y-4">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif text-foreground px-4">
+          <div className="max-w-4xl mx-auto text-center space-y-3 md:space-y-4 text-foreground ">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif px-4">
               Contacts
             </h1>
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
+            <p className="text-base sm:text-lg md:text-xl max-w-2xl mx-auto px-4">
               Got an idea? Let's see if we're a match
             </p>
           </div>
@@ -108,80 +107,8 @@ const Contact = () => {
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-4xl mx-auto">
             <div className="grid md:grid-cols-2 gap-8 md:gap-12">
-
-              {/* Social Links Column */}
-              <div className="relative p-6 md:p-8">
-                <div className="space-y-3 md:space-y-4">
-                  <h3 className="pb-6 text-secondary text-center text-2xl sm:text-3xl md:text-4xl sm:text-left">
-                    Or connect here:
-                  </h3>
-                  
-                  <div className="space-y-4">
-                    <a 
-                      href="https://threads.net/@burningfirefly" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent/10 transition-colors group"
-                    >
-                      <div className="w-10 h-10 rounded-full bg-accent hover:bg-secondary transition-colors flex items-center justify-center flex-shrink-0">
-                        <Instagram className="h-5 w-5 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="font-medium">@burningfirefly</div>
-                        <div className="text-sm text-muted-foreground">— Threads</div>
-                      </div>
-                    </a>
-
-                    <a 
-                      href="https://reddit.com/u/burningfirefly" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent/10 transition-colors group"
-                    >
-                      <div className="w-10 h-10 rounded-full bg-accent hover:bg-secondary transition-colors flex items-center justify-center flex-shrink-0">
-                        <Facebook className="h-5 w-5 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="font-medium">u/burningfirefly</div>
-                        <div className="text-sm text-muted-foreground">— Reddit</div>
-                      </div>
-                    </a>
-
-                    <a 
-                      href="https://github.com/feyabloom" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent/10 transition-colors group"
-                    >
-                      <div className="w-10 h-10 rounded-full bg-accent hover:bg-secondary transition-colors flex items-center justify-center flex-shrink-0">
-                        <Github className="h-5 w-5 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="font-medium">@feyabloom</div>
-                        <div className="text-sm text-muted-foreground">— GitHub</div>
-                      </div>
-                    </a>
-
-                    <a 
-                      href="https://youtube.com/@yourchannel" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent/10 transition-colors group"
-                    >
-                      <div className="w-10 h-10 rounded-full bg-accent hover:bg-secondary transition-colors flex items-center justify-center flex-shrink-0">
-                        <Youtube className="h-5 w-5 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="font-medium">[your channel]</div>
-                        <div className="text-sm text-muted-foreground">— YouTube</div>
-                      </div>
-                    </a>
-                  </div>
-                </div>
-              </div>
-
               {/* Form Column */}
-              <div className="space-y-6 p-6">
+              <div className="relative space-y-6 p-6 md:p-8">
                 <div className="space-y-2">
                   <Label htmlFor="name">Name</Label>
                   <Input 
@@ -243,9 +170,81 @@ const Contact = () => {
                   <Send className="h-4 w-4" />
                 </Button>
               </div>
+
+
+              {/* Social Links Column */}
+                <div className="space-y-3 md:space-y-4 p-6 md:p-8">
+                  <h3 className="pb-6 text-secondary text-center text-2xl sm:text-3xl md:text-4xl sm:text-left">
+                    Or connect here:
+                  </h3>
+                  
+                  <div className="space-y-4">
+                    <a 
+                      href="https://threads.net/@burningfirefly" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent/10 transition-colors group"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-accent hover:bg-secondary transition-colors flex items-center justify-center flex-shrink-0">
+                        <Instagram className="h-5 w-5 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-medium">@feyabloom</div>
+                        <div className="text-sm text-muted-foreground">— Threads</div>
+                      </div>
+                    </a>
+
+                    <a 
+                      href="https://reddit.com/user/feyabloom" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent/10 transition-colors group"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-accent hover:bg-secondary transition-colors flex items-center justify-center flex-shrink-0">
+                        <Facebook className="h-5 w-5 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-medium">u/feyabloom</div>
+                        <div className="text-sm text-muted-foreground">— Reddit</div>
+                      </div>
+                    </a>
+
+                    <a 
+                      href="https://github.com/feyabloom" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent/10 transition-colors group"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-accent hover:bg-secondary transition-colors flex items-center justify-center flex-shrink-0">
+                        <Github className="h-5 w-5 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-medium">@feyabloom</div>
+                        <div className="text-sm text-muted-foreground">— GitHub</div>
+                      </div>
+                    </a>
+
+                    <a 
+                      href="https://youtube.com/@yourchannel" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent/10 transition-colors group"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-accent hover:bg-secondary transition-colors flex items-center justify-center flex-shrink-0">
+                        <Youtube className="h-5 w-5 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-medium">[Feya Bloom]</div>
+                        <div className="text-sm text-muted-foreground">— YouTube</div>
+                      </div>
+                    </a>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
+
       </section>
 
       {/* What Inspires Section */}
@@ -264,14 +263,14 @@ const Contact = () => {
             </h2>
 
             <div className="space-y-8 text-center text-lg md:text-xl">
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-foreground leading-relaxed">
                 I'm drawn to projects that carry weight — work that helps people grow, 
                 supports communities, or makes the world a little less harsh.
               </p>
 
               <div className="text-3xl opacity-40">🌿</div>
 
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-foreground leading-relaxed">
                 Nature informs everything: its patterns, cycles, and logic. The way things 
                 grow, rest, adapt. That rhythm shows up whether I'm coding, knitting, or 
                 researching plants.
@@ -279,21 +278,21 @@ const Contact = () => {
 
               <div className="text-2xl opacity-40">•</div>
 
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-foreground leading-relaxed">
                 I'm inspired by people who live intentionally — who create and build because 
                 they're genuinely engaged, not performing. Those are the people I make things for.
               </p>
 
               <div className="text-2xl opacity-40">•</div>
 
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-foreground leading-relaxed">
                 And I value coherence. If something doesn't feel sincere in its design, 
                 message, or purpose, I won't make it.
               </p>
 
               <div className="w-16 h-px bg-muted-foreground/30 mx-auto my-8" />
 
-              <p className="text-muted-foreground/80 italic text-xl">
+              <p className="text-foreground/80 italic text-xl">
                 I make what I need — and hope it helps someone else too.
               </p>
             </div>
@@ -304,7 +303,7 @@ const Contact = () => {
       {/* CTA Box */}
       <section className="pb-24 md:pb-32">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-2xl mx-auto bg-accent/40 border-2 border-accent rounded-2xl p-8 md:p-12 text-center text-white">
+          <div className="max-w-2xl mx-auto bg-accent/40 border-2 border-accent rounded-2xl p-8 md:p-12 text-center text-foreground">
             <p className="text-3xl md:text-4xl font-script mb-4">
               Does this feel like home?
             </p>

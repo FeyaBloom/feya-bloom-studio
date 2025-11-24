@@ -124,11 +124,11 @@ const Gallery = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background" />
 
         <div className="container mx-auto px-4 md:px-6 relative z-10">
-          <div className="max-w-6xl mx-auto text-center space-y-3 md:space-y-4">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-foreground animate-in fade-in slide-in-from-bottom-4 duration-1000 px-4">
+          <div className="max-w-6xl mx-auto text-center space-y-3 md:space-y-4 text-foreground">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif animate-in fade-in slide-in-from-bottom-4 duration-1000 px-4">
               Project Gallery
             </h1>
-            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-200 px-4">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-200 px-4">
               Discover my creative universe 
             </p>
             
@@ -148,7 +148,7 @@ const Gallery = () => {
             What I Create
           </motion.h2>
                      
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground text-center mb-6 md:mb-8 px-4">        
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-foreground text-center mb-6 md:mb-8 px-4">        
             Each piece blends intuition with intentional design, beauty with usefulness
           </p>
 
@@ -211,7 +211,7 @@ const Gallery = () => {
               <h2 className="text-2xl md:text-3xl font-serif text-primary font-bold mb-2">
                 {activeMainCategory}
               </h2>
-              <p className="text-base md:text-lg text-muted-foreground max-w-3xl mx-auto mb-4 px-4">
+              <p className="text-base md:text-lg text-foreground max-w-3xl mx-auto mb-4 px-4">
                 {categoryDescriptions[activeMainCategory]}
               </p>
               <button
@@ -284,7 +284,7 @@ const Gallery = () => {
       <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-center text-secondary mb-6">
         Behind the Scenes
       </h2>
-      <p className="text-lg md:text-xl text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+      <p className="text-lg md:text-xl text-center text-foreground mb-12 max-w-2xl mx-auto">
         Everything begins with intention. Here's what goes into creating work that truly serves.
       </p>
 
@@ -296,7 +296,7 @@ const Gallery = () => {
             <img src="/src/assets/hero-mandala.png" alt="Research phase" className="w-full h-full object-cover rounded-lg" />
           </div>
           <h3 className="text-xl font-serif font-semibold">1. Deep Dive & Discovery</h3>
-          <p className="text-muted-foreground">
+          <p className="text-foreground">
             Understanding the real need behind the ask. Research, conversations, 
             sketches that don't make it to final—but shape everything.
           </p>
@@ -309,7 +309,7 @@ const Gallery = () => {
             <img src="/src/assets/hero-macrame.png" alt="Iteration phase" className="w-full h-full object-cover rounded-lg" />
           </div>
           <h3 className="text-xl font-serif font-semibold">2. Iteration & Refinement</h3>
-          <p className="text-muted-foreground">
+          <p className="text-foreground">
             Testing, breaking, rebuilding. This is where function meets beauty—
             through trial, error, and patience.
           </p>
@@ -322,7 +322,7 @@ const Gallery = () => {
             <img src="/src/assets/mood-aurora.png" alt="Crafting phase" className="w-full h-full object-cover rounded-lg" />
           </div>
           <h3 className="text-xl font-serif font-semibold">3. Crafting with Care</h3>
-          <p className="text-muted-foreground">
+          <p className="text-foreground">
             Whether code or thread, every detail matters. This is where intention 
             becomes tangible—pixel by pixel, stitch by stitch.
           </p>
@@ -335,7 +335,7 @@ const Gallery = () => {
             <img src="/src/assets/mood-floral.png" alt="Final polish" className="w-full h-full object-cover rounded-lg" />
           </div>
           <h3 className="text-xl font-serif font-semibold">4. Polish & Purpose</h3>
-          <p className="text-muted-foreground">
+          <p className="text-foreground">
             Final checks, user testing, making sure it actually works for real humans. 
             Beauty is useless if it doesn't serve.
           </p>

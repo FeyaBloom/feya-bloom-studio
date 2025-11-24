@@ -43,7 +43,7 @@ const FunFactsSection: React.FC<{ facts: Fact[] }> = ({ facts }) => {
         >
           Random Facts About Me
         </motion.h2>
-        <p className="text-lg md:text-2xl font-body text-muted-foreground">
+        <p className="text-lg md:text-2xl font-body text-foreground">
           because we're all 27% weird
         </p>
       </div>
@@ -99,14 +99,14 @@ const FactCard: React.FC<{ fact: Fact; index: number; inView: boolean; isReveale
     const positions = [
       // РЯД 1 (верхний)
       { x: -350, y: 80, rotate: -7 },    
-      { x: -120, y: 60, rotate: 5 },    
+      { x: -120, y: 20, rotate: 5 },    
       { x: 150, y: 100, rotate: -4 },     
       
       // РЯД 2 (средний)
       { x: -280, y: 250, rotate: 6 },    
-      { x: -50, y: 280, rotate: -5 },    
+      { x: -50, y: 350, rotate: -5 },    
       { x: 200, y: 230, rotate: 7 },    
-      { x: 380, y: 270, rotate: -3 },    
+      { x: 340, y: 400, rotate: -3 },    
       
       // РЯД 3 (нижний)
       { x: -200, y: 450, rotate: 5 },   
@@ -368,7 +368,7 @@ const About: React.FC = () => {
         >
           <div className="inline-block">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-script text-mystic mb-3 md:mb-4 drop-shadow-lg ">
-              Hi there! <br/> I'm Feya Bloom
+              Hi there! <br/> I'm Feya
             </h1>
             
           </div>
@@ -500,7 +500,7 @@ I'm done performing.
 
       <section className="relative pt-6 md:pt-12 lg:py-32 px-4 md:px-6 overflow-hidden bg-muted/30">
              <div>
-              <h3 className="text-center font-semibold text-muted-foreground text-2xl">
+              <h3 className="text-center font-semibold text-muted-foreground text-2xl md:text-3xl">
               My work lives at the intersection of:
             </h3>
              </div>
@@ -642,7 +642,7 @@ I'm done performing.
                 whileHover={{ scale: value.scale * 1.1, rotate: value.rotation + 2, zIndex: 10 }}
                 className="glass-card rounded-2xl p-4 md:p-6 shadow-xl cursor-default"
               >
-                <p className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-foreground text-center">
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl text-foreground text-center">
                   {value.text}
                 </p>
               </motion.div>
